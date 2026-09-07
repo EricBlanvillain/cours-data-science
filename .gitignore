@@ -1,0 +1,10 @@
+.ipynb_checkpoints/
+.DS_Store
+__pycache__/
+*.pyc
+# fichiers générés en exécutant les notebooks
+submission*.csv
+*.pkl
+kaggle.json
+train.csv
+test.csv
