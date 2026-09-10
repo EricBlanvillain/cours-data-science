@@ -15,7 +15,7 @@ liens-utiles.md       outils, datasets (Kaggle + miroirs publics), docs officiel
 docs/                 guides, aide-mémoires, fiches, glossaire, grille d'évaluation
 seances/              un dossier par séance : README (déroulé) + leçon + exercices
 projets/              les 4 projets du portfolio, avec datasets Kaggle
-seances-optionnelles/ les séances hors parcours (module Software engineering)
+seances-optionnelles/ les séances hors parcours (métiers de la data science, software engineering)
 projets-optionnels/   les projets hors parcours (module IA agentique)
 projets-avances/      pour aller plus loin : 6 projets ML complets, hors module
 ```
@@ -56,12 +56,13 @@ et donne la grille d'évaluation commune.
 
 ## Modules optionnels
 
-Deux modules en dehors du parcours en 12 séances. Ils ne sont pas des prérequis : on les prend quand on en a envie, ou quand le groupe bute sur les questions qu'ils traitent.
+Trois modules en dehors du parcours en 12 séances : deux séances et un module de projets. Ils ne sont pas des prérequis — on les prend quand on en a envie, ou quand le groupe bute sur les questions qu'ils traitent.
 
 | Module | Ce que c'est | Niveau | Contenu |
 |--------|--------------|--------|---------|
-| [Software engineering](seances-optionnelles/seance-optionnelle-software-engineering/) | Une séance de 1 h 30 : pourquoi Python est lent et comment on le contourne, la mémoire mesurée, où faire tourner son projet et comment le rendre reproductible | ⭐ | [`SO_software_engineering.ipynb`](seances-optionnelles/seance-optionnelle-software-engineering/SO_software_engineering.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances-optionnelles/seance-optionnelle-software-engineering/SO_software_engineering.ipynb) — [`SO_exercices.ipynb`](seances-optionnelles/seance-optionnelle-software-engineering/SO_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances-optionnelles/seance-optionnelle-software-engineering/SO_exercices.ipynb) |
-| [Projet avancé · IA agentique](projets-optionnels/projet-optionnel-avance-ia-agentique/) | Quatre projets pour construire avec un LLM : un assistant qui lit tes cours, un agent outillé, un analyste automatique, et un banc de test pour fiabiliser l'ensemble | ⭐⭐⭐ | [README du module](projets-optionnels/projet-optionnel-avance-ia-agentique/README.md) |
+| [1 · Les métiers de la data science](seances-optionnelles/seance-optionnelle-1-metiers-data-science/) | Quel langage pour quel usage : Python, R, SQL, Rust/C++, JavaScript — ce que chacun sait faire, qui gère la mémoire, et ce que coûte vraiment un modèle | ⭐ | [`SO1_metiers_data_science.ipynb`](seances-optionnelles/seance-optionnelle-1-metiers-data-science/SO1_metiers_data_science.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances-optionnelles/seance-optionnelle-1-metiers-data-science/SO1_metiers_data_science.ipynb) — [`SO1_exercices.ipynb`](seances-optionnelles/seance-optionnelle-1-metiers-data-science/SO1_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances-optionnelles/seance-optionnelle-1-metiers-data-science/SO1_exercices.ipynb) |
+| [2 · Software engineering, limites et contraintes dans un contexte de développement](seances-optionnelles/seance-optionnelle-2-software-engineering/) | Pourquoi Python est lent et comment on le contourne (banc d'essai Python / NumPy / C), la mémoire mesurée, où faire tourner son projet et comment le rendre reproductible | ⭐ | [`SO2_software_engineering.ipynb`](seances-optionnelles/seance-optionnelle-2-software-engineering/SO2_software_engineering.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances-optionnelles/seance-optionnelle-2-software-engineering/SO2_software_engineering.ipynb) — [`SO2_exercices.ipynb`](seances-optionnelles/seance-optionnelle-2-software-engineering/SO2_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances-optionnelles/seance-optionnelle-2-software-engineering/SO2_exercices.ipynb) |
+| [3 · Projet avancé IA agentique, de la conception à la production](projets-optionnels/projet-optionnel-avance-ia-agentique/) | Quatre projets pour construire avec un LLM : un assistant qui lit tes cours, un agent outillé, un analyste automatique, et un banc de test pour fiabiliser l'ensemble | ⭐⭐⭐ | [README du module](projets-optionnels/projet-optionnel-avance-ia-agentique/README.md) |
 
 ## Pour aller plus loin
 

@@ -246,9 +246,21 @@ Les énoncés détaillés, les datasets Kaggle et les critères de réussite son
 
 ## Modules optionnels
 
-Deux modules vivent en dehors du parcours en 12 séances. Ils ne sont ni des prérequis ni des séances à rattraper : on les prend quand le groupe en a envie, ou quand il bute sur les questions qu'ils traitent.
+Trois modules vivent en dehors du parcours en 12 séances — deux séances et un module de projets. Ils ne sont ni des prérequis ni des séances à rattraper : on les prend quand le groupe en a envie, ou quand il bute sur les questions qu'ils traitent.
 
-### Module · Software engineering ⭐ (1 h 30)
+### Module 1 · Les métiers de la data science ⭐ (1 h 30)
+
+Une séance de culture technique, à prendre en amont : elle répond à « pourquoi Python, et pas un autre langage ? » et à « combien ça coûte, au juste ? ».
+
+- Le comparatif honnête des langages de la data — Python, **R** (statistiques, `ggplot2`, recherche académique, biostatistique, et ses limites dès qu'il faut industrialiser), SQL, Rust/C++, JavaScript : ce que chacun sait faire, sa limite, qui l'utilise
+- Qui gère la mémoire, et ce que ça coûte au programmeur : ramasse-miettes en Python et en R, gestion explicite en C, garantie à la compilation en Rust
+- Le coût d'un modèle : tokens et euros, l'heure de GPU, et pourquoi on prototype toujours sur un échantillon
+
+Fichiers : [`seances-optionnelles/seance-optionnelle-1-metiers-data-science/`](seances-optionnelles/seance-optionnelle-1-metiers-data-science/) — leçon, 12 exercices ⭐ à ⭐⭐⭐.
+
+Ils repartent avec : leur fiche [`docs/fiche-choisir-ses-outils.md`](docs/fiche-choisir-ses-outils.md) remplie — le langage et le modèle qu'ils retiennent pour leur projet, avec leurs chiffres.
+
+### Module 2 · Software engineering, limites et contraintes dans un contexte de développement ⭐ (1 h 30)
 
 Une séance de culture technique, à prendre quand la question « pourquoi Python ? pourquoi c'est lent ? où je fais tourner ça ? » arrive d'elle-même — souvent après la séance 2 ou 4.
 
@@ -256,11 +268,11 @@ Une séance de culture technique, à prendre quand la question « pourquoi Pytho
 - La mémoire, en la mesurant : `df.info(memory_usage="deep")`, le gain du `dtype` `category`, la lecture par morceaux avec `chunksize`, ramasse-miettes contre gestion explicite
 - Local ou cloud : sa machine, Colab, un serveur loué — mise en route, puissance, persistance, coût ; ce que Colab masque (`!pip list`) et la reproductibilité avec `requirements.txt`
 
-Fichiers : [`seances-optionnelles/seance-optionnelle-software-engineering/`](seances-optionnelles/seance-optionnelle-software-engineering/) — leçon, 10 exercices ⭐ à ⭐⭐⭐.
+Fichiers : [`seances-optionnelles/seance-optionnelle-2-software-engineering/`](seances-optionnelles/seance-optionnelle-2-software-engineering/) — leçon, 12 exercices ⭐ à ⭐⭐⭐.
 
 Ils repartent avec : le `requirements.txt` de leur propre projet, et leur fiche « où faire tourner mon projet » avec la décision et le chiffre qui la justifie.
 
-### Module · Projet avancé, IA agentique ⭐⭐⭐
+### Module 3 · Projet avancé IA agentique, de la conception à la production ⭐⭐⭐
 
 Quatre projets pour construire avec un LLM, après les séances 9 à 12. Sans clé d'API et sans GPU obligatoire : le petit modèle tourne dans Colab, et l'interrupteur `USE_MODEL` permet de travailler hors ligne.
 

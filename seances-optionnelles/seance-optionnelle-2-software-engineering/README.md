@@ -1,14 +1,16 @@
-# Séance optionnelle · Software engineering · ⭐
+# Séance optionnelle 2 · Software engineering · ⭐
 
 Niveau : ⭐ Débutant
 
 Module optionnel · ne fait pas partie du parcours en 12 séances
 
+Elle fait suite à la [séance optionnelle 1 · Les métiers de la data science](../seance-optionnelle-1-metiers-data-science/), qui répond à « quel langage pour quel usage » ; celle-ci répond à « pourquoi celui-là est lent, et où le faire tourner ».
+
 Objectifs : mesurer soi-même la lenteur de Python et le gain de la vectorisation, mesurer la mémoire d'un jeu de données et savoir quoi faire quand un fichier dépasse la RAM, et choisir en connaissance de cause entre sa machine, Colab et un serveur cloud — en sachant rendre son projet reproductible ailleurs.
 
 Déroulé (1 h 30)
 - 15 min : au tableau, l'idée qui porte la séance : **on ne devine pas, on mesure**. Un chronomètre, un compteur de mémoire, un fichier de dépendances. Pourquoi Python est lent (interprété contre compilé) et pourquoi ça ne l'empêche pas d'être le langage de la data : le calcul est délégué à des moteurs écrits en C ou en Rust
-- 60 min : notebook `SO_software_engineering.ipynb`
+- 60 min : notebook `SO2_software_engineering.ipynb`
   - partie 1 (20 min) : la cellule chronométrée qui compare une boucle Python et NumPy sur 5 millions de valeurs et affiche le facteur d'accélération ; la vectorisation ; NumPy et pandas écrits en C, Polars écrit en Rust
   - partie 2 (18 min) : `df.info(memory_usage="deep")`, le passage d'une colonne en `category` mesuré avant/après, la lecture par morceaux avec `chunksize`, ramasse-miettes contre gestion explicite de la mémoire
   - partie 3 (14 min) : ma machine, Colab ou serveur cloud ; ce que Colab masque (`!pip list`), le `requirements.txt` écrit avec `%%writefile` et la reproductibilité ; les plateformes et leurs pages de tarifs
@@ -17,7 +19,7 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête à la fin de la partie 2 (la mémoire) et on reprend à la partie 3 et au livrable au créneau suivant. Rien n'est renvoyé à la maison.
 
-Entre deux séances (à la maison) : `SO_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
+Entre deux séances (à la maison) : `SO2_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Outils (gratuits)
 - Google Colab, et sa comparaison gratuit / Pro : https://colab.research.google.com · https://colab.research.google.com/signup
