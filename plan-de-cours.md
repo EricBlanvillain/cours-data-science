@@ -266,7 +266,7 @@ Quatre projets pour construire avec un LLM, après les séances 9 à 12. Sans cl
 
 | Projet | Ce qu'on construit |
 |---|---|
-| B1 · Assistant réviseur | Un assistant qui lit ses propres cours et pose des questions de révision (notebook complet) |
+| B1 · Assistant réviseur | Un assistant qui lit ses propres cours et pose des questions de révision |
 | B2 · Agent outillé | Un agent qui choisit le bon outil Python et se rattrape quand un outil échoue |
 | B3 · Analyste automatique | Un agent qui explore un CSV seul, écrit un mini-rapport et propose 3 graphiques |
 | B4 · Fiabiliser un assistant | Un banc de test de 15 questions, la mesure des hallucinations, des garde-fous |

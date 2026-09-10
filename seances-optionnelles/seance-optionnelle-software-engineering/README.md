@@ -17,7 +17,7 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête à la fin de la partie 2 (la mémoire) et on reprend à la partie 3 et au livrable au créneau suivant. Rien n'est renvoyé à la maison.
 
-Entre deux séances (à la maison) : `SO_exercices.ipynb` — 10 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
+Entre deux séances (à la maison) : `SO_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Outils (gratuits)
 - Google Colab, et sa comparaison gratuit / Pro : https://colab.research.google.com · https://colab.research.google.com/signup
