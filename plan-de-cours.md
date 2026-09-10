@@ -29,7 +29,6 @@
 
 | Séance | Titre | Niveau | Livrable | Projet alimenté |
 |---|---|---|---|---|
-| C | Le contexte du métier *(optionnelle, en amont)* | ⭐ | Sa fiche « choisir ses outils » remplie | — (culture technique) |
 | 0 | Faire connaissance | ⭐ | Un notebook Colab qui tourne, un compte GitHub avec un premier dépôt | — (mise en place) |
 | 1 | Introduction à l'IA | ⭐ | Un modèle Teachable Machine, la fiche « mes 5 règles de prompt » | Projet 4 (prompting) |
 | 2 | Python pour la data | ⭐ | 3 questions, 3 graphiques sur un dataset | Projet 1 |
@@ -47,20 +46,6 @@
 Chaque dossier `seances/seance-NN-<nom>/` contient un `README.md` (déroulé minuté), la leçon `NN_<nom>.ipynb` et les exercices `NN_exercices.ipynb` (au moins 10 exercices, des ⭐ aux ⭐⭐⭐, avec vérification automatique et solution cachée). Les 4 projets sont décrits dans `projets/`.
 
 ---
-
-## Séance C · Le contexte du métier ⭐ (1 h 30, optionnelle, en amont du parcours)
-
-Une séance de culture technique, à faire avant la séance 0 quand le groupe a déjà programmé et se pose les questions « pourquoi Python ? », « pourquoi c'est lent ? », « ça coûte combien ? ».
-
-- Pourquoi Python plutôt que R, SQL, Rust/C++ ou JavaScript : on choisit un langage pour son **écosystème** avant sa vitesse
-- Pourquoi Python est lent et comment on le contourne : une boucle contre NumPy sur 5 millions de valeurs, chronométrées ; vectorisation ; pandas et NumPy écrits en C ; Polars, écrit en Rust
-- La mémoire, en la mesurant : `df.info(memory_usage="deep")`, le gain du `dtype` `category`, la lecture par morceaux avec `chunksize`, ramasse-miettes contre gestion explicite
-- Local ou cloud : sa machine, Colab, un serveur loué — mise en route, puissance, persistance, coût ; ce que Colab masque (`!pip list`, `requirements.txt`)
-- Le coût d'un modèle : tokens et euros, l'heure de GPU, et pourquoi on prototype toujours sur un échantillon
-
-Fichiers : `seances/seance-C-contexte-du-metier/` (leçon + exercices) et la fiche [docs/fiche-choisir-ses-outils.md](docs/fiche-choisir-ses-outils.md).
-
-Ils repartent avec : leur fiche « choisir ses outils » remplie par eux.
 
 ## Séance 0 · Faire connaissance ⭐ (1 h 30)
 
@@ -259,14 +244,38 @@ Livrable : un portfolio GitHub complet et une présentation finale.
 
 Les énoncés détaillés, les datasets Kaggle et les critères de réussite sont dans `projets/`. L'évaluation commune (projets et présentations) est dans [docs/grille-evaluation.md](docs/grille-evaluation.md).
 
-## Et après : la piste « projets avancés » (optionnelle, ⭐⭐⭐)
+## Modules optionnels
 
-Une fois les 4 projets du portfolio terminés, dix projets supplémentaires prolongent le parcours, en deux pistes. Ils ne font pas partie des 12 séances et se font en autonomie ou en séances bonus.
+Deux modules vivent en dehors du parcours en 12 séances. Ils ne sont ni des prérequis ni des séances à rattraper : on les prend quand le groupe en a envie, ou quand il bute sur les questions qu'ils traitent.
 
-- **Piste ML** (6 projets) : la démarche complète du data scientist — nettoyage, feature engineering, analyse, modèles candidats, **tuning ou fine-tuning**, interprétation, recommandation — avec scikit-learn, XGBoost, TensorFlow et Hugging Face : énergie des bâtiments, scoring crédit, reconnaissance d'images, séries temporelles, classification et génération de texte.
-- **Piste agentique** (4 projets) : construire avec un LLM — un assistant qui lit tes cours, un agent outillé, un analyste automatique, et un banc de test pour fiabiliser l'ensemble. Sans clé d'API et sans GPU obligatoire.
+### Module · Software engineering ⭐ (1 h 30)
 
-Voir [projets-avances/README.md](projets-avances/README.md).
+Une séance de culture technique, à prendre quand la question « pourquoi Python ? pourquoi c'est lent ? où je fais tourner ça ? » arrive d'elle-même — souvent après la séance 2 ou 4.
+
+- Pourquoi Python est lent et comment on le contourne : une boucle contre NumPy sur 5 millions de valeurs, chronométrées ; la vectorisation ; pandas et NumPy écrits en C ; Polars, écrit en Rust
+- La mémoire, en la mesurant : `df.info(memory_usage="deep")`, le gain du `dtype` `category`, la lecture par morceaux avec `chunksize`, ramasse-miettes contre gestion explicite
+- Local ou cloud : sa machine, Colab, un serveur loué — mise en route, puissance, persistance, coût ; ce que Colab masque (`!pip list`) et la reproductibilité avec `requirements.txt`
+
+Fichiers : [`seances-optionnelles/seance-optionnelle-software-engineering/`](seances-optionnelles/seance-optionnelle-software-engineering/) — leçon, 10 exercices ⭐ à ⭐⭐⭐.
+
+Ils repartent avec : le `requirements.txt` de leur propre projet, et leur fiche « où faire tourner mon projet » avec la décision et le chiffre qui la justifie.
+
+### Module · Projet avancé, IA agentique ⭐⭐⭐
+
+Quatre projets pour construire avec un LLM, après les séances 9 à 12. Sans clé d'API et sans GPU obligatoire : le petit modèle tourne dans Colab, et l'interrupteur `USE_MODEL` permet de travailler hors ligne.
+
+| Projet | Ce qu'on construit |
+|---|---|
+| B1 · Assistant réviseur | Un assistant qui lit ses propres cours et pose des questions de révision (notebook complet) |
+| B2 · Agent outillé | Un agent qui choisit le bon outil Python et se rattrape quand un outil échoue |
+| B3 · Analyste automatique | Un agent qui explore un CSV seul, écrit un mini-rapport et propose 3 graphiques |
+| B4 · Fiabiliser un assistant | Un banc de test de 15 questions, la mesure des hallucinations, des garde-fous |
+
+Fichiers : [`projets-optionnels/projet-optionnel-avance-ia-agentique/`](projets-optionnels/projet-optionnel-avance-ia-agentique/) — un dossier par projet, avec sa fiche et sa grille En route / Atteint / Dépassé.
+
+## Pour aller plus loin
+
+Six projets « pipeline complet » restent dans le dépôt comme une réserve : nettoyage, feature engineering, analyse, modèles candidats, **tuning ou fine-tuning**, interprétation, recommandation — avec scikit-learn, XGBoost, TensorFlow et Hugging Face. Énergie des bâtiments, scoring crédit, reconnaissance d'images, séries temporelles, classification et génération de texte. Ils ne constituent pas un module et ne s'inscrivent dans aucun parcours : on en pioche un quand on veut creuser un sujet. Voir [projets-avances/README.md](projets-avances/README.md).
 
 ## Points d'attention
 
