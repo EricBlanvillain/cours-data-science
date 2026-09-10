@@ -66,19 +66,19 @@ Trois modules en dehors du parcours en 12 séances : deux séances et un module 
 
 ## Pour aller plus loin
 
-Six projets « pipeline complet », dans l'esprit d'une soutenance de data scientist : nettoyage → analyse → modèles →
-**tuning / fine-tuning** → interprétation, avec scikit-learn, XGBoost, TensorFlow et Hugging Face. Ce ne sont pas des
-modules : ils vivent dans le dépôt comme une réserve, à piocher quand on veut creuser un sujet. Détails et grille de
-rapport dans [projets-avances/README.md](projets-avances/README.md).
+Six projets « pipeline complet » (nettoyage → analyse → modèles → **tuning / fine-tuning** → interprétation), avec
+scikit-learn, XGBoost, TensorFlow et Hugging Face. Ce n'est pas un module : c'est une **réserve dans laquelle piocher**,
+en particulier pour **remplacer le projet Kaggle des séances 7 et 8** quand il ne convient pas au groupe. Détails et
+grille de rapport dans [projets-avances/README.md](projets-avances/README.md).
 
-| # | Projet | Techniques clés | Notebook |
-|---|--------|-----------------|----------|
-| A1 | [Consommation énergétique des bâtiments](projets-avances/A1-energie-batiments/) | XGBoost + SHAP | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A1-energie-batiments/A1_energie_batiments.ipynb) |
-| A2 | [Scoring crédit](projets-avances/A2-scoring-credit/) | XGBoost + Optuna, seuil métier, SHAP | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A2-scoring-credit/A2_scoring_credit.ipynb) |
-| A3 | [Reconnaissance d'images](projets-avances/A3-reconnaissance-images/) | CNN, transfer learning, fine-tuning | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A3-reconnaissance-images/A3_reconnaissance_images.ipynb) |
-| A4 | Séries temporelles | SARIMA, Prophet, XGBoost, LSTM | *En cours de rédaction* |
-| A5 | Classification de texte | BiLSTM, fine-tuning CamemBERT | *En cours de rédaction* |
-| A6 | [Génération de texte](projets-avances/A6-generation-texte/) | LSTM, Qwen + LoRA | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A6-generation-texte/A6_generation_texte.ipynb) |
+| # | Projet | État | À sortir si… | Notebook |
+|---|--------|------|--------------|----------|
+| A1 | [Consommation énergétique des bâtiments](projets-avances/A1-energie-batiments/) | disponible | même exercice, autre sujet | [Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A1-energie-batiments/A1_energie_batiments.ipynb) |
+| A2 | [Scoring crédit](projets-avances/A2-scoring-credit/) | disponible | Titanic a paru facile | [Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A2-scoring-credit/A2_scoring_credit.ipynb) |
+| A3 | [Reconnaissance d'images](projets-avances/A3-reconnaissance-images/) | disponible | c'est l'ennui, pas le niveau | [Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A3-reconnaissance-images/A3_reconnaissance_images.ipynb) |
+| A4 | [Séries temporelles](projets-avances/A4-series-temporelles/) | *notebook à écrire* | le groupe accroche sur « prévoir » | — |
+| A5 | [Classification de texte](projets-avances/A5-classification-texte/) | *notebook à écrire* | le groupe préfère le texte aux tableaux | — |
+| A6 | [Génération de texte](projets-avances/A6-generation-texte/) | disponible | voir un modèle créer plutôt que classer | [Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/A6-generation-texte/A6_generation_texte.ipynb) |
 
 ## Documentation
 
