@@ -8,13 +8,17 @@ Objectifs : améliorer le score de la séance 7 en comparant 4 modèles dans un 
 
 Avant la séance : redéposer `train.csv` et `test.csv` dans Colab (ils disparaissent à la fermeture de la session) et retrouver son score de la séance 7.
 
-Déroulé (2h, en binômes)
-- 10 min : rappel de la séance 7, tour des scores, ce qui distingue les 4 familles de modèles
-- 10 min : le sur-apprentissage expliqué avec l'analogie de l'élève qui apprend les annales par cœur
-- 40 min : notebook `08_kaggle_titanic_2.ipynb`, sections 1 à 4 : tableau des 4 modèles, importance des variables, courbe train / validation, `GridSearchCV`
-- 15 min : section 5, les pièges : démonstration d'une fuite de données, score sur ses propres données, la règle bête à battre (0.766)
-- 25 min : projet, section 6 : modèle final, `submission_finale.csv`, soumission, tableau des scores du groupe ; puis section 7, préparer la présentation
-- 20 min : présentations, 5 min par binôme : hypothèses → ce qu'on a essayé → score → ce qu'on referait
+Déroulé (1 h 30, en binômes)
+- 15 min : rappel de la séance 7 et tour des scores ; le sur-apprentissage expliqué avec l'analogie de l'élève qui apprend les annales par cœur
+- 60 min : notebook `08_kaggle_titanic_2.ipynb`
+  - sections 1 à 4 (30 min) : tableau des 4 modèles, importance des variables, courbe train / validation, `GridSearchCV`
+  - section 5 (10 min) : les pièges : démonstration d'une fuite de données, score sur ses propres données, la règle bête à battre (0.766)
+  - section 6 (20 min) : projet, modèle final, `submission_finale.csv`, soumission, tableau des scores du groupe
+- 15 min : premiers passages, 5 min par binôme : hypothèses → ce qu'on a essayé → score → ce qu'on referait
+
+Si le temps manque : la préparation de la présentation (section 7) et les passages restants ouvrent la séance suivante. À partir de trois binômes, la reprise est à prévoir dès le calendrier : les présentations ne se coupent pas.
+
+Entre deux séances (à la maison) : `08_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Liens
 - Classement : https://www.kaggle.com/competitions/titanic/leaderboard

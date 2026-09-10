@@ -1,7 +1,7 @@
 # Cours Data Science & IA · 12 séances
 
 Un parcours complet — Python, Data Science et IA générative — en une séance de prise de contact
-et 12 séances de 2 h, réparties en 4 blocs. Public : débutants en programmation, curieux de la data
+et 12 séances de 1 h 30, réparties en 4 blocs, précédées d'une séance C optionnelle sur le contexte du métier. Public : débutants en programmation, curieux de la data
 et de l'IA. Tout tourne gratuitement dans le navigateur (Google Colab, Kaggle, GitHub).
 
 **Niveaux :** ⭐ Débutant · ⭐⭐ Intermédiaire · ⭐⭐⭐ Avancé — chaque séance, exercice et projet
@@ -10,17 +10,19 @@ porte le sien (voir [plan-de-cours.md](plan-de-cours.md) → « Comment lire les
 ## Contenu du dossier
 
 ```
-plan-de-cours.md      le plan détaillé : blocs, séances, rythme 20/80/20, livrables, projets
+plan-de-cours.md      le plan détaillé : blocs, séances, rythme 15/60/15, livrables, projets
 liens-utiles.md       outils, datasets (Kaggle + miroirs publics), docs officielles, tutoriels
 docs/                 guides, aide-mémoires, fiches, glossaire, grille d'évaluation
 seances/              un dossier par séance : README (déroulé) + leçon + exercices
 projets/              les 4 projets du portfolio, avec datasets Kaggle
+projets-avances/      2 pistes optionnelles : 6 projets ML (tuning / fine-tuning) + 4 projets agentiques
 ```
 
 ## Les séances
 
 | # | Séance | Niveau | Leçon | Exercices |
 |---|--------|--------|-------|-----------|
+| C | [Le contexte du métier](seances/seance-C-contexte-du-metier/) *(optionnelle, en amont)* | ⭐ | [`C_contexte_du_metier.ipynb`](seances/seance-C-contexte-du-metier/C_contexte_du_metier.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-C-contexte-du-metier/C_contexte_du_metier.ipynb) | [`C_exercices.ipynb`](seances/seance-C-contexte-du-metier/C_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-C-contexte-du-metier/C_exercices.ipynb) |
 | 0 | [Faire connaissance](seances/seance-00-faire-connaissance/) | ⭐ | [`00_faire_connaissance.ipynb`](seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb) | [`00_exercices.ipynb`](seances/seance-00-faire-connaissance/00_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_exercices.ipynb) |
 | 1 | [Introduction à l'IA](seances/seance-01-introduction-ia/) | ⭐ | [`01_introduction_ia.ipynb`](seances/seance-01-introduction-ia/01_introduction_ia.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-01-introduction-ia/01_introduction_ia.ipynb) | [`01_exercices.ipynb`](seances/seance-01-introduction-ia/01_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-01-introduction-ia/01_exercices.ipynb) |
 | 2 | [Python pour la data](seances/seance-02-python-pour-la-data/) | ⭐ | [`02_python_pour_la_data.ipynb`](seances/seance-02-python-pour-la-data/02_python_pour_la_data.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-02-python-pour-la-data/02_python_pour_la_data.ipynb) | [`02_exercices.ipynb`](seances/seance-02-python-pour-la-data/02_exercices.ipynb) · [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-02-python-pour-la-data/02_exercices.ipynb) |
@@ -51,11 +53,37 @@ exercices progressifs (⭐ → ⭐⭐⭐) avec indice, vérification automatique
 Le [README des projets](projets/README.md) explique comment récupérer un dataset Kaggle (3 façons)
 et donne la grille d'évaluation commune.
 
+## Projets avancés (optionnels) ⭐⭐⭐
+
+Pour aller plus loin après les 12 séances, deux pistes au choix. Détails, prérequis et grille de rapport dans
+[projets-avances/README.md](projets-avances/README.md).
+
+**Piste ML** — le pipeline complet d'un data scientist (nettoyage → analyse → modèles → **tuning / fine-tuning** →
+interprétation), avec scikit-learn, XGBoost, TensorFlow et Hugging Face.
+
+| # | Projet | Techniques clés | Notebook |
+|---|--------|-----------------|----------|
+| A1 | [Consommation énergétique des bâtiments](projets-avances/piste-ml/A1-energie-batiments/) | XGBoost + SHAP | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/piste-ml/A1-energie-batiments/A1_energie_batiments.ipynb) |
+| A2 | [Scoring crédit](projets-avances/piste-ml/A2-scoring-credit/) | XGBoost + Optuna, seuil métier, SHAP | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/piste-ml/A2-scoring-credit/A2_scoring_credit.ipynb) |
+| A3 | [Reconnaissance d'images](projets-avances/piste-ml/A3-reconnaissance-images/) | CNN, transfer learning, fine-tuning | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/piste-ml/A3-reconnaissance-images/A3_reconnaissance_images.ipynb) |
+| A4 | Séries temporelles | SARIMA, Prophet, XGBoost, LSTM | *En cours de rédaction* |
+| A5 | Classification de texte | BiLSTM, fine-tuning CamemBERT | *En cours de rédaction* |
+| A6 | [Génération de texte](projets-avances/piste-ml/A6-generation-texte/) | LSTM, Qwen + LoRA | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/piste-ml/A6-generation-texte/A6_generation_texte.ipynb) |
+
+**Piste agentique** — construire avec un LLM, sans clé d'API et sans GPU obligatoire.
+
+| # | Projet | Ce que tu construis | Notebook |
+|---|--------|---------------------|----------|
+| B1 | [Assistant réviseur](projets-avances/piste-agentique/B1-assistant-reviseur/) | Un assistant qui lit tes cours et te pose des questions | [Ouvrir dans Colab](https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/projets-avances/piste-agentique/B1-assistant-reviseur/B1_assistant_reviseur.ipynb) |
+| B2 | [Agent outillé](projets-avances/piste-agentique/B2-agent-outille/) | Un agent qui choisit le bon outil Python | *En cours de rédaction* |
+| B3 | [Analyste automatique](projets-avances/piste-agentique/B3-analyste-automatique/) | Un agent qui explore un CSV et écrit son rapport | *En cours de rédaction* |
+| B4 | [Fiabiliser un assistant](projets-avances/piste-agentique/B4-fiabiliser-un-assistant/) | Un banc de test et des garde-fous | *En cours de rédaction* |
+
 ## Documentation
 
 - Guides : [Colab](docs/guide-colab.md) · [Kaggle](docs/guide-kaggle.md) · [GitHub](docs/guide-github.md) · [Avant la première séance](docs/avant-la-premiere-seance.md)
 - Aide-mémoires : [Python](docs/aide-memoire-python.md) · [pandas & matplotlib](docs/aide-memoire-pandas-matplotlib.md) · [SQL](docs/aide-memoire-sql.md) · [scikit-learn](docs/aide-memoire-scikit-learn.md) · [Git](docs/aide-memoire-git.md) · [LLM](docs/aide-memoire-llm.md)
-- Fiches : [Les 5 règles du prompt](docs/fiche-5-regles-du-prompt.md) · [Glossaire](docs/glossaire.md) · [Grille d'évaluation](docs/grille-evaluation.md) · [Déroulé type d'une séance](docs/deroule-type-seance.md)
+- Fiches : [Choisir ses outils](docs/fiche-choisir-ses-outils.md) · [Les 5 règles du prompt](docs/fiche-5-regles-du-prompt.md) · [Glossaire](docs/glossaire.md) · [Grille d'évaluation](docs/grille-evaluation.md) · [Déroulé type d'une séance](docs/deroule-type-seance.md)
 
 ## Lancer les notebooks
 

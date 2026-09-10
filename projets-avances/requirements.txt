@@ -1,0 +1,25 @@
+# Environnement local pour les projets avancés (Python 3.12, CPU). Sur Google Colab, tout est déjà installé sauf peft/optuna/prophet (pip install dans le notebook).
+tensorflow>=2.16,<2.19
+tensorflow-datasets
+tensorflow-metadata<1.17
+xgboost
+shap
+optuna
+prophet
+transformers
+torch
+peft
+datasets
+accelerate
+imbalanced-learn
+statsmodels
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+requests
+jupyter
+nbconvert
+ipykernel

@@ -6,13 +6,18 @@ Bloc 1 · Les bases solides
 
 Objectifs : situer IA, machine learning, deep learning et IA générative ; comprendre comment une machine apprend (exemples, erreurs, corrections) ; connaître les outils du moment et savoir bien prompter.
 
-Déroulé (2h)
-- 20 min : quiz « IA ou pas ? » (section 1 du notebook `01_introduction_ia.ipynb`) et les trois cercles (section 2)
-- 20 min : section 3 : « comment une machine apprend », simulation d'un seuil qui s'ajuste sur 20 fruits (pommes / melons), on compte les erreurs, on trace, on piège la machine avec une pomme géante
-- 25 min : section 4 : Teachable Machine, chacun entraîne un modèle qui reconnaît ses gestes à la webcam, le piège, l'améliore
-- 15 min : section 5 : panorama des outils (ChatGPT, Claude, Mistral, Gemini, Midjourney, Suno, Cursor), ce que chacun fait bien et mal, démo sur mon ordinateur
-- 20 min : section 6, projet : les 5 règles d'un bon prompt, grille d'évaluation automatique (score /5), concours du meilleur prompt sur un défi imposé, jury par binômes, fiche « mes 5 règles »
-- 20 min : partage : chacun montre son modèle Teachable Machine et lit son meilleur prompt
+Déroulé (1 h 30)
+- 15 min : quiz « IA ou pas ? » (section 1 du notebook `01_introduction_ia.ipynb`) et les trois cercles (section 2)
+- 60 min : notebook `01_introduction_ia.ipynb`
+  - section 3 (15 min) : « comment une machine apprend », simulation d'un seuil qui s'ajuste sur 20 fruits (pommes / melons), on compte les erreurs, on trace, on piège la machine avec une pomme géante
+  - section 4 (20 min) : Teachable Machine, chacun entraîne un modèle qui reconnaît ses gestes à la webcam, le piège, l'améliore
+  - section 5 (10 min) : panorama des outils (ChatGPT, Claude, Mistral, Gemini, Midjourney, Suno, Cursor), ce que chacun fait bien et mal, démo sur mon ordinateur
+  - section 6 (15 min) : projet, les 5 règles d'un bon prompt, grille d'évaluation automatique (score /5), concours du meilleur prompt sur un défi imposé
+- 15 min : partage : chacun montre son modèle Teachable Machine et lit son meilleur prompt
+
+Si le temps manque : on s'arrête à la fin de Teachable Machine (section 4) ; le panorama des outils et le concours de prompts ouvrent la séance suivante.
+
+Entre deux séances (à la maison) : `01_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Fiche : les 5 règles d'un bon prompt
 1. Le contexte : qui tu es, pour quoi faire

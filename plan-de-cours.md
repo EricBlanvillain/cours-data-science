@@ -2,7 +2,9 @@
 
 **Public :** débutants en programmation, curieux de la data et de l'IA. Avoir déjà touché à un langage (Python, Scratch, JavaScript…) aide, mais tout est repris depuis le début.
 **Objectif :** consolider les bases de Python, découvrir le métier de data scientist, puis comprendre les principes derrière l'IA d'aujourd'hui (LLM, SLM, RAG, agents) et apprendre à bien utiliser les principaux outils.
-**Format :** une séance 0 de prise de contact, puis 12 séances de 2 h découpées en 4 blocs. Chaque séance suit le même rythme **20 / 80 / 20** : 20 min d'explication, 80 min de pratique sur un projet, 20 min de partage de ce que chacun a construit (détail dans [docs/deroule-type-seance.md](docs/deroule-type-seance.md)).
+**Format :** une séance 0 de prise de contact, puis 12 séances de 1 h 30 découpées en 4 blocs. Chaque séance suit le même rythme **15 / 60 / 15** : 15 min d'explication, 60 min de pratique sur un projet, 15 min de partage de ce que chacun a construit (détail dans [docs/deroule-type-seance.md](docs/deroule-type-seance.md)).
+
+**Le notebook de leçon se fait toujours ensemble, en séance.** Ce qui n'a pas été fini n'est jamais renvoyé à la maison : chaque séance a un **point de reprise** noté dans son README, et on repart de là au créneau suivant. Une séance dense peut donc s'étaler sur deux créneaux — compter 16 à 17 créneaux de 1 h 30 pour les 13 séances. Le seul travail personnel, c'est le notebook d'exercices `NN_exercices.ipynb` de la séance : 12 exercices ⭐ à ⭐⭐⭐ corrigés automatiquement.
 **Outils :** Google Colab (Python sans installation), Kaggle (données et notebooks), SQLite (SQL), GitHub, ChatGPT / Claude / Mistral, Hugging Face. Tout est gratuit et tourne dans le navigateur.
 
 **Le fil conducteur :** à la fin du parcours, chacun repart avec un portfolio GitHub de 4 projets réalisés de ses mains, dont un projet Kaggle et un assistant IA construit soi-même.
@@ -27,6 +29,7 @@
 
 | Séance | Titre | Niveau | Livrable | Projet alimenté |
 |---|---|---|---|---|
+| C | Le contexte du métier *(optionnelle, en amont)* | ⭐ | Sa fiche « choisir ses outils » remplie | — (culture technique) |
 | 0 | Faire connaissance | ⭐ | Un notebook Colab qui tourne, un compte GitHub avec un premier dépôt | — (mise en place) |
 | 1 | Introduction à l'IA | ⭐ | Un modèle Teachable Machine, la fiche « mes 5 règles de prompt » | Projet 4 (prompting) |
 | 2 | Python pour la data | ⭐ | 3 questions, 3 graphiques sur un dataset | Projet 1 |
@@ -45,7 +48,21 @@ Chaque dossier `seances/seance-NN-<nom>/` contient un `README.md` (déroulé min
 
 ---
 
-## Séance 0 · Faire connaissance ⭐ (1 h 30 à 2 h)
+## Séance C · Le contexte du métier ⭐ (1 h 30, optionnelle, en amont du parcours)
+
+Une séance de culture technique, à faire avant la séance 0 quand le groupe a déjà programmé et se pose les questions « pourquoi Python ? », « pourquoi c'est lent ? », « ça coûte combien ? ».
+
+- Pourquoi Python plutôt que R, SQL, Rust/C++ ou JavaScript : on choisit un langage pour son **écosystème** avant sa vitesse
+- Pourquoi Python est lent et comment on le contourne : une boucle contre NumPy sur 5 millions de valeurs, chronométrées ; vectorisation ; pandas et NumPy écrits en C ; Polars, écrit en Rust
+- La mémoire, en la mesurant : `df.info(memory_usage="deep")`, le gain du `dtype` `category`, la lecture par morceaux avec `chunksize`, ramasse-miettes contre gestion explicite
+- Local ou cloud : sa machine, Colab, un serveur loué — mise en route, puissance, persistance, coût ; ce que Colab masque (`!pip list`, `requirements.txt`)
+- Le coût d'un modèle : tokens et euros, l'heure de GPU, et pourquoi on prototype toujours sur un échantillon
+
+Fichiers : `seances/seance-C-contexte-du-metier/` (leçon + exercices) et la fiche [docs/fiche-choisir-ses-outils.md](docs/fiche-choisir-ses-outils.md).
+
+Ils repartent avec : leur fiche « choisir ses outils » remplie par eux.
+
+## Séance 0 · Faire connaissance ⭐ (1 h 30)
 
 Objectif : comprendre le niveau réel de chacun, ce qui a déjà été fait et ce que chacun a envie de construire.
 
@@ -242,6 +259,15 @@ Livrable : un portfolio GitHub complet et une présentation finale.
 
 Les énoncés détaillés, les datasets Kaggle et les critères de réussite sont dans `projets/`. L'évaluation commune (projets et présentations) est dans [docs/grille-evaluation.md](docs/grille-evaluation.md).
 
+## Et après : la piste « projets avancés » (optionnelle, ⭐⭐⭐)
+
+Une fois les 4 projets du portfolio terminés, dix projets supplémentaires prolongent le parcours, en deux pistes. Ils ne font pas partie des 12 séances et se font en autonomie ou en séances bonus.
+
+- **Piste ML** (6 projets) : la démarche complète du data scientist — nettoyage, feature engineering, analyse, modèles candidats, **tuning ou fine-tuning**, interprétation, recommandation — avec scikit-learn, XGBoost, TensorFlow et Hugging Face : énergie des bâtiments, scoring crédit, reconnaissance d'images, séries temporelles, classification et génération de texte.
+- **Piste agentique** (4 projets) : construire avec un LLM — un assistant qui lit tes cours, un agent outillé, un analyste automatique, et un banc de test pour fiabiliser l'ensemble. Sans clé d'API et sans GPU obligatoire.
+
+Voir [projets-avances/README.md](projets-avances/README.md).
+
 ## Points d'attention
 
 - Pas d'installation compliquée : tout tourne dans le navigateur (Colab, Kaggle). Les modèles en local (Ollama) sont une démo sur la machine du formateur, puis optionnels chez soi
@@ -250,6 +276,7 @@ Les énoncés détaillés, les datasets Kaggle et les critères de réussite son
 - Les niveaux ⭐ permettent à un groupe hétérogène d'avancer ensemble : les exercices ⭐ pour tout le monde, les ⭐⭐⭐ pour ceux qui vont vite
 - Les clés d'API, quand il y en a, sont fournies et gérées par le formateur, avec un budget plafonné. Le parcours fonctionne entièrement sans clé grâce à un petit modèle ouvert qui tourne dans Colab
 - Le plan est modulable : si le groupe avance vite, on ajoute une séance sur la génération d'images ou sur le fine-tuning d'un petit modèle ; si un bloc demande plus de temps, on ajuste
+- Une séance non terminée se poursuit au créneau suivant, jamais à la maison. Les séances 5, 8 et 12 débordent le plus souvent (dashboard et pitch, présentations en binômes, présentations finales) : leur prévoir une reprise dès le calendrier
 
 ## Supports existants réutilisés
 

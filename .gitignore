@@ -8,3 +8,12 @@ submission*.csv
 kaggle.json
 train.csv
 test.csv
+# projets avancés : données téléchargées et modèles entraînés
+data/
+*.keras
+*.h5
+*.safetensors
+lora*/
+results/
+runs/
+logs/
