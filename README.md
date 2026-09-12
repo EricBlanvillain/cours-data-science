@@ -1,7 +1,6 @@
 # Cours Data Science & IA · 12 séances
 
-Python, Data Science et IA générative — en une séance de prise de contact
-et 12 séances, réparties en 4 blocs. Deux modules optionnels. Public : débutants en programmation, curieux de la data
+Python, Data Science et IA générative — 12 séances, réparties en 4 blocs. Deux modules optionnels. Public : débutants en programmation, curieux de la data
 et de l'IA. Tout tourne dans le navigateur (Google Colab, Kaggle, GitHub).
 
 **Niveaux :** ⭐ Débutant · ⭐⭐ Intermédiaire · ⭐⭐⭐ Avancé — chaque séance, exercice et projet
