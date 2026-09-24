@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Séance 0 · Faire connaissance</title>
+<style>
+  :root {
+    --fond: #fbfaf7; --carte: #ffffff; --encre: #1d1d1b; --gris: #6b6b66; --trait: #e3e0d8;
+    --accent: #1f5fbf; --accent-doux: #e8f0fc; --vert: #2f7d4f; --vert-doux: #e6f4ea; --orange: #b4560b; --orange-doux: #fdf0e4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--fond); color: var(--encre);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 22px; line-height: 1.45;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  /* barre de progression */
+  .progression { height: 6px; background: var(--trait); }
+  .progression > div { height: 100%; width: 20%; background: var(--accent); transition: width .3s ease; }
+  .etapes { display: flex; justify-content: space-between; max-width: 960px; margin: 6px auto 0; padding: 0 24px; width: 100%; font-size: 15px; color: var(--gris); }
+  .etapes span.active { color: var(--accent); font-weight: 600; }
+
+  main { flex: 1; width: 100%; max-width: 960px; margin: 0 auto; padding: 10px 24px 100px; }   /* marge basse : rien ne passe sous la barre de navigation */
+  .ecran[hidden] { display: none; }
+  h1 { font-size: 40px; line-height: 1.1; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h2 { font-size: 36px; line-height: 1.2; margin: 8px 0 18px; letter-spacing: -0.01em; }
+  h3 { font-size: 24px; margin: 0 0 8px; }
+  p { margin: 0 0 14px; }
+  .sous { color: var(--gris); font-size: 19px; }
+  .carte { background: var(--carte); border: 1px solid var(--trait); border-radius: 14px; padding: 20px 22px; }
+  .grille-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grille-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }   /* start : une carte dépliée n'étire pas ses voisines */
+  @media (max-width: 720px) { .grille-2, .grille-3 { grid-template-columns: 1fr; } body { font-size: 19px; } h1 { font-size: 34px; } h2 { font-size: 28px; } }
+
+  /* écran 1 */
+  .promesses { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 8px; }
+  .promesses li { background: var(--carte); border: 1px solid var(--trait); border-radius: 14px; padding: 9px 18px; display: flex; gap: 16px; align-items: baseline; font-size: 20px; }
+  .promesses .num { color: var(--accent); font-weight: 700; font-size: 26px; min-width: 32px; }
+  .encart { border-left: 5px solid var(--accent); background: var(--accent-doux); border-radius: 0 14px 14px 0; padding: 14px 20px; margin-top: 14px; }
+  .encart p { margin: 0 0 6px; font-size: 19px; line-height: 1.38; }
+  .encart p:last-child { margin-bottom: 0; }
+  .encart .etiquette { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+
+  /* champs */
+  label.champ { display: block; font-size: 17px; color: var(--gris); margin-bottom: 6px; }
+  input[type=text], textarea {
+    width: 100%; font: inherit; color: var(--encre); background: #fff; border: 1.5px solid var(--trait); border-radius: 10px; padding: 10px 12px;
+  }
+  input[type=text]:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-doux); }
+  textarea { min-height: 150px; resize: vertical; }
+  .prenom { font-size: 26px; font-weight: 700; margin-bottom: 12px; }
+
+  /* écran 3 : quiz */
+  .vignette { display: flex; flex-direction: column; gap: 10px; }
+  .vignette .titre { font-weight: 600; font-size: 22px; }
+  .choix { display: flex; gap: 8px; }
+  .choix button, .bouton {
+    font: inherit; font-size: 18px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--trait); background: #fff; color: var(--encre); cursor: pointer;
+  }
+  .choix button.sel { border-color: var(--accent); background: var(--accent-doux); color: var(--accent); font-weight: 600; }
+  .pourquoi { font-size: 17px; line-height: 1.4; padding: 10px 12px; border-radius: 10px; }
+  .pourquoi.oui { background: var(--vert-doux); color: #1d5a37; }
+  .pourquoi.non { background: var(--orange-doux); color: #7a3a05; }
+  .pourquoi b { display: block; margin-bottom: 2px; }
+  .lien-discret { background: none; border: none; color: var(--accent); text-decoration: underline; font-size: 17px; padding: 0; cursor: pointer; text-align: left; }
+
+  /* écran 4 : cases */
+  .cases { display: grid; gap: 8px; margin: 6px 0 16px; }
+  .cases label { display: flex; align-items: center; gap: 10px; font-size: 20px; cursor: pointer; }
+  .cases input { width: 22px; height: 22px; accent-color: var(--accent); }
+  .question-cle { border: 2px solid var(--accent); }
+  .question-cle h3 { color: var(--accent); }
+
+  /* écran 5 */
+  .blocs { display: grid; gap: 12px; margin: 16px 0 26px; }
+  .bloc { display: grid; grid-template-columns: 110px 1fr 1fr; gap: 16px; align-items: center; background: var(--carte); border: 1px solid var(--trait); border-radius: 14px; padding: 14px 18px; }
+  .bloc .n { font-weight: 700; color: var(--accent); }
+  .bloc .n small { display: block; color: var(--gris); font-weight: 400; font-size: 15px; }
+  .bloc .quoi { font-size: 20px; }
+  .bloc .gain { font-size: 19px; color: var(--vert); font-weight: 600; }
+  @media (max-width: 720px) { .bloc { grid-template-columns: 1fr; gap: 4px; } }
+  #recap { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 16px; line-height: 1.5; background: #fff; border: 1px solid var(--trait); border-radius: 12px; padding: 16px 18px; user-select: all; }
+  .actions { display: flex; gap: 12px; align-items: center; margin: 10px 0 30px; flex-wrap: wrap; }
+  .actions .ok { color: var(--vert); font-size: 17px; }
+  .pied { display: flex; justify-content: flex-end; border-top: 1px solid var(--trait); padding-top: 16px; }
+  .pied a { color: var(--gris); font-size: 16px; text-decoration: none; }
+  .pied a:hover { color: var(--accent); text-decoration: underline; }
+
+  /* navigation */
+  nav { position: sticky; bottom: 0; background: linear-gradient(to top, var(--fond) 70%, transparent); padding: 10px 24px 14px; }
+  nav .barre { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  nav button { font: inherit; font-size: 19px; padding: 12px 24px; border-radius: 999px; border: 1.5px solid var(--trait); background: #fff; color: var(--encre); cursor: pointer; }
+  nav button.principal { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  nav button:disabled { opacity: .35; cursor: default; }
+  nav .compteur { color: var(--gris); font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div class="progression"><div id="jauge"></div></div>
+<div class="etapes" id="etapes">
+  <span>Accueil</span><span>C'est quoi l'IA ?</span><span>IA ou pas ?</span><span>Déjà fait</span><span>Le parcours</span>
+</div>
+
+<main>
+
+  <!-- ===================== Écran 1 · Accueil ===================== -->
+  <section class="ecran" data-ecran="1">
+    <p class="sous">Séance 0 · Faire connaissance</p>
+    <h1>Data Science &amp; IA<br>en 12 séances</h1>
+    <p class="sous">Python, données, machine learning, puis l'IA générative. Tout dans le navigateur, rien à installer.</p>
+
+    <ul class="promesses">
+      <li><span class="num">1</span><span>À la fin, vous aurez un <b>portfolio sur GitHub</b> : quatre projets faits de vos mains, visibles par n'importe qui avec un lien.</span></li>
+      <li><span class="num">2</span><span>Un <b>modèle de prédiction</b> avec un vrai score dans un <b>classement mondial</b> (la compétition Kaggle Titanic).</span></li>
+      <li><span class="num">3</span><span>Un <b>assistant IA</b> construit par vous, qui répond à des questions sur <b>vos propres cours</b>.</span></li>
+    </ul>
+
+    <div class="encart">
+      <div class="etiquette">Qui je suis</div>
+      <p>Je suis consultant data et intelligence artificielle.</p>
+      <p>Concrètement : les entreprises ont des données partout, dans des fichiers, des bases, des applications, et elles n'arrivent pas à s'en servir. Mon travail, c'est de rendre ces données utilisables et de construire les outils qui vont avec.</p>
+      <p>Master en data science à CentraleSupélec, diplômé de l'ESSEC. Six ans à faire ça, dans la finance, l'assurance, et aujourd'hui l'industrie.</p>
+      <p>Ce parcours, je l'ai écrit entièrement : les treize séances, les notebooks, les projets. Vous n'allez pas suivre un tutoriel. Vous allez construire vos propres outils, et vous les gardez.</p>
+    </div>
+  </section>
+
+  <!-- ===================== Écran 2 · C'est quoi l'IA pour toi ? ===================== -->
+  <section class="ecran" data-ecran="2" hidden>
+    <h2>C'est quoi l'IA, pour toi ?</h2>
+    <p class="sous">Pas de bonne réponse. Écris ce qui te vient, en une phrase ou en trois mots. On en reparle à la fin.</p>
+    <div class="grille-2">
+      <div class="carte">
+        <label class="champ" for="prenom1">Prénom</label>
+        <input type="text" id="prenom1" placeholder="Prénom" autocomplete="off">
+        <label class="champ" for="ia1" style="margin-top:14px">L'IA, c'est…</label>
+        <textarea id="ia1" placeholder="Par exemple : un robot qui parle, un programme qui devine, ChatGPT…"></textarea>
+      </div>
+      <div class="carte">
+        <label class="champ" for="prenom2">Prénom</label>
+        <input type="text" id="prenom2" placeholder="Prénom" autocomplete="off">
+        <label class="champ" for="ia2" style="margin-top:14px">L'IA, c'est…</label>
+        <textarea id="ia2" placeholder="Par exemple : un robot qui parle, un programme qui devine, ChatGPT…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Écran 3 · Est-ce de l'IA ? ===================== -->
+  <section class="ecran" data-ecran="3" hidden>
+    <h2>Est-ce de l'IA ?</h2>
+    <p class="sous">Répondez ensemble, à l'instinct. Puis cliquez sur « Pourquoi ? » : la réponse n'est pas toujours celle qu'on croit.</p>
+    <div class="grille-3" id="quiz"></div>
+  </section>
+
+  <!-- ===================== Écran 4 · Ce que tu as déjà fait ===================== -->
+  <section class="ecran" data-ecran="4" hidden>
+    <h2>Ce que tu as déjà fait</h2>
+    <p class="sous">Coche tout ce qui te concerne. « Rien pour l'instant » est une réponse parfaitement normale : c'est le point de départ de tout le monde.</p>
+    <div class="grille-2" id="deja"></div>
+
+    <div class="carte question-cle" style="margin-top:18px">
+      <h3>La question qui compte</h3>
+      <p>Si tu pouvais construire un outil qui te simplifie la vie, ce serait quoi ?</p>
+      <div class="grille-2">
+        <div>
+          <label class="champ" for="reve1"><span class="nom-1">Participant 1</span></label>
+          <textarea id="reve1" style="min-height:110px" placeholder="Un truc qui trie mes photos, qui me rappelle mes entraînements, qui résume mes cours…"></textarea>
+        </div>
+        <div>
+          <label class="champ" for="reve2"><span class="nom-2">Participant 2</span></label>
+          <textarea id="reve2" style="min-height:110px" placeholder="Un truc qui trie mes photos, qui me rappelle mes entraînements, qui résume mes cours…"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Écran 5 · Le parcours ===================== -->
+  <section class="ecran" data-ecran="5" hidden>
+    <h2>Le parcours, en quatre blocs</h2>
+    <p class="sous">Une séance de 1 h 30 à la fois. La leçon se fait toujours ensemble ; seul le carnet d'exercices se fait entre deux séances.</p>
+    <div class="blocs">
+      <div class="bloc"><div class="n">Bloc 1<small>séances 1 à 3</small></div><div class="quoi">Les bases solides : ce qu'est l'IA, Python pour les données, SQL et Git.</div><div class="gain">Un premier projet d'analyse en ligne sur GitHub.</div></div>
+      <div class="bloc"><div class="n">Bloc 2<small>séances 4 à 6</small></div><div class="quoi">Le métier : collecter, nettoyer, analyser, raconter, puis entraîner un premier modèle.</div><div class="gain">Un tableau de bord présenté à l'oral et un modèle évalué.</div></div>
+      <div class="bloc"><div class="n">Bloc 3<small>séances 7 et 8</small></div><div class="quoi">La compétition Kaggle Titanic, en binôme, comme les data scientists du monde entier.</div><div class="gain">Un score au classement mondial.</div></div>
+      <div class="bloc"><div class="n">Bloc 4<small>séances 9 à 12</small></div><div class="quoi">Comprendre les LLM de l'intérieur, leur parler par le code, leur donner de la mémoire, en faire des agents.</div><div class="gain">Un assistant IA construit soi-même, et le portfolio complet.</div></div>
+    </div>
+
+    <h3>Ce que vous avez répondu aujourd'hui</h3>
+    <p class="sous">Le bloc ci-dessous se sélectionne d'un clic ; il servira à choisir les jeux de données des prochaines séances.</p>
+    <div id="recap" tabindex="0"></div>
+    <div class="actions">
+      <button class="bouton" id="btn-select">Tout sélectionner</button>
+      <button class="bouton" id="btn-copier">Copier</button>
+      <span class="ok" id="copie-ok" hidden>Copié.</span>
+    </div>
+
+    <div class="pied">
+      <a id="lien-colab" href="https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb" target="_blank" rel="noopener">Ouvrir le notebook de la séance 0 dans Colab →</a>
+    </div>
+  </section>
+
+</main>
+
+<nav>
+  <div class="barre">
+    <button id="prec">← Précédent</button>
+    <span class="compteur" id="compteur">1 / 5</span>
+    <button id="suiv" class="principal">Suivant →</button>
+  </div>
+</nav>
+
+<script>
+(function () {
+  // ------------------------------------------------------------------
+  // État : tout ce qui est saisi vit ici (variables JavaScript), rien n'est
+  // stocké ailleurs. Les écrans restent dans la page (on les masque), donc
+  // revenir en arrière ne perd rien.
+  // ------------------------------------------------------------------
+  var etat = {
+    prenoms: ["", ""],
+    ia: ["", ""],            // écran 2
+    quiz: {},                // écran 3 : id → "oui" | "non"
+    langages: [[], []],      // écran 4
+    outils: [[], []],
+    reve: ["", ""]
+  };
+  var ecranCourant = 1;
+  var NB_ECRANS = 5;
+
+  // ------------------------------------------------------------------
+  // Écran 3 : les six vignettes. `ia` = réponse attendue, `pourquoi` = ce
+  // qu'on révèle. Le fil rouge : « IA » ne veut pas dire « apprend ».
+  // ------------------------------------------------------------------
+  var QUIZ = [
+    { id: "correcteur", titre: "Le correcteur orthographique du téléphone", ia: "oui",
+      pourquoi: "Oui, aujourd'hui. Celui d'il y a quinze ans comparait tes mots à un dictionnaire. Celui de ton téléphone a appris sur des millions de textes ce que tu vas probablement taper : c'est du machine learning, et c'est le même mécanisme que ChatGPT, en tout petit." },
+    { id: "youtube", titre: "Les recommandations YouTube", ia: "oui",
+      pourquoi: "Oui. Personne n'a écrit la règle « après cette vidéo, propose celle-là ». Un modèle a appris, sur ce que regardent des centaines de millions de personnes, ce qui te fera rester. On en reparle : c'est aussi là que se cachent les biais." },
+    { id: "chatgpt", titre: "ChatGPT", ia: "oui",
+      pourquoi: "Oui, et c'est la version la plus récente : le deep learning. Il ne fait qu'une chose, prédire le mot suivant, mais il l'a appris sur une bonne partie d'Internet. On le construira en miniature à la séance 9." },
+    { id: "gps", titre: "Le GPS qui calcule l'itinéraire le plus rapide", ia: "oui",
+      pourquoi: "Oui, mais pas celle qu'on croit : rien n'est appris. Le plus court chemin est calculé par un algorithme écrit à la main dans les années 1950, avec des règles. C'est de l'IA « classique » : un programme qui imite un raisonnement humain, sans exemples." },
+    { id: "snapchat", titre: "Un filtre Snapchat", ia: "oui",
+      pourquoi: "Oui. Pour poser des oreilles de chat au bon endroit, il faut d'abord trouver le visage, les yeux, la bouche, trente fois par seconde. C'est un réseau de neurones entraîné sur des millions de visages." },
+    { id: "calculatrice", titre: "La calculatrice", ia: "non",
+      pourquoi: "Non. Elle applique des règles fixes et n'imite aucune capacité humaine : personne ne dit qu'une calculatrice « réfléchit ». C'est la frontière : de l'informatique, très utile, mais pas de l'IA. Un tableur non plus." }
+  ];
+
+  var LANGAGES = ["Scratch", "Python", "JavaScript", "Mods de jeu", "HTML", "Rien pour l'instant"];
+  var OUTILS = ["ChatGPT", "Claude", "Gemini", "Midjourney", "Aucun"];
+
+  // ------------------------------------------------------------------
+  // Construction des écrans 3 et 4
+  // ------------------------------------------------------------------
+  function construireQuiz() {
+    var conteneur = document.getElementById("quiz");
+    QUIZ.forEach(function (q) {
+      var carte = document.createElement("div");
+      carte.className = "carte vignette";
+      carte.innerHTML =
+        '<div class="titre">' + q.titre + '</div>' +
+        '<div class="choix"><button data-rep="oui">Oui</button><button data-rep="non">Non</button></div>' +
+        '<button class="lien-discret" data-pourquoi>Pourquoi ?</button>' +
+        '<div class="pourquoi ' + q.ia + '" hidden><b>' + (q.ia === "oui" ? "C'est de l'IA" : "Ce n'est pas de l'IA") + '</b>' + q.pourquoi + '</div>';
+      var boutons = carte.querySelectorAll(".choix button");
+      boutons.forEach(function (b) {
+        b.addEventListener("click", function () {
+          etat.quiz[q.id] = b.dataset.rep;
+          boutons.forEach(function (x) { x.classList.toggle("sel", x === b); });
+        });
+      });
+      var lien = carte.querySelector("[data-pourquoi]");
+      var explication = carte.querySelector(".pourquoi");
+      lien.addEventListener("click", function () {
+        explication.hidden = !explication.hidden;
+        lien.textContent = explication.hidden ? "Pourquoi ?" : "Masquer";
+      });
+      conteneur.appendChild(carte);
+    });
+  }
+
+  function construireDeja() {
+    var conteneur = document.getElementById("deja");
+    [0, 1].forEach(function (i) {
+      var carte = document.createElement("div");
+      carte.className = "carte";
+      carte.innerHTML =
+        '<div class="prenom nom-' + (i + 1) + '">Participant ' + (i + 1) + '</div>' +
+        '<label class="champ">Langages déjà touchés</label><div class="cases" data-groupe="langages" data-i="' + i + '"></div>' +
+        '<label class="champ">Outils d\'IA déjà utilisés</label><div class="cases" data-groupe="outils" data-i="' + i + '"></div>';
+      conteneur.appendChild(carte);
+      remplirCases(carte.querySelector('[data-groupe="langages"]'), LANGAGES, "langages", i);
+      remplirCases(carte.querySelector('[data-groupe="outils"]'), OUTILS, "outils", i);
+    });
+  }
+
+  function remplirCases(zone, valeurs, groupe, i) {
+    valeurs.forEach(function (v) {
+      var label = document.createElement("label");
+      var input = document.createElement("input");
+      input.type = "checkbox"; input.value = v;
+      input.addEventListener("change", function () {
+        var liste = etat[groupe][i];
+        var pos = liste.indexOf(v);
+        if (input.checked && pos < 0) liste.push(v);
+        if (!input.checked && pos >= 0) liste.splice(pos, 1);
+      });
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(v));
+      zone.appendChild(label);
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Champs texte → état, et prénoms répercutés sur les écrans 4 et 5
+  // ------------------------------------------------------------------
+  function lier(id, cible, i) {
+    var el = document.getElementById(id);
+    el.addEventListener("input", function () {
+      etat[cible][i] = el.value;
+      if (cible === "prenoms") majPrenoms();
+    });
+  }
+  function majPrenoms() {
+    [0, 1].forEach(function (i) {
+      var nom = etat.prenoms[i].trim() || ("Participant " + (i + 1));
+      document.querySelectorAll(".nom-" + (i + 1)).forEach(function (el) { el.textContent = nom; });
+    });
+  }
+  lier("prenom1", "prenoms", 0); lier("prenom2", "prenoms", 1);
+  lier("ia1", "ia", 0);           lier("ia2", "ia", 1);
+  lier("reve1", "reve", 0);       lier("reve2", "reve", 1);
+
+  // ------------------------------------------------------------------
+  // Écran 5 : récapitulatif copiable
+  // ------------------------------------------------------------------
+  function libelleQuiz(q) {
+    var rep = etat.quiz[q.id];
+    if (!rep) return "—";
+    return rep + (rep === q.ia ? " ✓" : " (réponse : " + q.ia + ")");
+  }
+  function construireRecap() {
+    var date = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    var lignes = ["Séance 0 · " + date, ""];
+    [0, 1].forEach(function (i) {
+      var nom = etat.prenoms[i].trim() || ("Participant " + (i + 1));
+      lignes.push("## " + nom);
+      lignes.push("L'IA, c'est : " + (etat.ia[i].trim() || "—"));
+      lignes.push("Langages : " + (etat.langages[i].length ? etat.langages[i].join(", ") : "—"));
+      lignes.push("Outils d'IA : " + (etat.outils[i].length ? etat.outils[i].join(", ") : "—"));
+      lignes.push("Outil rêvé : " + (etat.reve[i].trim() || "—"));
+      lignes.push("");
+    });
+    lignes.push("## Quiz « est-ce de l'IA ? » (réponses communes)");
+    QUIZ.forEach(function (q) { lignes.push("- " + q.titre + " : " + libelleQuiz(q)); });
+    document.getElementById("recap").textContent = lignes.join("\n");
+  }
+  function selectionnerRecap() {
+    var recap = document.getElementById("recap");
+    var plage = document.createRange(); plage.selectNodeContents(recap);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(plage);
+    return recap.textContent;
+  }
+  document.getElementById("btn-select").addEventListener("click", selectionnerRecap);
+  document.getElementById("btn-copier").addEventListener("click", function () {
+    var texte = selectionnerRecap();
+    var ok = document.getElementById("copie-ok");
+    function montrer() { ok.hidden = false; setTimeout(function () { ok.hidden = true; }, 2000); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texte).then(montrer, function () { try { document.execCommand("copy"); montrer(); } catch (e) {} });
+    } else {
+      try { document.execCommand("copy"); montrer(); } catch (e) {}
+    }
+  });
+
+  // ------------------------------------------------------------------
+  // Navigation
+  // ------------------------------------------------------------------
+  var ecrans = document.querySelectorAll(".ecran");
+  var etapes = document.querySelectorAll("#etapes span");
+  function afficher(n) {
+    ecranCourant = Math.max(1, Math.min(NB_ECRANS, n));
+    ecrans.forEach(function (e) { e.hidden = (Number(e.dataset.ecran) !== ecranCourant); });
+    etapes.forEach(function (s, i) { s.classList.toggle("active", i + 1 === ecranCourant); });
+    document.getElementById("jauge").style.width = (ecranCourant / NB_ECRANS * 100) + "%";
+    document.getElementById("compteur").textContent = ecranCourant + " / " + NB_ECRANS;
+    document.getElementById("prec").disabled = (ecranCourant === 1);
+    document.getElementById("suiv").disabled = (ecranCourant === NB_ECRANS);
+    if (ecranCourant === 5) construireRecap();
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("prec").addEventListener("click", function () { afficher(ecranCourant - 1); });
+  document.getElementById("suiv").addEventListener("click", function () { afficher(ecranCourant + 1); });
+  document.addEventListener("keydown", function (ev) {
+    var tag = (ev.target.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea") return;      // ne pas voler les flèches à la saisie
+    if (ev.key === "ArrowRight") afficher(ecranCourant + 1);
+    if (ev.key === "ArrowLeft") afficher(ecranCourant - 1);
+  });
+
+  construireQuiz();
+  construireDeja();
+  majPrenoms();
+  afficher(1);
+})();
+</script>
+</body>
+</html>
