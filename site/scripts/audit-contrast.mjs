@@ -76,10 +76,15 @@ const ETATS = [
   { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-affirmation-sans-avis", pilote: `
       const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300);
       if (!r.querySelector(".debat-affirmation.ouvert")) throw new Error("l'affirmation devrait être cuivre avant le clic");` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-avis-donne", pilote: `
-      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300); btn(r, "Plutôt d'accord").click(); await w(250);
-      if (r.querySelector(".debat-affirmation.ouvert")) throw new Error("plus de cuivre après le clic");
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-curseur-gauche", pilote: `
+      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300); curseur(r.querySelector('input[type="range"]'), 0); await w(300);
+      if (r.querySelector(".debat-affirmation.ouvert")) throw new Error("plus de cuivre une fois le curseur bougé");
       if (!r.textContent.includes("Les deux camps ont des arguments")) throw new Error("les arguments devraient être dépliés");` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-curseur-milieu", pilote: `
+      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300); const c = r.querySelector('input[type="range"]'); curseur(c, 60); await w(120); curseur(c, 50); await w(300);   // un vrai geste passe par d'autres valeurs avant de revenir au milieu
+      if (!r.textContent.includes("Les deux camps ont des arguments")) throw new Error("bouger puis revenir au milieu compte comme un avis");` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-curseur-droite", pilote: `
+      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300); curseur(r.querySelector('input[type="range"]'), 100); await w(300);` },
   { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran3-champs-remplis", pilote: `
       const r = ile("AccueilSeance0"); for (let i = 0; i < 2; i++) { btn(r, "Suivant").click(); await w(250); }
       saisir(r.querySelector("#prenom0"), "Inès"); saisir(r.querySelector("#ia0"), "Un programme qui apprend"); await w(200);` },
@@ -171,6 +176,7 @@ const MESURE = (pilote) => `
   var w = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   var ile = function (nom) { var el = document.querySelector('astro-island[component-url*="' + nom + '"]'); if (!el) throw new Error("îlot introuvable : " + nom); return el.firstElementChild || el; };
   var btn = function (root, texte) { var b = Array.prototype.find.call(root.querySelectorAll('button'), function (x) { return x.textContent.indexOf(texte) >= 0; }); if (!b) throw new Error("bouton introuvable : " + texte); return b; };
+  var curseur = function (el, v) { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, String(v)); el.dispatchEvent(new Event('input', { bubbles: true })); };
   var saisir = function (el, v) { var proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v); el.dispatchEvent(new Event('input', { bubbles: true })); };
   // Les transitions CSS ne s'écoulent pas dans le temps virtuel du headless : sans ceci, un bouton qui vient de perdre
   // l'état actif garde son ancien fond et l'audit mesure un état intermédiaire qui n'existe pas à l'écran.
@@ -182,7 +188,12 @@ const MESURE = (pilote) => `
   try { await (async function () { ${pilote} })(); } catch (e) { erreurPilote = String(e); }
   await w(200);
 
-  var parse = function (c) { var m = c.match(/rgba?\\(([\\d.]+),\\s*([\\d.]+),\\s*([\\d.]+)(?:,\\s*([\\d.]+))?\\)/); return m ? [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]] : null; };
+  // Les couleurs calculées arrivent en rgb(), ou en oklab() quand elles sortent d'un color-mix(in oklab) : on convertit.
+  var oklabVersRgb = function (c) { var m = c.match(/oklab\\(\\s*([\\d.\\-e]+)%?\\s+([\\d.\\-e]+)\\s+([\\d.\\-e]+)(?:\\s*\\/\\s*([\\d.]+))?\\)/); if (!m) return null; var L = +m[1], a = +m[2], b = +m[3], al = m[4] === undefined ? 1 : +m[4]; if (c.indexOf('%') > 0 && c.indexOf('%') < c.indexOf(' ')) L /= 100;
+      var l_ = L + 0.3963377774 * a + 0.2158037573 * b, m_ = L - 0.1055613458 * a - 0.0638541728 * b, s_ = L - 0.0894841775 * a - 1.2914855480 * b; var l = l_ * l_ * l_, mm = m_ * m_ * m_, s = s_ * s_ * s_;
+      var lin = [4.0767416621 * l - 3.3077115913 * mm + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * mm - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * mm + 1.7076147010 * s];
+      var gam = function (v) { v = Math.min(1, Math.max(0, v)); return 255 * (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055); }; return [gam(lin[0]), gam(lin[1]), gam(lin[2]), al]; };
+  var parse = function (c) { var m = c.match(/rgba?\\(([\\d.]+),\\s*([\\d.]+),\\s*([\\d.]+)(?:,\\s*([\\d.]+))?\\)/); if (m) return [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]]; if (c.indexOf('oklab(') === 0) return oklabVersRgb(c); return null; };
   var over = function (fg, bg) { var a = fg[3]; return [fg[0]*a + bg[0]*(1-a), fg[1]*a + bg[1]*(1-a), fg[2]*a + bg[2]*(1-a), 1]; };
   var lum = function (c) { var f = function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126*f(c[0]) + 0.7152*f(c[1]) + 0.0722*f(c[2]); };
   var ratio = function (a, b) { var l = [lum(a), lum(b)].sort(function (p, q) { return q - p; }); return (l[0] + 0.05) / (l[1] + 0.05); };
@@ -222,6 +233,17 @@ const MESURE = (pilote) => `
       out.text.push({ text: 'svg: ' + tx.textContent.trim().slice(0, 44), fg: hex(sfg), bg: hex(sbg), size: +ssize.toFixed(1), weight: sweight, ratio: +scr.toFixed(2), need: sneed, pass: scr >= sneed, disabled: false, cls: String(tx.className.baseVal || '').slice(0, 80) });
     }
   }
+  // Les pouces de curseur (input[type=range]) : composants d'interface, 3:1 minimum contre le fond de leur case (WCAG 1.4.11).
+  // Chrome n'expose pas le style calculé du pseudo-élément ::-webkit-slider-thumb : on résout --couleur (le color-mix du pouce)
+  // sur une sonde posée dans le même conteneur, ce qui donne la couleur réellement peinte.
+  document.querySelectorAll('input[type="range"]').forEach(function (el) {
+    var conteneur = el.closest('.curseur-avis') || el.parentElement; var sonde = document.createElement('span');
+    sonde.style.cssText = 'position:absolute;width:1px;height:1px;background:var(--couleur, transparent)'; conteneur.appendChild(sonde);
+    var pouce = parse(getComputedStyle(sonde).backgroundColor); conteneur.removeChild(sonde);
+    if (!pouce || pouce[3] === 0) { out.text.push({ text: 'curseur (pouce) valeur ' + el.value + ' : couleur introuvable', fg: '#000000', bg: '#000000', size: 26, weight: 400, ratio: 0, need: 3.0, pass: false, disabled: false, cls: 'range-thumb' }); return; }
+    var pbg = effBg(el), pfg = over(pouce, pbg), pr = ratio(pfg, pbg);
+    out.text.push({ text: 'curseur (pouce) valeur ' + el.value, fg: hex(pfg), bg: hex(pbg), size: 26, weight: 400, ratio: +pr.toFixed(2), need: 3.0, pass: pr >= 3.0, disabled: false, cls: 'range-thumb' });
+  });
   window.scrollTo(0, 0); await w(60);
   var els = document.querySelectorAll('body *');
   for (var k = 0; k < els.length; k++) {
@@ -293,7 +315,8 @@ for (const etat of ETATS) {
       }
     }
     for (const [k, v] of Object.entries(res.borders)) bordures[k] = Math.max(bordures[k] || 0, v);
-    lignes.push(`${ou.padEnd(52)} ${String(res.text.length).padStart(4)} textes  cuivre×${nbCuivre}${res.erreurPilote ? "  !! pilote en échec" : ""}`);
+    const pouces = res.text.filter((t) => t.cls === 'range-thumb');
+    lignes.push(`${ou.padEnd(52)} ${String(res.text.length).padStart(4)} textes  cuivre×${nbCuivre}${pouces.length ? "  pouce " + pouces.map((t) => t.fg + " " + t.ratio + ":1").join(", ") : ""}${res.erreurPilote ? "  !! pilote en échec" : ""}`);
   }
 }
 server.close();

@@ -52,6 +52,11 @@
   --cuivre-plein: #c24a16;                          /* copper : remplissage, texte crème dessus (4,70:1) */
   --bouton-fond: #14171a;                           /* bouton principal : encre pleine, texte crème */
   --bouton-texte: #fbfaf8;
+  /* le curseur d'avis de la séance 0 : ambre à gauche (pas d'accord), bleu à droite (d'accord). Ni l'un ni l'autre n'est
+     le cuivre, qui garde son sens (non résolu) ; l'ambre reste du côté jaune, loin de la teinte rouge-orangée du cuivre.
+     Contraste contre le fond de la case (cream) : 3,7:1 et 5,8:1, au-dessus du 3:1 de WCAG 1.4.11. */
+  --avis-contre: #c76a00;
+  --avis-pour: #2563b0;
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
 }
 /* Sombre : soit le système le demande et personne n'a forcé le clair, soit l'interrupteur de l'en-tête a forcé le sombre
@@ -70,6 +75,8 @@
     --cuivre-plein: #c24a16;
     --bouton-fond: #fbfaf8;
     --bouton-texte: #14171a;
+    --avis-contre: #f0a040;                         /* 7,5:1 sur ink-raised */
+    --avis-pour: #6fa8e8;                           /* 6,5:1 sur ink-raised */
   }
 }
 :root[data-theme="sombre"] {
@@ -85,6 +92,8 @@
   --cuivre-plein: #c24a16;
   --bouton-fond: #fbfaf8;
   --bouton-texte: #14171a;
+  --avis-contre: #f0a040;
+  --avis-pour: #6fa8e8;
 }
 :root[data-theme="clair"] { color-scheme: light; }
 
@@ -275,8 +284,21 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 
 /* La case « une affirmation, deux avis » : elle grandit à l'ouverture (dernière de l'écran, barre épinglée : rien ne bouge
    au-dessus ni en dessous). Le cuivre est sur l'affirmation tant que rien n'est cliqué, nulle part ensuite. */
-.debat { display: grid; gap: 0.6rem; }
+.debat { display: grid; gap: 0.6rem; text-align: center; }
 .debat-affirmation { font-family: var(--font-serif); font-size: 1.25rem; line-height: 1.3; }
+.debat-arguments { text-align: left; }
+/* Le curseur d'avis : piste fine et neutre ; le pouce prend la couleur du côté (--cote) mélangée au gris neutre selon
+   l'écart au centre (--melange, 0 % au milieu, 100 % aux bouts) et grossit de 14 à 26 px (--taille). Les trois variables
+   sont posées sur l'élément par le composant. */
+.curseur-avis { --melange: 0%; --taille: 14px; --cote: var(--encre-2); --couleur: color-mix(in oklab, var(--cote) var(--melange), var(--encre-2)); display: grid; gap: 0.3rem; width: min(100%, 36rem); margin: 0.4rem auto 0; }
+.curseur-avis input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; }
+.curseur-avis input[type="range"]:focus-visible { outline: 2px solid var(--encre); outline-offset: 4px; }
+.curseur-avis input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--trait-fort); }
+.curseur-avis input[type="range"]::-moz-range-track { height: 2px; background: var(--trait-fort); }
+.curseur-avis input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: var(--taille); height: var(--taille); margin-top: calc((2px - var(--taille)) / 2); border: 0; border-radius: 50%; background: var(--couleur); transition: width .25s var(--ease), height .25s var(--ease), margin-top .25s var(--ease), background-color .25s var(--ease); }
+.curseur-avis input[type="range"]::-moz-range-thumb { width: var(--taille); height: var(--taille); border: 0; border-radius: 50%; background: var(--couleur); transition: width .25s var(--ease), height .25s var(--ease), background-color .25s var(--ease); }
+.curseur-bouts { display: flex; justify-content: space-between; color: var(--encre-2); }
+@media (prefers-reduced-motion: reduce) { .curseur-avis input[type="range"]::-webkit-slider-thumb, .curseur-avis input[type="range"]::-moz-range-thumb { transition: none; } }
 .debat-arguments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; font-size: 0.92rem; line-height: 1.4; }
 .debat-arguments p + p { margin-top: 0.3rem; }
 .debat-cloture { margin-top: 0.7rem; }

@@ -105,6 +105,10 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
   carte, pastille cuivre et texte appuyé dans la barre latérale. C'est le même fait montré à deux endroits. Les séances pas encore
   ouvertes sont neutres, pastille vide : douze séances futures en cuivre seraient douze faits distincts.
 - Flèches : `→` mène à une page du site, `↗` à une destination externe (Colab, GitHub). Jamais l'une pour l'autre.
+- Deux couleurs de plus, réservées au curseur d'avis de la séance 0 : `--avis-contre` (ambre, à gauche) et `--avis-pour` (bleu,
+  à droite), valeurs claires et sombres, 3:1 au moins contre le fond de la case. Ni l'une ni l'autre n'est le cuivre : il garde son
+  sens et n'est jamais réutilisé pour le curseur. Le pouce mélange sa couleur au gris neutre selon l'écart au centre et grossit de
+  14 à 26 px (`color-mix`, variables posées par le composant) ; l'audit de contraste mesure le pouce à trois positions.
 - Le pied d'une carte de séance a trois éléments, dans cet ordre, qui répondent à des questions distinctes :
   1. **disponibilité** : « Leçon en ligne · notebooks » ou « Notebooks seuls · leçon à écrire ». Un fait sur le site, il ne change
      jamais pour un élève donné, jamais cuivre.

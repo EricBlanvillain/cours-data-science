@@ -8,7 +8,7 @@
  *     l'accueil, le glossaire, la séance 0 et la séance 1 ; le pied de page aussi. Le conteneur est le même partout (1360 px) ;
  *  3. la prose : aucun bloc de texte direct de .prose, ni hero-texte, ne dépasse son plafond (46 rem, 36 rem pour le hero) ;
  *  4. les écrans de la séance 0 : chacun, atteint aux flèches du clavier, se termine au-dessus de la barre épinglée dans une
- *     fenêtre de 1440 × 900 (zone visible), l'affirmation dépliée comprise. 1280 × 720 est mesuré et rapporté, sans faire échouer.
+ *     fenêtre de 1440 × 900 (zone visible), l'affirmation dépliée comprise (curseur à un bout, arguments visibles). 1280 × 720 est mesuré et rapporté, sans faire échouer.
  *
  * Lancer :  npm run build && npm run audit:mise-en-page       Sort en code 1 à la moindre faute, 2 s'il ne peut pas mesurer.
  */
@@ -48,7 +48,7 @@ const ECRANS = (largeur) => ({ page: "lecons/seance-00-faire-connaissance.html",
         if (n > 0) { fleche(); await w(250); }
         const h = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut());
         let ouvert = null;
-        if (noms[n] === "Une affirmation") { btn(r, "Plutôt d'accord").click(); await w(250); ouvert = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut()); }
+        if (noms[n] === "Une affirmation") { curseur(r.querySelector('input[type="range"]'), 100); await w(300); ouvert = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut()); }
         if (noms[n] === "IA ou pas ?") { btn(r, "Pourquoi").click(); await w(250); ouvert = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut()); }
         res.push({ nom: noms[n], hauteur: h, ouvert: ouvert });
       }
@@ -63,6 +63,7 @@ const MESURE = (pilote) => `
 (async function () {
   var w = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   var ile = function (nom) { var el = document.querySelector('astro-island[component-url*="' + nom + '"]'); if (!el) throw new Error("îlot introuvable : " + nom); return el.firstElementChild || el; };
+  var curseur = function (el, v) { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, String(v)); el.dispatchEvent(new Event('input', { bubbles: true })); };
   var btn = function (root, texte) { var b = Array.prototype.find.call(root.querySelectorAll('button'), function (x) { return x.textContent.indexOf(texte) >= 0; }); if (!b) throw new Error("bouton introuvable : " + texte); return b; };
   var st = document.createElement('style'); st.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }'; document.head.appendChild(st);
   try { localStorage.removeItem('cours-data-science-progression'); localStorage.removeItem('cours-data-science-barre'); document.documentElement.setAttribute('data-barre', 'depliee'); } catch (e) {}
