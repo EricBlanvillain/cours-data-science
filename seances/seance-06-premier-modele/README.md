@@ -16,6 +16,18 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête à la préparation X / y du projet Pokémon (section 8) ; l'entraînement, le piège du « toujours non » et la phrase de synthèse ouvrent la séance suivante.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 4 questions en tête de `06_exercices.ipynb`, à poser à voix haute avant de commencer
+- Section 1, l'apprentissage supervisé : « Faire trouver par le groupe d'autres exemples de classification et de régression dans leur quotidien (recommandation, note, temps de trajet). »
+- Section 2, explorer les manchots : « Le nuage de points est à montrer avant tout code : « vous voyez déjà trois groupes ; la machine va-t-elle les voir aussi ? » »
+- Sections 2 à 3, X et y : « Deux lettres, à répéter toute la séance. Quand un élève demande « c'est quoi le y ? », c'est le bon moment pour réexpliquer, pas un échec. »
+- Section 3, train / test : « L'analogie du contrôle avec les corrigés marche à tous les coups. La faire dire par un élève. »
+- Section 4, l'arbre de décision : « Lire l'arbre dessiné à voix haute, nœud par nœud, avec un manchot inventé. Demander : quelle question l'arbre pose-t-il en premier ? pourquoi celle-là ? »
+- Section 5, k-NN : « Faire deviner à la main un point du nuage avec ses voisins avant de lancer le code. »
+- Section 5, le sur-apprentissage : « L'exercice max_depth de 1 à 20 est le plus important de la séance : faire noter les scores dans un tableau au tableau, on voit la courbe apparaître. »
+- Toute la séance : « Une seule notion nouvelle par tranche de dix minutes : supervisé, X/y, train/test, arbre. Pas plus. »
+- Si le groupe est fatigué : « Si le groupe est fatigué, sauter le k-NN et garder le sur-apprentissage : c'est l'idée qui reste. »
+
 Entre deux séances (à la maison) : `06_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Liens (gratuits)

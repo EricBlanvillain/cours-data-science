@@ -18,6 +18,15 @@ Déroulé (1 h 30, en binômes)
 
 Si le temps manque : on s'arrête avant l'ajout d'une variable personnelle (section 8) ; la soumission se fait en tout début de séance 8, avant de chercher à améliorer le score.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 2 questions en tête de `07_exercices.ipynb`, à poser à voix haute avant de commencer
+- Avant la séance : « Vérifier avant la séance que chaque binôme a train.csv et test.csv. Sinon, le notebook charge une copie publique : le projet reste faisable, seule la soumission saute. »
+- Sections 1-2, la compétition et ses données : « Cinq minutes maximum. Le tableau des colonnes est à projeter et à laisser affiché. »
+- Sections 3 à 5, les hypothèses : « Laisser chaque binôme choisir une hypothèse et la vérifier seul avant d'ouvrir la partie modèle. C'est ce qui donne du sens à la préparation. »
+- Section 6, la fonction preparer() : « Insister sur la fonction preparer() appliquée aux deux fichiers. L'erreur classique : préparer train à la main et oublier test. »
+- Section 8, première soumission : « La soumission est le moment fort. Prévoir que le site Kaggle mette une minute à calculer le score, et faire applaudir le premier score affiché. »
+- Toute la séance : « Séance supervisée : rester en mouvement entre les tables, ne pas s'asseoir. »
+
 Entre deux séances (à la maison) : `07_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Liens

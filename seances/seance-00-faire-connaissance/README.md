@@ -20,6 +20,15 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête où on en est dans le jeu (section 6) et l'amélioration au choix (chaud / froid, essais limités, score) ouvre la séance suivante. Seule exception : la création des comptes (section 5) doit être terminée avant de partir, c'est ce qui bloque toutes les séances suivantes.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 3 questions en tête de `00_exercices.ipynb`, à poser à voix haute avant de commencer
+- Écran 5, le parcours en 4 blocs : « Deux minutes, pas plus. Montrer le tableau des quatre blocs et dire ce qu'ils repartent avec. Le reste de la séance, c'est eux qui parlent et qui tapent. »
+- Section 1, Python répond ? : « Faire exécuter la première cellule par tout le monde avant d'aller plus loin. Montrer une fois Enregistrer une copie dans Drive, et le refaire à la fin. »
+- Section 2, diagnostic Python : « Laisser chercher. Une erreur en rouge, on la lit ensemble à voix haute : la dernière ligne dit presque toujours quoi corriger. »
+- Section 5, check-list des comptes : « Vérifier la connexion Colab et Kaggle en premier : un mot de passe oublié se règle avec le parent, pas pendant la séance. GitHub : pseudo lisible, sans date de naissance. »
+- Section 6, le nombre mystère : « Ceux qui finissent vite : compteur d'essais, puis la stratégie en 6 coups, puis la version où l'ordinateur devine. Ne pas donner le mot dichotomie avant qu'ils aient trouvé l'idée. »
+- Objectif caché de la séance : que chacun reparte avec un notebook dans son Drive et l'envie de revenir.
+
 Entre deux séances (à la maison) : `00_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Liens

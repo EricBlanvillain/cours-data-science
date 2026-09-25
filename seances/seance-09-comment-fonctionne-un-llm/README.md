@@ -16,6 +16,12 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête après deux ou trois catégories de pièges (section 7) ; les autres et la fiche « mes 3 limites » ouvrent la séance suivante.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 2 questions en tête de `09_exercices.ipynb`, à poser à voix haute avant de commencer
+- Démo tokens (15 min d'ouverture) et section 1 : « Faire tourner le tokenizer en direct sur une phrase proposée par un élève. Puis la même en anglais. Le « pourquoi » (le modèle a vu plus d'anglais) vient tout seul. »
+- Section 2, le mot suivant : « Jouer au jeu du mot suivant avec le groupe avant de projeter le schéma : « Le chat dort sur le… ». Ils font exactement ce que fait le modèle. »
+- Cellule Préparation (le modèle) : « Le modèle met deux minutes à se charger dans Colab : lancer la cellule avant l'explication, pas après. »
+
 Entre deux séances (à la maison) : `09_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Outils (gratuits)

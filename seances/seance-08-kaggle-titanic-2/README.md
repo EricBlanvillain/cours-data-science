@@ -18,6 +18,11 @@ Déroulé (1 h 30, en binômes)
 
 Si le temps manque : la préparation de la présentation (section 7) et les passages restants ouvrent la séance suivante. À partir de trois binômes, la reprise est à prévoir dès le calendrier : les présentations ne se coupent pas.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 1 question en tête de `08_exercices.ipynb`, à poser à voix haute avant de commencer
+- Section 5, les pièges : « Un binôme à 0,98 a presque toujours mesuré sur le train ou laissé Survived dans X. Chercher l'erreur avec eux, devant le groupe si l'ambiance le permet. »
+- Toute la séance : « Séance supervisée : rester en mouvement entre les tables, ne pas s'asseoir. »
+
 Entre deux séances (à la maison) : `08_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Liens

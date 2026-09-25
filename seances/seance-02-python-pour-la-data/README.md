@@ -16,6 +16,17 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête après la première ou la deuxième question du projet (section 7) ; les questions restantes et le CSV personnel (section 8) ouvrent la séance suivante.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 3 questions en tête de `02_exercices.ipynb`, à poser à voix haute avant de commencer
+- Section 2, c'est quoi un DataFrame : « Ouvrir le CSV brut dans un éditeur de texte avant pandas, pour qu'ils voient que c'est juste du texte avec des virgules. »
+- Section 2, la démo : « Les trois réflexes (head, shape, describe) à faire exécuter tout de suite. Demander : combien de lignes ? combien de colonnes ? quelle est la vitesse maximale ? »
+- Sections 3 à 5, filtrer, trier, compter, regrouper : « Ne pas expliquer les cinq verbes d'un bloc. Un verbe, une cellule exécutée, une question posée au groupe. Le tableau sert de fiche à retrouver ensuite. »
+- Section 5, groupby : « Le groupby est le moment où ça clique : « quel type est le plus puissant ? » résolu en une ligne. Laisser un silence après le résultat. »
+- Section 6, les trois graphiques : « Refuser les graphiques sans titre ni axes. Demander à chaque fois : à quelle question ce graphique répond-il ? »
+- Section 7, projet 3 questions / 3 graphiques : « Passer entre les tables. Ceux qui bloquent sur la syntaxe : donner le squelette de la ligne, pas la réponse. Ceux qui finissent : un autre dataset de la liste. »
+- Toute la séance : « Le notebook charge les données tout seul : pas besoin de compte Kaggle aujourd'hui. »
+- Pour la fin du parcours : « Garder trois graphiques d'élèves pour la restitution finale : un bon, un sans titre, un qui répond à une question surprenante. »
+
 Entre deux séances (à la maison) : `02_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Datasets (gratuits)

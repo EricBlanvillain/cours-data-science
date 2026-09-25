@@ -16,6 +16,10 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête après les 5 questions d'évaluation (section 7) ; le réglage du seuil et du nombre de passages `k` ouvre la séance suivante.
 
+Notes d'animation (formateur)
+- Quiz d'ouverture (2 min) : 1 question en tête de `11_exercices.ipynb`, à poser à voix haute avant de commencer
+- Sections 1 et 6, l'idée du RAG : « La phrase à faire répéter : donner ses notes au modèle avant de poser la question. »
+
 Entre deux séances (à la maison) : `11_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Outils (gratuits)

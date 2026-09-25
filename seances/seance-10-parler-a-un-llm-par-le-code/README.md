@@ -16,6 +16,10 @@ Déroulé (1 h 30)
 
 Si le temps manque : on s'arrête au bot qui répond (section 6) ; la sortie JSON du bot et le bonus Streamlit ouvrent la séance suivante.
 
+Notes d'animation (formateur)
+- Section 3, le prompt système : « Faire lire à voix haute une réponse du pirate qui oublie d'être un pirate. C'est le SLM en action, et c'est drôle. »
+- Section 4, l'historique de conversation : « Le test « tu te souviens de mon prénom ? » à faire par chacun. Puis cinq messages pour voir le modèle perdre le fil. »
+
 Entre deux séances (à la maison) : `10_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Outils (gratuits)
