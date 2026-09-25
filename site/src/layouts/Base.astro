@@ -138,8 +138,8 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
       })();
     </script>
   </head>
-  {/* Pages à barre latérale : le conteneur passe à 1360 px, en-tête et hero compris ; la prose garde ses 46 rem (voir .page-barre). */}
-  <body class:list={[barre && "page-barre"]}>
+  {/* Même largeur de conteneur (1360 px) sur toutes les pages, avec ou sans barre latérale : l'en-tête et le pied ne bougent pas. */}
+  <body>
     <Nav />
     <slot name="hero" />
     <main class:list={["conteneur pb-24", barre && "avec-laterale"]}>

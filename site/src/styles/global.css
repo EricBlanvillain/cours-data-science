@@ -119,11 +119,10 @@ code, kbd, pre { font-family: var(--font-mono); }
 code { font-size: 0.9em; background: var(--fond-3); padding: 0.08em 0.35em; }
 kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-width: 2px; padding: 0 0.4em; }
 
-/* Le conteneur unique : 1120 px, la largeur de l'en-tête, pour que tout tombe sur la même verticale.
-   Sur les pages à barre latérale (body.page-barre), 1360 px, en-tête et hero compris : la largeur en plus va aux cartes,
-   à la frise et au sommaire ; la colonne de prose garde son plafond de 46 rem, dans le texte lu rien ne change. */
-.conteneur { width: 100%; max-width: 1120px; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
-.page-barre .conteneur { max-width: 1360px; }
+/* Le conteneur unique : 1360 px sur TOUTES les pages, en-tête, hero, corps et pied, pour que l'en-tête ne bouge pas d'un
+   pixel d'une page à l'autre (scripts/audit-mise-en-page.mjs le mesure). La largeur en plus va aux cartes, à la frise et au
+   sommaire ; la colonne de prose garde son plafond de 46 rem, dans le texte lu rien ne change. */
+.conteneur { width: 100%; max-width: 1360px; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
 @media (min-width: 640px) { .conteneur { padding-left: 2rem; padding-right: 2rem; } }
 
 /* ------------------------------------------------------------------

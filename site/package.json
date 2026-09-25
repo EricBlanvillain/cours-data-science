@@ -9,7 +9,8 @@
     "build": "astro build && node scripts/relativize.mjs",
     "preview": "astro preview",
     "audit": "node scripts/audit-contrast.mjs",
-    "check": "astro check"
+    "check": "astro check",
+    "audit:mise-en-page": "node scripts/audit-mise-en-page.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.2",

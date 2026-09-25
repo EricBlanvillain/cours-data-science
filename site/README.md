@@ -12,7 +12,8 @@ npm install          # une fois
 npm run dev          # http://localhost:4321, rechargement à chaud
 npm run build        # construit dist/ puis le rend ouvrable hors ligne (scripts/relativize.mjs)
 npm run preview      # sert dist/ comme le ferait un hébergeur
-npm run audit        # après un build : audit de contraste et règle du cuivre sur 31 états (clics compris), en clair et en sombre
+npm run audit        # après un build : audit de contraste et règle du cuivre sur 32 états (clics compris), en clair et en sombre
+npm run audit:mise-en-page   # après un build : bandes des grilles de cartes alignées, en-tête au pixel près sur quatre pages, prose sous 46 rem
 ```
 
 ## Secours hors ligne (le wifi lâche pendant une séance)
@@ -41,6 +42,7 @@ src/styles/global.css           thème clair / sombre, registres typographiques,
 src/styles/palette.mjs          la palette, source unique pour l'audit
 scripts/relativize.mjs          post-build : chemins relatifs (pages, polices) + vérification des cibles et de l'absence de ressource externe
 scripts/audit-contrast.mjs      mesure chaque texte contre son fond composité dans Chrome headless, sans dépendance
+scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose
 ```
 
 ## Écrire une leçon
@@ -122,9 +124,9 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
 
 ## Les largeurs
 
-Le conteneur fait 1120 px sur l'accueil et 1360 px sur les pages à barre latérale (`body.page-barre`), en-tête et hero compris
-pour garder la même verticale. La largeur en plus va aux cartes, à la frise et au sommaire ; la colonne de prose garde son
-plafond de 46 rem quelle que soit la page : dans le texte lu, rien ne change.
+Le conteneur fait 1360 px sur toutes les pages, en-tête, hero, corps et pied : l'en-tête ne bouge pas d'un pixel d'une page
+à l'autre, `npm run audit:mise-en-page` le mesure sur quatre pages. La largeur va aux cartes, à la frise et au sommaire ; la
+colonne de prose garde son plafond de 46 rem quelle que soit la page : dans le texte lu, rien ne change.
 
 ## En séance : les raccourcis clavier
 
