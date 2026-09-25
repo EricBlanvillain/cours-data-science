@@ -1,0 +1,69 @@
+---
+/**
+ * Une courbe SVG statique, écrite à la main aux tokens du site : une série, un axe des années, un axe linéaire ou
+ * logarithmique (annoncé), une annotation en cuivre sur LE point mis en avant. Pas de librairie.
+ * Dessinée dans une carte de ~300 px : peu de graduations, des libellés d'au moins 12 unités pour rester lisibles.
+ */
+export type Point = { x: number; y: number; etiquette?: string; prevision?: boolean };
+interface Props {
+  titre: string;              // pour le lecteur d'écran
+  points: Point[];            // triés par x
+  unite: string;              // libellé de l'axe vertical
+  log?: boolean;              // échelle logarithmique (puissances de 10)
+  annotation?: { x: number; y: number; texte: string; ancre?: "start" | "end" };
+  id: string;
+}
+const { titre, points, unite, log = false, annotation, id } = Astro.props;
+
+const W = 340, H = 240, L = log ? 50 : 44, R = 14, T = 18, B = 46;
+const xs = points.map((p) => p.x), ys = points.map((p) => p.y);
+const x0 = Math.floor(Math.min(...xs)), x1 = Math.ceil(Math.max(...xs));
+const yMin = log ? Math.floor(Math.log10(Math.min(...ys))) : 0;
+const yMax = log ? Math.ceil(Math.log10(Math.max(...ys))) : Math.ceil(Math.max(...ys) / 50) * 50;
+const sx = (x: number) => L + ((x - x0) / (x1 - x0)) * (W - L - R);
+const sy = (y: number) => { const v = log ? Math.log10(y) : y; return T + (1 - (v - yMin) / (yMax - yMin)) * (H - T - B); };
+
+/* graduations : 3 ou 4 sur chaque axe, pas plus */
+const pasX = x1 - x0 > 12 ? 5 : x1 - x0 > 6 ? 2 : 1;
+const ticksX: number[] = []; for (let x = Math.ceil(x0 / pasX) * pasX; x <= x1; x += pasX) ticksX.push(x);
+const ticksY: number[] = [];
+if (log) { const pas = Math.max(1, Math.round((yMax - yMin) / 3)); for (let e = yMin; e <= yMax; e += pas) ticksY.push(e); }
+else { const pas = yMax / 4; for (let v = 0; v <= yMax + 1e-9; v += pas) ticksY.push(v); }
+const exposant = (e: number) => String(e).split("").map((c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]).join("");
+const libelleY = (v: number) => { if (!log) return String(Math.round(v)); if (v < 0) return (10 ** v).toLocaleString("fr-FR"); if (v < 3) return String(10 ** v); return `10${exposant(v)}`; };
+
+/* la ligne : pleine sur le mesuré, en pointillé dès qu'un point est une prévision */
+const segments: { d: string; prevision: boolean }[] = [];
+for (let i = 1; i < points.length; i++) {
+  const a = points[i - 1], b = points[i];
+  segments.push({ d: `M${sx(a.x).toFixed(1)} ${sy(a.y).toFixed(1)} L${sx(b.x).toFixed(1)} ${sy(b.y).toFixed(1)}`, prevision: !!b.prevision });
+}
+---
+<svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${id}-t`}>
+  <title id={`${id}-t`}>{titre}</title>
+  {/* axes */}
+  <line x1={L} y1={T} x2={L} y2={H - B} class="trait-fin" stroke-width="1" />
+  <line x1={L} y1={H - B} x2={W - R} y2={H - B} class="trait-fin" stroke-width="1" />
+  {ticksY.map((v) => (
+    <g>
+      <line x1={L} x2={W - R} y1={sy(log ? 10 ** v : v)} y2={sy(log ? 10 ** v : v)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" />
+      <text x={L - 6} y={sy(log ? 10 ** v : v) + 4} text-anchor="end" class="encre-2 mono" font-size="12.5">{libelleY(v)}</text>
+    </g>
+  ))}
+  {ticksX.map((x) => <text x={sx(x)} y={H - B + 17} text-anchor="middle" class="encre-2 mono" font-size="12.5">{x}</text>)}
+  <text x={L} y={H - 16} class="encre-2" font-size="11.5">{unite}</text>
+  {log && <text x={L} y={H - 4} class="encre-2" font-size="11.5">échelle logarithmique : chaque cran vaut × 10</text>}
+  {/* la série */}
+  {segments.map((s) => <path d={s.d} fill="none" class="plein-trait" stroke-width="2.2" stroke-dasharray={s.prevision ? "5 4" : undefined} stroke-linecap="round" />)}
+  {points.map((p) => <circle cx={sx(p.x)} cy={sy(p.y)} r="3.4" class={p.prevision ? "fond-2 plein-trait" : "plein"} stroke-width="2" />)}
+  {points.filter((p) => p.etiquette).map((p) => (
+    <text x={sx(p.x)} y={sy(p.y) - 8} text-anchor={sx(p.x) > W - 60 ? "end" : sx(p.x) < L + 40 ? "start" : "middle"} class="encre" font-size="12">{p.etiquette}</text>
+  ))}
+  {/* l'annotation : le seul cuivre du graphique, sur le point mis en avant */}
+  {annotation && (
+    <g>
+      <circle cx={sx(annotation.x)} cy={sy(annotation.y)} r="5.5" class="cuivre-plein" />
+      <text x={sx(annotation.x) + (annotation.ancre === "end" ? -9 : 9)} y={sy(annotation.y) + 4} text-anchor={annotation.ancre ?? "start"} class="cuivre" font-size="12" font-weight="600">{annotation.texte}</text>
+    </g>
+  )}
+</svg>

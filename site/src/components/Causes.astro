@@ -1,26 +1,24 @@
 ---
-/** Les trois cartes « Pourquoi maintenant », alimentées par src/data/causes.ts. Sources repliées.
- *  min 14rem : trois cartes de front dès 1280 px de fenêtre (colonne de 902 px), barre latérale dépliée. */
+/** Les trois cartes « Pourquoi maintenant », alimentées par src/data/causes.ts.
+ *  Le graphique porte l'information ; sous lui, une légende d'une ligne ; tout le reste (explication, chiffres
+ *  secondaires, sources) est derrière « détails et sources ». min 14rem : trois cartes de front dès 1280 px. */
 import { causes } from "../data/causes";
 import GrilleCartes from "./GrilleCartes.astro";
+import Courbe from "./schemas/Courbe.astro";
 ---
 {causes.length === 0 ? (
   <p class="encart">Les cartes n'ont pas encore de données : remplis <code>src/data/causes.ts</code>.</p>
 ) : (
-  <GrilleCartes bandes={6} liste={false} class="large" min="14rem">
-    {/* Six bandes alignées : étiquette, titre, accroche, chiffre, explication, pied (détails et sources). */}
+  <GrilleCartes bandes={5} liste={false} class="large" min="14rem">
     {causes.map((c, i) => (
       <article class="carte">
         <p class="etiquette">Cause {i + 1}</p>
         <h3>{c.titre}</h3>
-        <p style="color: var(--encre-2);">{c.accroche}</p>
-        <p>
-          <span class="chiffre" style="font-size: 1.7rem; line-height: 1.15; display: block; text-wrap: balance;">{c.chiffre}</span>
-          <span class="discret">{c.chiffreLegende}</span>
-        </p>
-        <p style="font-size: 0.97rem;">{c.explication}</p>
+        <Courbe id={`courbe-${c.id}`} titre={c.serie.titre} points={c.serie.points} unite={c.serie.unite} log={c.serie.log} annotation={c.serie.annotation} />
+        <p class="discret">{c.serie.legende}</p>
         <details class="bande-pied pt-2">
           <summary class="lien-source" style="list-style: none; display: inline;">détails et sources</summary>
+          <p class="mt-2" style="font-size: 0.92rem;">{c.explication}</p>
           <ul class="mt-2 pl-5" style="font-size: 0.88rem;">
             {c.details.map((d) => <li class="mt-1">{d}</li>)}
           </ul>

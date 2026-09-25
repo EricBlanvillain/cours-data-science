@@ -248,6 +248,23 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 .schema .sur-plein { fill: var(--fond); }
 .schema .fond-2 { fill: var(--fond-2); }
 .schema .fond-3 { fill: var(--fond-3); }
+/* Courbes : le seul cuivre d'un graphique est l'annotation du point mis en avant. */
+.schema .cuivre { fill: var(--cuivre-texte); }
+.schema .cuivre-plein { fill: var(--cuivre-plein); }
+.courbe { margin-top: 0.2rem; }
+/* Au téléphone, un grand schéma (920 unités de large) garde 620 px et défile plutôt que de rétrécir ses textes à 6 px. */
+@media (max-width: 720px) { .prose figure.large { overflow-x: auto; scrollbar-width: thin; } .schema.grand { min-width: 620px; } }
+
+/* Replis dans la prose : les nuances, l'aparté, le « pour l'élève curieux ». Une figure remplace son explication ;
+   ce qui reste utile à l'élève curieux vit ici, fermé. */
+.prose > details { border-top: 1px solid var(--trait); border-bottom: 1px solid var(--trait); padding: 0.7rem 0; }
+.prose > details > summary { cursor: pointer; list-style: none; font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: var(--tracking-label); font-weight: 500; color: var(--encre-2); }
+.prose > details > summary::-webkit-details-marker { display: none; }
+.prose > details > summary::before { content: "+ "; }
+.prose > details[open] > summary::before { content: "− "; }
+.prose > details > * + * { margin-top: 0.9em; }
+.prose > details[open] > summary { color: var(--encre); margin-bottom: 0.9em; }
+
 
 /* Séance 0 : la navigation des écrans est épinglée au bas de la fenêtre. Le corps de la page est rembourré d'autant
    (.avec-barre-basse, posé sur <body> par l'îlot) pour que rien ne passe dessous, pied de page compris. */
@@ -270,7 +287,7 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
    ------------------------------------------------------------------ */
 .pastille { display: inline-block; box-sizing: border-box; width: 0.5em; height: 0.5em; border-radius: 50%; border: 1px solid var(--trait-fort); vertical-align: middle; margin-right: 0.45em; }
 .pastille.invisible { border-color: transparent; }
-[data-etat="terminee"] .pastille { background: var(--encre); border-color: var(--encre); }
+[data-etat="terminee"] .pastille, .pastille.pleine { background: var(--encre); border-color: var(--encre); }
 [data-etat="ouverte"] .pastille { background: var(--cuivre-plein); border-color: var(--cuivre-plein); }
 .etat-seance { color: var(--encre-2); }
 [data-etat="ouverte"] .etat-seance { color: var(--cuivre-texte); }

@@ -13,6 +13,10 @@ const lecons = defineCollection({
     duree: z.string().default("1 h 30"),
     /** Ce qu'on repart avec à la fin de la séance */
     livrable: z.string().optional(),
+    /** En tête de leçon : 3 puces au plus, formulées « tu sauras… ». Absent pour une prise de contact. */
+    objectifs: z.array(z.string()).max(3).optional(),
+    /** En pied de leçon, avant la navigation : 5 lignes au plus, une idée par ligne, qui compressent l'heure et demie. */
+    aRetenir: z.array(z.string()).max(5).optional(),
   }),
 });
 

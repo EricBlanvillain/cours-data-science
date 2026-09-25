@@ -2,37 +2,48 @@
 numero: 1
 titre: Introduction à l'intelligence artificielle
 niveau: ⭐
+duree: 1 h 30
 resume: D'où vient l'IA, pourquoi elle explose maintenant, ce que recouvrent les mots IA, machine learning et deep learning, et à quoi ressemble un réseau de neurones.
 livrable: Une frise que tu sais raconter, la différence classification / régression, et un premier réseau de neurones que tu as fait apprendre toi-même dans le Playground.
+objectifs:
+  - Tu sauras dire pourquoi 2012 est la vraie rupture de la frise, et pas 1957 ni 2022.
+  - Tu sauras placer un exemple dans le bon cercle, IA, machine learning ou deep learning.
+  - Tu sauras reconnaître une classification d'une régression à la forme de la réponse.
+aRetenir:
+  - Les idées datent de 1957, la rupture de 2012, l'accélération de 2017, avec deux hivers entre-temps.
+  - Trois causes au boom, aucune ne suffit seule, du calcul, des données, de meilleurs algorithmes.
+  - Un GPU gagne parce qu'il fait des milliers de fois la même multiplication en même temps.
+  - Tout deep learning est du machine learning, tout machine learning est de l'IA, pas l'inverse.
+  - Apprendre, pour un réseau de neurones, c'est régler ses poids un peu à chaque erreur.
 ---
 import Frise from "../../components/islands/Frise";
 import Causes from "../../components/Causes.astro";
+import CpuGpu from "../../components/schemas/CpuGpu.astro";
 import TroisCercles from "../../components/schemas/TroisCercles.astro";
 import CarteML from "../../components/schemas/CarteML.astro";
 import ClassifOuRegression from "../../components/islands/ClassifOuRegression";
 import ReseauNeurones from "../../components/schemas/ReseauNeurones.astro";
+import CartesNumerotees from "../../components/CartesNumerotees.astro";
+import { bilanFrise, conditions } from "../../data/conditions";
 
 ## Une frise, de 1950 à aujourd'hui
 
-L'IA n'est pas née avec ChatGPT. L'idée a soixante-quinze ans, elle a connu deux périodes de gel, et ce que tu utilises aujourd'hui repose sur une invention de 2017. Fais défiler : chaque carte est un jalon ; à partir de 2017, elles racontent le boom actuel. Quand des sources sérieuses ne s'accordent pas sur un chiffre, la carte le dit.
+L'IA n'est pas née avec ChatGPT : l'idée a soixante-quinze ans. Fais défiler. Quand des sources sérieuses ne s'accordent pas sur un chiffre, la carte le dit.
 
 <Frise client:load />
 
-Trois choses à retenir de cette frise.
-
-- **Les idées sont anciennes, les moyens sont récents.** Le neurone artificiel date de 1957 ; il a fallu attendre 2012 pour qu'un ordinateur soit assez puissant, et les données assez nombreuses, pour qu'il serve vraiment.
-- **Il y a eu des hivers.** Deux fois, les promesses n'ont pas été tenues, les financements ont disparu, et le mot « IA » est devenu embarrassant pendant des années. Ça peut arriver de nouveau.
-- **Depuis 2017, tout s'accélère.** Une seule architecture, le transformer, est derrière les modèles de texte, d'image, de son et de code. C'est pour ça que tant de choses arrivent en même temps.
+<CartesNumerotees cartes={bilanFrise} motif="chiffre" />
 
 ## Pourquoi maintenant
 
-Si les idées datent des années 1950, pourquoi le boom a-t-il lieu maintenant ? Trois causes, et aucune ne suffit seule. Sous chaque carte, « détails et sources » dit d'où vient le chiffre.
+Les idées sont anciennes, les moyens sont récents : le neurone artificiel date de 1957, et il a fallu attendre 2012 pour qu'un ordinateur soit assez puissant, et les données assez nombreuses, pour qu'il serve vraiment. Trois causes à ce rattrapage, aucune ne suffit seule ; « détails et sources » dit d'où vient chaque chiffre.
 
 <Causes />
 
-### Pourquoi un GPU, et pas ton processeur
+<CpuGpu />
 
-C'est le point qui surprend le plus, alors prenons le temps.
+<details>
+<summary>Pour l'élève curieux : pourquoi une carte de jeu vidéo</summary>
 
 Un réseau de neurones ne fait presque qu'une seule chose : **multiplier des tableaux de nombres**. Chaque neurone additionne ses entrées pondérées par des poids ; avec des milliers de neurones par couche, ça devient une multiplication de matrices, répétée pour chaque couche, pour chaque exemple, à chaque tour d'apprentissage. Des milliards d'opérations, toutes **identiques** et **indépendantes** les unes des autres.
 
@@ -42,49 +53,54 @@ Une carte graphique (le GPU) a été inventée pour les jeux vidéo, où il faut
 
 Or « la même opération sur des millions de nombres », c'est exactement ce que demande un réseau de neurones. En 2012, trois chercheurs de Toronto ont entraîné leur réseau de reconnaissance d'images, AlexNet, pendant cinq à six jours sur deux cartes de jeu vidéo au lieu de processeurs classiques : c'est le déclic du deep learning moderne, et c'est pour ça que l'entreprise qui fabriquait ces cartes, NVIDIA, est devenue l'une des plus valorisées au monde. Dans Colab, le GPU que tu utiliseras aux séances 9 à 12 (en général un T4, une carte de 2018) vient de cette histoire.
 
+</details>
+
+## Est-ce que ça va durer ?
+
+La carte « Hivers » de la frise pose la question, et le marché a misé des centaines de milliards sur la réponse : quatre choses doivent tenir pour que ce pari soit gagné.
+
+<CartesNumerotees cartes={conditions} motif="verdict" />
+
 ## Les trois cercles
 
-Trois mots que tout le monde mélange. Ils ne désignent pas trois techniques concurrentes : ils sont emboîtés.
+Trois mots que tout le monde mélange.
 
 <TroisCercles />
 
-- **Intelligence artificielle** : un programme qui imite une capacité humaine. Un GPS qui calcule un itinéraire ou un programme d'échecs à règles en font partie, sans rien apprendre.
-- **Machine learning** : la machine trouve la règle elle-même à partir d'exemples. Tu ne lui écris pas « un spam contient souvent le mot gratuit » ; tu lui montres dix mille mails étiquetés, elle trouve.
-- **Deep learning** : du machine learning avec des réseaux de neurones à beaucoup de couches. C'est ce qui reconnaît un visage, transcrit une voix, ou prédit le mot suivant.
-- **L'IA générative** est une région du deep learning : au lieu de reconnaître, elle **produit** du texte, des images, du son. ChatGPT, Midjourney et Suno vivent tous dans le petit cercle du milieu.
-
-Dans ce parcours, on commence par le machine learning classique (séances 6 à 8), on ouvre la boîte du deep learning et des LLM ensuite (séances 9 à 12).
-
 ## La carte du machine learning
 
-Quand quelqu'un dit « on va mettre du machine learning », il pense en fait à l'une de ces cinq cases.
+Quand quelqu'un dit « on va mettre du machine learning », il pense à l'une de ces cinq cases.
 
 <CarteML />
 
-La première question à se poser, toujours : **a-t-on la bonne réponse pour nos exemples ?** Si oui, c'est du supervisé : on montre la réponse, la machine apprend à la retrouver. Si non, c'est du non supervisé : la machine cherche seule une structure dans les données. Tout le cours, jusqu'au projet Kaggle, se passe dans la branche de gauche.
-
-### L'ancêtre : la régression linéaire
+<details>
+<summary>L'ancêtre : la régression linéaire, 1805</summary>
 
 Le machine learning n'est pas de la magie : ce sont des mathématiques anciennes devenues calculables. Sa plus vieille méthode, la régression linéaire, consiste à faire passer la meilleure droite possible dans un nuage de points. Legendre l'a publiée en 1805 pour prédire la trajectoire des comètes, avec la méthode des moindres carrés, et Gauss a revendiqué l'avoir utilisée avant lui. Le mot « régression » vient de Francis Galton, en 1886, qui étudiait la taille des enfants par rapport à celle de leurs parents.
 
 Deux siècles plus tard, c'est toujours le premier modèle qu'on entraîne (tu le feras à la séance 6), et un réseau de neurones n'est, au fond, qu'un empilement de régressions avec une petite courbure entre chaque couche. Ce qui a changé, ce n'est pas l'idée : c'est qu'on peut désormais la faire tourner sur des milliards de nombres.
 
+</details>
+
 ## Classification ou régression
 
-C'est la distinction qui se retient le mieux, et celle qu'on te demandera à chaque projet. Le réflexe : ne regarde pas le sujet de la question, regarde **la forme de la réponse**.
+C'est la distinction qu'on te demandera à chaque projet. Le réflexe : ne regarde pas le sujet de la question, regarde **la forme de la réponse**.
 
 <ClassifOuRegression client:load />
 
-Pourquoi ça compte : les deux familles ne se mesurent pas pareil. Une classification se juge en pourcentage de bonnes cases ; une régression se juge à la distance entre la prédiction et la vraie valeur. Se tromper de famille, c'est mesurer son modèle avec la mauvaise règle.
+<details>
+<summary>Pourquoi ça compte : on ne les mesure pas pareil</summary>
+
+Les deux familles ne se mesurent pas de la même façon. Une classification se juge en pourcentage de bonnes cases ; une régression se juge à la distance entre la prédiction et la vraie valeur. Se tromper de famille, c'est mesurer son modèle avec la mauvaise règle.
+
+</details>
 
 ## Un réseau de neurones
 
-Reprenons la pomme et le melon du notebook. Un neurone artificiel, c'est une addition pondérée suivie d'une décision. Un réseau, c'est des neurones en couches : ce qui entre, ce qui calcule, ce qui sort.
+Reprenons la pomme et le melon du notebook.
 
 <ReseauNeurones />
 
-Ce qui entre est **toujours des nombres** : un poids en grammes, une largeur, une couleur codée entre 0 et 1. Une image est un tableau de nombres (ses pixels), un texte aussi une fois découpé en tokens (séance 9). Ce qui sort est une probabilité par réponse possible. Et apprendre, c'est régler les poids des liens, un peu à chaque erreur, jusqu'à ce que la sortie colle aux exemples : exactement le seuil pomme / melon du notebook, avec beaucoup plus de boutons à tourner.
-
 ### À toi : le Playground
 
-Ouvre le [TensorFlow Playground](https://playground.tensorflow.org/) (il faut le réseau). Choisis le jeu de données en spirale en bas à gauche, garde une seule couche cachée avec deux neurones, et lance l'apprentissage : le réseau n'y arrive pas. Ajoute des couches et des neurones avec les boutons **+**, relance, et regarde la frontière se tordre jusqu'à épouser la spirale. Tu viens de voir pourquoi on dit *deep* : la profondeur, c'est ce qui permet d'apprendre des formes compliquées.
+Ouvre le [TensorFlow Playground](https://playground.tensorflow.org/) (il faut le réseau). Choisis le jeu de données en spirale, garde une couche cachée à deux neurones, lance : le réseau n'y arrive pas. Ajoute des couches et des neurones avec les boutons **+**, relance, et regarde la frontière épouser la spirale. C'est ça, *deep* : la profondeur apprend des formes compliquées.

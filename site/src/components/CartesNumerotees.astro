@@ -1,0 +1,46 @@
+---
+/**
+ * Des cartes numérotées très dépouillées, sur la primitive GrilleCartes (pas une variante de carte de plus) :
+ * un numéro en mono, un mot fort, puis selon le motif
+ *   - « chiffre » : un chiffre, une ligne                       (le bilan de la frise)
+ *   - « verdict » : une question, un verdict                    (les quatre conditions)
+ * et un repli « pour aller plus loin » qui porte le détail et sa source. Rien d'autre de visible.
+ * Le cuivre ne va que sur un verdict ouvert (`ouvert: true`) : ici la règle « le cuivre marque le non résolu » porte
+ * de l'information. Un verdict établi se distingue aussi par la forme : pastille pleine et ✓, contre pastille cuivre et ?.
+ */
+import GrilleCartes from "./GrilleCartes.astro";
+import type { CarteNumerotee } from "../data/conditions";
+
+interface Props { cartes: CarteNumerotee[]; motif: "chiffre" | "verdict" }
+const { cartes, motif } = Astro.props;
+---
+<GrilleCartes bandes={5} liste={false} class="large" min={motif === "verdict" ? "10.5rem" : "16rem"}>
+  {cartes.map((c) => (
+    <article class="carte">
+      <p class="mono-caps" style="color: var(--encre-2);">{c.numero}</p>
+      <h3>{c.mot}</h3>
+      {motif === "chiffre" ? (
+        <p class="chiffre" style="font-size: 2.4rem; line-height: 1;">{c.chiffre}</p>
+      ) : (
+        <p>{c.question}</p>
+      )}
+      {motif === "chiffre" ? (
+        <p style="font-size: 0.97rem;">{c.ligne}</p>
+      ) : (
+        <p class:list={["mono-caps verdict", c.ouvert && "ouvert"]} style={c.ouvert ? undefined : "color: var(--encre);"}>
+          <span class:list={["pastille", !c.ouvert && "pleine"]} aria-hidden="true"></span>{c.ouvert ? "? " : "✓ "}{c.verdict}
+        </p>
+      )}
+      <details class="bande-pied pt-2">
+        <summary class="lien-source" style="list-style: none; display: inline;">pour aller plus loin</summary>
+        <ul class="mt-2 pl-5" style="font-size: 0.88rem;">
+          {c.repli.map((l) => <li class="mt-1">{l}</li>)}
+        </ul>
+        <p class="discret mt-2" style="font-size: 0.8rem;">
+          {c.sources.map((s, k) => <span>{k > 0 && " · "}<a href={s.url} target="_blank" rel="noopener">{s.titre} ↗</a></span>)}
+          {" "}· vérifié le {c.verifie}
+        </p>
+      </details>
+    </article>
+  ))}
+</GrilleCartes>

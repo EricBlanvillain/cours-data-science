@@ -13,6 +13,8 @@ const { Content, headings } = await render(lecon);
 const sections = headings.filter((h) => h.depth === 2);
 const n = lecon.data.numero;
 const suivante = seances.find((s) => s.numero === n + 1);
+const objectifs = lecon.data.objectifs ?? [];
+const aRetenir = lecon.data.aRetenir ?? [];
 ---
 
 <Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume} barre courant={n}>
@@ -42,9 +44,28 @@ const suivante = seances.find((s) => s.numero === n + 1);
       </nav>
     )}
 
+    {/* Le cadre de la leçon : objectifs en tête (frontmatter), « à retenir » et mini-quiz en pied, avant la navigation. */}
+    {objectifs.length > 0 && (
+      <section class="mt-10 objectifs" style="max-width: 46rem;" aria-labelledby="objectifs-titre">
+        <p id="objectifs-titre" class="mono-caps" style="color: var(--encre-2);">À la fin de la séance</p>
+        <ul class="mt-2" style="padding-left: 1.3em;">
+          {objectifs.map((o) => <li>{o}</li>)}
+        </ul>
+      </section>
+    )}
+
     <article class="prose mt-14">
       <Content />
     </article>
+
+    {aRetenir.length > 0 && (
+      <section class="mt-20 a-retenir" style="max-width: 46rem;" aria-labelledby="retenir-titre">
+        <h2 id="retenir-titre">À retenir</h2>
+        <ol class="mt-4" style="padding-left: 1.6em;">
+          {aRetenir.map((l) => <li class="mt-2">{l}</li>)}
+        </ol>
+      </section>
+    )}
 
     {/* Terminer la séance : c'est l'élève qui le dit, depuis ici. Ouvre la suivante. */}
     <section class="mt-20 pt-8 fin-de-seance" style="max-width: 46rem; border-top: 1px solid var(--trait);">

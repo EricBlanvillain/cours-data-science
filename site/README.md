@@ -61,6 +61,15 @@ puis du Markdown. Un composant s'importe en tête du fichier et se pose dans le 
 (`<TroisCercles />`, ou `<Frise client:load />` pour un composant React). Ajoute ensuite le `slug`
 dans `src/data/seances.ts` pour que la carte de la page d'accueil devienne cliquable.
 
+## Une figure remplace son explication
+
+Règle structurante des leçons : après un schéma ou un graphique, au plus une légende d'une ligne ; aucun récapitulatif en
+puces de ce que la figure montre. Si le lecteur a besoin d'un paragraphe pour comprendre la figure, c'est la figure qu'on
+refait. Budget par bloc : une idée, un chiffre, moins de 80 mots visibles ; nuances, chiffres secondaires et sources vont
+derrière un repli (`<details><summary>…</summary>` dans le MDX, stylé par `.prose > details`). Les séries chiffrées sont des
+courbes SVG écrites à la main (`schemas/Courbe.astro`, données et sources dans `src/data/causes.ts`), échelle logarithmique
+annoncée sur le graphique quand elle sert, cuivre réservé à l'annotation du point mis en avant.
+
 ## Vérifier un fait
 
 Toute date et tout chiffre affichés viennent de `src/data/frise.ts` ou `src/data/causes.ts`, où chaque entrée porte
