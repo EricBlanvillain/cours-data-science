@@ -265,6 +265,16 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 .prose > details > * + * { margin-top: 0.9em; }
 .prose > details[open] > summary { color: var(--encre); margin-bottom: 0.9em; }
 
+/* Le mini-quiz : une option = un bouton radio ; juste et faux se lisent à la forme et au libellé, pas à la couleur. */
+.quiz-option { width: 100%; display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto; column-gap: 0.6rem; align-items: baseline; text-align: left; font: inherit; font-size: 0.95rem; line-height: 1.35; color: var(--encre); background: var(--fond-2); border: 1px solid var(--trait-fort); padding: 0.55rem 0.8rem; cursor: pointer; }
+.quiz-option:disabled { cursor: default; }
+@media (hover: hover) { .quiz-option:not(:disabled):hover { border-color: var(--encre); } }
+.quiz-option.choisi { border-color: var(--encre); box-shadow: inset 0 0 0 1px var(--encre); }
+.quiz-option.bonne { background: var(--bouton-fond); color: var(--bouton-texte); border-color: var(--bouton-fond); }
+.quiz-option.fausse { border-style: dashed; color: var(--encre-2); }
+.quiz-option.fausse > span:nth-child(2) { text-decoration: line-through; text-decoration-thickness: 1px; }
+.quiz-num { font-weight: 500; }
+.quiz-verdict { font-size: 0.6rem; }
 
 /* Séance 0 : la navigation des écrans est épinglée au bas de la fenêtre. Le corps de la page est rembourré d'autant
    (.avec-barre-basse, posé sur <body> par l'îlot) pour que rien ne passe dessous, pied de page compris. */

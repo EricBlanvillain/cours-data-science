@@ -2,6 +2,8 @@
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import { seances } from "../../data/seances";
+import Quiz from "../../components/islands/Quiz";
+import { quiz } from "../../data/quiz";
 
 export async function getStaticPaths() {
   const lecons = await getCollection("lecons");
@@ -15,6 +17,7 @@ const n = lecon.data.numero;
 const suivante = seances.find((s) => s.numero === n + 1);
 const objectifs = lecon.data.objectifs ?? [];
 const aRetenir = lecon.data.aRetenir ?? [];
+const aUnQuiz = (quiz[n] ?? []).length > 0;
 ---
 
 <Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume} barre courant={n}>
@@ -57,6 +60,14 @@ const aRetenir = lecon.data.aRetenir ?? [];
     <article class="prose mt-14">
       <Content />
     </article>
+
+    {aUnQuiz && (
+      <section class="mt-20" style="max-width: 46rem;" aria-labelledby="quiz-titre">
+        <h2 id="quiz-titre">Mini-quiz</h2>
+        <p class="discret mt-2">Quatre questions sur ce que tu viens de lire. Une à la fois, l'explication vient après chaque réponse.</p>
+        <div class="mt-5"><Quiz client:load seance={n} /></div>
+      </section>
+    )}
 
     {aRetenir.length > 0 && (
       <section class="mt-20 a-retenir" style="max-width: 46rem;" aria-labelledby="retenir-titre">

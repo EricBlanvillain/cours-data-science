@@ -12,7 +12,7 @@ npm install          # une fois
 npm run dev          # http://localhost:4321, rechargement à chaud
 npm run build        # construit dist/ puis le rend ouvrable hors ligne (scripts/relativize.mjs)
 npm run preview      # sert dist/ comme le ferait un hébergeur
-npm run audit        # après un build : audit de contraste et règle du cuivre sur 26 états (clics compris), en clair et en sombre
+npm run audit        # après un build : audit de contraste et règle du cuivre sur 31 états (clics compris), en clair et en sombre
 ```
 
 ## Secours hors ligne (le wifi lâche pendant une séance)
@@ -70,6 +70,16 @@ derrière un repli (`<details><summary>…</summary>` dans le MDX, stylé par `.
 courbes SVG écrites à la main (`schemas/Courbe.astro`, données et sources dans `src/data/causes.ts`), échelle logarithmique
 annoncée sur le graphique quand elle sert, cuivre réservé à l'annotation du point mis en avant.
 
+## Le cadre d'une leçon
+
+Trois champs optionnels du frontmatter, pour pouvoir les lister ailleurs un jour : `objectifs` (3 puces au plus, en
+« tu sauras… », rendues en tête), `aRetenir` (5 lignes au plus, une idée par ligne, rendues en pied avant la navigation), et
+`duree` (à écrire explicitement : « 1 h 30 »). Le mini-quiz de fin de leçon vient de `src/data/quiz.ts`, une entrée par
+séance, quatre questions écrites depuis le contenu réel de la page ; une séance sans entrée n'a pas de quiz (séance 0).
+Composant `islands/Quiz.tsx` : une question à la fois, validation explicite, explication qui reste lisible, score, reprise ;
+clavier `1` à `4`, flèches, `Entrée` dès que le focus est dans le quiz ; cuivre sur la question tant qu'elle n'est pas validée,
+juste et faux distingués par la forme et le libellé, jamais par la couleur seule.
+
 ## Vérifier un fait
 
 Toute date et tout chiffre affichés viennent de `src/data/frise.ts` ou `src/data/causes.ts`, où chaque entrée porte
@@ -122,6 +132,7 @@ plafond de 46 rem quelle que soit la page : dans le texte lu, rien ne change.
   déplacent le curseur). La navigation est épinglée au bas de la fenêtre : jauge, position (« 2 / 5 · C'est quoi l'IA ? »),
   Précédent, Suivant. Changer d'écran ramène au début de l'écran, pas au haut de la page.
 - **Frise de la séance 1** : cliquer une fois sur la bande, puis `←` `→` d'un jalon à l'autre, `Début` et `Fin` pour les bouts.
+- **Mini-quiz** : `Tab` jusqu'au quiz, `1` à `4` pour choisir, `Entrée` pour valider puis passer à la suivante.
 - **Terminer une séance** : bouton en bas de la leçon ; `?ouvrir=N` dans l'URL pour ouvrir une séance à la main.
 
 ## La barre latérale (leçons et pages transverses)

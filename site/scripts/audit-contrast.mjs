@@ -111,6 +111,28 @@ const ETATS = [
   { page: "lecons/seance-01-introduction-ia.html", id: "theme-force-sombre", fond: "sombre", pilote: `
       window.theme.appliquer("sombre"); await w(150);` },
   { page: "glossaire.html", id: "glossaire", pilote: "" },
+
+  // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
+  { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `
+      const z = ile("Quiz"); z.scrollIntoView(); await w(200);
+      if (!z.textContent.includes("sans réponse")) throw new Error("le cuivre « sans réponse » manque");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-juste", pilote: `
+      const z = ile("Quiz"); z.querySelectorAll(".quiz-option")[1].click(); await w(100); btn(z, "Valider").click(); await w(300);
+      if (!z.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-faux", pilote: `
+      const z = ile("Quiz"); z.querySelectorAll(".quiz-option")[0].click(); await w(100); btn(z, "Valider").click(); await w(300);
+      if (!z.querySelector(".quiz-option.fausse") || !z.querySelector(".quiz-option.bonne")) throw new Error("le faux et la bonne réponse doivent être marqués");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-score", pilote: `
+      const z = ile("Quiz");
+      for (let k = 0; k < 4; k++) { z.querySelectorAll(".quiz-option")[0].click(); await w(80); btn(z, "Valider").click(); await w(150); [...z.querySelectorAll("button")].find((b) => /suivante|score/.test(b.textContent)).click(); await w(150); }
+      if (!z.textContent.includes("Fin de la série")) throw new Error("score final non atteint");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-clavier", pilote: `
+      const z = ile("Quiz"); const root = z.classList.contains("quiz") ? z : z.querySelector(".quiz"); root.focus();
+      const touche = (key) => root.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+      touche("2"); await w(80); touche("Enter"); await w(200);
+      if (!z.textContent.includes("✓ juste")) throw new Error("clavier : 2 puis Entrée devrait valider la bonne réponse");
+      touche("Enter"); await w(200);
+      if (!z.textContent.includes("Question 2 / 4")) throw new Error("clavier : Entrée devrait passer à la question suivante");` },
 ];
 
 /* Ce que l'audit ne mesure pas, dit explicitement. */
@@ -165,9 +187,38 @@ const MESURE = (pilote) => `
     return bg;
   };
   var out = { ground: hex(effBg(document.body)), text: [], borders: {}, erreurPilote: erreurPilote };
+  var SVG = 'http://www.w3.org/2000/svg';
+  // Les textes des SVG (schémas, courbes) : la couleur est le fill, pas color ; le fond est la forme dessinée derrière
+  // (rect, circle, path…), trouvée par elementsFromPoint après avoir fait défiler le SVG dans la fenêtre.
+  var svgs = document.querySelectorAll('svg');
+  for (var si = 0; si < svgs.length; si++) {
+    var svg = svgs[si]; if (svg.getBoundingClientRect().width === 0) continue;
+    svg.scrollIntoView({ block: 'center' }); await w(60);
+    var vb = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width ? svg.viewBox.baseVal.width : svg.getBoundingClientRect().width;
+    var echelle = svg.getBoundingClientRect().width / vb;
+    var textes = svg.querySelectorAll('text');
+    for (var ti = 0; ti < textes.length; ti++) {
+      var tx = textes[ti], tcs = getComputedStyle(tx), tr = tx.getBoundingClientRect();
+      if (!tx.textContent.trim() || tr.width === 0) continue;
+      var fill = parse(tcs.fill); if (!fill || fill[3] === 0) continue;
+      if (tr.left < 0 || tr.right > window.innerWidth) { tx.scrollIntoView({ block: 'center', inline: 'center' }); await w(30); tr = tx.getBoundingClientRect(); }
+      var derriere = null, pile = document.elementsFromPoint(tr.left + tr.width / 2, tr.top + tr.height / 2);
+      for (var pi = 0; pi < pile.length; pi++) {
+        var e2 = pile[pi]; if (e2 === tx || tx.contains(e2)) continue;
+        if (e2.namespaceURI === SVG && /^(rect|circle|path|ellipse|polygon)$/i.test(e2.tagName)) { var f2 = parse(getComputedStyle(e2).fill); if (f2 && f2[3] > 0) { derriere = f2; break; } }
+        if (e2.namespaceURI !== SVG) break;
+      }
+      var sbg = derriere ? over(derriere, effBg(svg)) : effBg(svg), sfg = over(fill, sbg);
+      var ssize = parseFloat(tcs.fontSize) * echelle, sweight = +tcs.fontWeight || 400;
+      var sneed = ssize >= 24 || (ssize >= 18.66 && sweight >= 700) ? 3.0 : 4.5, scr = ratio(sfg, sbg);
+      out.text.push({ text: 'svg: ' + tx.textContent.trim().slice(0, 44), fg: hex(sfg), bg: hex(sbg), size: +ssize.toFixed(1), weight: sweight, ratio: +scr.toFixed(2), need: sneed, pass: scr >= sneed, disabled: false, cls: String(tx.className.baseVal || '').slice(0, 80) });
+    }
+  }
+  window.scrollTo(0, 0); await w(60);
   var els = document.querySelectorAll('body *');
   for (var k = 0; k < els.length; k++) {
-    var el = els[k], cs = getComputedStyle(el), r = el.getBoundingClientRect();
+    var el = els[k]; if (el.namespaceURI === SVG) continue;
+    var cs = getComputedStyle(el), r = el.getBoundingClientRect();
     if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity === 0) continue;
     if (r.width === 0 || r.height === 0) continue;
     var sides = ['Top', 'Right', 'Bottom', 'Left'];
