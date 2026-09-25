@@ -134,7 +134,7 @@ Livrable : un mini-dashboard présenté à voix haute en 2 minutes, comme devant
 
 - Apprentissage supervisé expliqué simplement : on montre des exemples avec la réponse, la machine trouve la règle
 - Classification vs régression avec des exemples du quotidien (ce mail est-il un spam ? combien de vues aura cette vidéo ?)
-- Entraînement / test : pourquoi on cache une partie des données. Notion de précision d'un modèle, et du « modèle bête » à battre
+- Entraînement / test : pourquoi on cache une partie des données. Notion d'exactitude d'un modèle (la part de bonnes réponses), et du « modèle bête » à battre
 - Pratique avec scikit-learn : arbre de décision, k plus proches voisins, la courbe du sur-apprentissage, une première régression. On mesure, on améliore
 
 Fichiers : `seances/seance-06-premier-modele/06_premier_modele.ipynb` · `06_exercices.ipynb`

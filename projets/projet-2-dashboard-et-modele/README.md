@@ -37,7 +37,7 @@ Les miroirs sont listés dans le [README des projets](../README.md). Les cibles 
 - [ ] Le journal de nettoyage contient au moins 2 corrections, dont une à toi, avec le nombre de lignes concernées.
 - [ ] 3 graphiques Plotly avec un titre qui est une question, et un pitch constat / preuve / recommandation.
 - [ ] Le modèle est comparé au modèle « bête » (classe majoritaire) et la matrice de confusion est commentée (combien de vrais « oui » trouvés).
-- [ ] Au moins 2 essais d'amélioration notés (nouvelle variable ou réglage), avec la précision avant/après.
+- [ ] Au moins 2 essais d'amélioration notés (nouvelle variable ou réglage), avec l'exactitude avant/après.
 - [ ] Une phrase explique ce que le modèle a compris (quelles variables comptent).
 - [ ] Présentation en 2 minutes : problème, données, résultat, recommandation.
 

@@ -1,6 +1,6 @@
 # Glossaire
 
-Les mots de l'atelier, dans l'ordre où on les rencontre. Les 40 premiers viennent du site du cours ; les 15 derniers couvrent les séances 7 à 12.
+Les mots du parcours, dans l'ordre où on les rencontre.
 
 ## Bloc 0 · Les outils (séance 0)
 
@@ -8,7 +8,7 @@ Les mots de l'atelier, dans l'ordre où on les rencontre. Les 40 premiers vienne
 |---|---|
 | Notebook | Un document où le code s'exécute cellule par cellule, avec le résultat affiché sous chaque cellule. Google Colab en est une version dans le navigateur. |
 | Cellule | Un morceau de notebook : quelques lignes de code ou du texte. Maj + Entrée l'exécute. |
-| Colab | Google Colab, un service gratuit pour écrire et exécuter du Python dans le navigateur, avec un GPU gratuit à la demande. |
+| Colab | Google Colab, un service gratuit pour écrire et exécuter du Python dans le navigateur. Un GPU peut être demandé (menu *Exécution*), sans garantie d'en obtenir un aux heures chargées : les notebooks des séances 9 à 12 ont un repli sans GPU. |
 | Variable | Une boîte avec un nom qui contient une valeur : `niveau = 15`. |
 | Fonction | Un bout de code réutilisable avec un nom, qui prend des entrées et renvoie un résultat. |
 
@@ -39,14 +39,19 @@ Les mots de l'atelier, dans l'ordre où on les rencontre. Les 40 premiers vienne
 | Valeur manquante | Une case vide dans le tableau. On la retire, ou on la remplit avec une valeur raisonnable comme la médiane. |
 | Encoder | Transformer du texte en nombres pour qu'un modèle puisse s'en servir : female devient 1, male devient 0. |
 | API | Une porte d'entrée pour demander des données ou un service à un programme distant, par une URL. PokéAPI, Open-Meteo, l'API d'un LLM. |
+| Corrélation | Deux colonnes qui bougent ensemble : quand l'une monte, l'autre monte (ou descend) aussi. Mesurée de -1 à 1 par `df.corr()`. Une corrélation n'est pas une cause : les ventes de glaces et les coups de soleil montent ensemble parce que c'est l'été. |
+| Dashboard | Un tableau de bord : plusieurs graphiques sur une même page, choisis pour répondre aux questions de quelqu'un qui ne lira pas le notebook. Séance 5 : plusieurs graphiques matplotlib sur une même figure. |
 | Apprentissage supervisé | On montre au modèle des exemples avec la bonne réponse, et il cherche une règle qui relie les deux. |
 | Classification | Deviner une catégorie : spam ou pas, quelle espèce de manchot. |
 | Régression | Deviner un nombre : un prix, un nombre de vues. |
 | X et y | X, ce que la machine voit (les mesures). y, ce qu'elle doit deviner (la réponse). |
 | Train / test | On coupe les données en deux : une partie pour apprendre, une partie cachée pour vérifier que le modèle a compris et pas appris par cœur. |
-| Précision | Le pourcentage de bonnes réponses du modèle sur les données cachées. |
+| Modèle bête (baseline) | Le modèle le plus simple possible, à battre avant tout : répondre toujours la classe la plus fréquente, ou la moyenne. Si ton modèle ne fait pas mieux, il n'a rien appris. |
+| Exactitude (accuracy) | La part de bonnes réponses sur les données cachées : bonnes réponses / toutes les réponses. C'est ce que renvoie `modele.score` en classification. Trompeuse quand une classe est rare : « jamais légendaire » a 92 % d'exactitude et ne trouve aucun légendaire. |
+| Précision | Parmi les cas que le modèle a déclarés positifs (« légendaire », « survivant »), la part qui l'est vraiment. Répond à : quand il dit oui, peut-on le croire ? Ce n'est pas l'exactitude. |
+| Rappel | Parmi les vrais positifs, la part que le modèle retrouve. Répond à : en laisse-t-il passer ? Précision et rappel se paient l'un l'autre ; on règle le seuil selon ce qui coûte le plus cher (séance 8, projet A2). |
 | Arbre de décision | Un modèle qui pose des questions en cascade sur les mesures jusqu'à une réponse. On peut le lire. |
-| k plus proches voisins | Un modèle sans règle : pour deviner un point, on regarde les k points connus qui lui ressemblent le plus et on vote. |
+| k plus proches voisins | Un modèle sans règle apprise : pour deviner un point, on regarde les k points connus les plus proches et on vote (ou on fait la moyenne, en régression). Il compare des distances, donc les colonnes doivent être à la même échelle (`StandardScaler`, ajusté sur le train). k est un hyperparamètre : petit, il apprend par cœur ; grand, il lisse tout. |
 | Sur-apprentissage | Un modèle trop compliqué qui connaît ses exemples par cœur et se trompe sur les nouveaux. Parfait en entraînement, décevant sur le test. |
 | Hyperparamètre | Un réglage choisi par toi, que le modèle n'apprend pas : la profondeur d'un arbre, le nombre de voisins. |
 | scikit-learn | La bibliothèque Python de machine learning : des modèles prêts à entraîner avec fit et à évaluer avec score. |
@@ -67,8 +72,8 @@ Les mots de l'atelier, dans l'ordre où on les rencontre. Les 40 premiers vienne
 
 | Terme | Définition |
 |---|---|
-| Token | Un morceau de mot transformé en nombre. Un modèle de langage ne lit que des tokens. « manchots » en fait trois. |
-| LLM | Large Language Model : un modèle de langage à des centaines de milliards de paramètres, dans le cloud. GPT, Claude, Mistral Large. |
+| Token | Un morceau de mot transformé en nombre. Un modèle de langage ne lit que des tokens. Le découpage dépend du modèle : avec celui des modèles GPT, « manchots » fait trois tokens (man · ch · ots) et un mot anglais courant n'en fait souvent qu'un. |
+| LLM | Large Language Model : un modèle de langage à des dizaines ou des centaines de milliards de paramètres, trop gros pour un ordinateur personnel. On l'utilise à distance, par une API. GPT, Claude, Mistral Large. |
 | SLM | Small Language Model : un modèle assez petit pour tourner sur un ordinateur ou un téléphone. Moins doué, mais gratuit et privé. |
 | Température | Le réglage du hasard quand le modèle choisit le token suivant. 0 : toujours le plus probable, réponses stables. Élevée : plus de surprise, plus d'erreurs. |
 | Hallucination | Une réponse fausse dite avec assurance. Le modèle produit des mots probables, pas des faits vérifiés. |
@@ -78,7 +83,7 @@ Les mots de l'atelier, dans l'ordre où on les rencontre. Les 40 premiers vienne
 | Embedding | Un texte transformé en vecteur de nombres, de façon que deux textes proches par le sens donnent des points proches dans l'espace. |
 | Similarité cosinus | La mesure de proximité entre deux embeddings, de -1 à 1. Proche de 1 : même sens. C'est elle qui classe les passages dans un RAG. |
 | Chunk | Un morceau de document (quelques centaines de mots) découpé pour être vectorisé et retrouvé séparément. |
-| RAG | Donner ses notes au modèle avant de poser la question : on cherche les passages utiles dans ses documents et on les met dans le prompt. |
-| Agent | Un modèle qui peut agir : décider d'appeler une fonction, lire le résultat, puis répondre. |
+| RAG | Retrieval-Augmented Generation : donner ses notes au modèle avant de poser la question. Cinq étapes : découper les documents en chunks, les vectoriser (embeddings), chercher les passages les plus proches de la question (similarité cosinus), les injecter dans le prompt, laisser le modèle répondre. Le modèle n'apprend rien : il lit. |
+| Agent | Un programme en boucle autour d'un LLM : le modèle choisit un outil à appeler, le code l'exécute, le modèle lit le résultat et recommence jusqu'à pouvoir répondre. Le LLM décide, le code agit. Séance 12 : trois outils, sans framework. |
 | Outil | Une fonction Python (calculatrice, recherche dans un fichier, RAG) que l'agent peut appeler. Décrite dans le prompt système avec son nom et ses arguments. |
 | Fenêtre de contexte | Le nombre maximum de tokens que le modèle peut lire d'un coup. Au-delà, il oublie le début. |

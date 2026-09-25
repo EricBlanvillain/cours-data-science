@@ -13,7 +13,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 modele = DecisionTreeClassifier(max_depth=3)
 modele.fit(X_train, y_train)          # apprendre
-modele.score(X_test, y_test)          # précision sur les données cachées
+modele.score(X_test, y_test)          # exactitude (part de bonnes réponses) sur les données cachées
 modele.predict(X_test.head())         # prédire
 ```
 
@@ -49,8 +49,8 @@ Tous s'utilisent avec les mêmes méthodes : `.fit(X, y)`, `.predict(X)`, `.scor
 
 | Code | Ce que ça fait |
 |---|---|
-| `modele.score(X_test, y_test)` | Précision (classification) ou R² (régression) |
-| `from sklearn.metrics import accuracy_score` puis `accuracy_score(y_test, y_pred)` | Précision : part de bonnes réponses |
+| `modele.score(X_test, y_test)` | Exactitude (classification) ou R² (régression) |
+| `from sklearn.metrics import accuracy_score` puis `accuracy_score(y_test, y_pred)` | Exactitude (*accuracy*) : part de bonnes réponses. Pas la précision, qui est autre chose (voir `classification_report`) |
 | `from sklearn.metrics import confusion_matrix` puis `confusion_matrix(y_test, y_pred)` | Qui a été confondu avec qui |
 | `from sklearn.metrics import classification_report` puis `print(classification_report(y_test, y_pred))` | Précision, rappel, F1 par classe |
 | `from sklearn.metrics import mean_absolute_error` puis `mean_absolute_error(y_test, y_pred)` | Régression : erreur moyenne, dans l'unité de y |
@@ -87,7 +87,7 @@ La courbe du sur-apprentissage : pour `max_depth` de 1 à 20, tracer le score tr
 | Sur-apprentissage | 100 % en train, bien moins en test | Modèle plus simple (`max_depth` plus petit, plus de voisins), plus de données, forêt plutôt qu'arbre |
 | Fuite de données | Score trop beau pour être vrai | Aucune colonne qui « contient la réponse » ; préparation calculée sur train seulement |
 | Score sur les données d'entraînement | Score irréaliste | Toujours mesurer sur `X_test` ou en validation croisée |
-| Classes déséquilibrées | 95 % de précision alors que le modèle dit toujours « non » | Comparer au modèle bête, regarder la matrice de confusion |
+| Classes déséquilibrées | 95 % d'exactitude alors que le modèle dit toujours « non » | Comparer au modèle bête, regarder la matrice de confusion |
 | Hasard non fixé | Un score différent à chaque exécution | `random_state=42` partout |
 
 ## Soumettre sur Kaggle (séances 7 et 8)
