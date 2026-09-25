@@ -140,30 +140,38 @@ export default function AccueilSeance0() {
 
       {/* ---------------- Écran 1 ---------------- */}
       {ecran === 1 && (
-        <section style={{ display: "grid", gap: "0.9rem" }}>
+        <section className="grid gap-12">
+          {/* Quatre groupes, deux écarts : gap-2 ou gap-3 (0,5 ou 0,75 rem) dans un groupe, gap-12 (3 rem) entre groupes : au moins trois fois plus.
+              Le seul cadre de l'écran est celui de la case affirmation : c'est la seule chose cliquable. */}
+          <div className="grid gap-3">
           <p className="etiquette">Séance 0 · Faire connaissance</p>
           <h1 style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)" }}>Data Science &amp; IA<br />en 12 séances</h1>
           <p style={{ color: "var(--encre-2)" }}>Python, données, machine learning, puis l'IA générative. Tout dans le navigateur, rien à installer.</p>
-          <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "0.5rem" }}>
+          </div>
+          <ol className="grid gap-2" style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {[
               <>À la fin, vous aurez un <b>portfolio sur GitHub</b> : quatre projets faits de vos mains, visibles par n'importe qui avec un lien.</>,
               <>Un <b>modèle de prédiction</b> avec un vrai score dans un <b>classement mondial</b> (la compétition Kaggle Titanic).</>,
               <>Un <b>assistant IA</b> construit par vous, qui répond à des questions sur <b>vos propres cours</b>.</>,
             ].map((txt, i) => (
-              <li key={i} className="carte" style={{ display: "flex", gap: "1rem", alignItems: "baseline", padding: "0.7rem 1.1rem" }}>
+              <li key={i} style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
                 <span className="chiffre" style={{ fontSize: "1.3rem", minWidth: "1.6rem" }}>{String(i + 1).padStart(2, "0")}</span>
                 <span>{txt}</span>
               </li>
             ))}
           </ol>
-          <p className="etiquette" style={{ marginTop: "0.4rem" }}>Qui je suis</p>
-          <dl className="lignes" style={{ marginTop: "-0.5rem" }}>
+          <div className="grid gap-2">
+          <p className="etiquette">Qui je suis</p>
+          <dl className="lignes">
             {QUI.map(([libelle, ligne]) => (
               <div key={libelle}><dt className="mono-caps">{libelle}</dt><dd>{ligne}</dd></div>
             ))}
           </dl>
+          </div>
+          <div className="grid gap-4">
           <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
           <Affirmation avis={etat.avis} onAvis={(a) => set("avis", a)} />
+          </div>
         </section>
       )}
 
