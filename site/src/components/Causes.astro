@@ -1,0 +1,39 @@
+---
+/** Les trois cartes « Pourquoi maintenant », alimentées par src/data/causes.ts. Sources repliées. */
+import { causes } from "../data/causes";
+---
+{causes.length === 0 ? (
+  <p class="encart">Les cartes n'ont pas encore de données : remplis <code>src/data/causes.ts</code>.</p>
+) : (
+  <div class="large grid gap-4 lg:grid-cols-3">
+    {causes.map((c, i) => (
+      <article class="carte flex flex-col gap-3">
+        <p class="etiquette">Cause {i + 1}</p>
+        <h3>{c.titre}</h3>
+        <p style="color: var(--encre-2);">{c.accroche}</p>
+        <p class="my-1">
+          <span class="chiffre" style="font-size: 1.7rem; line-height: 1.15; display: block; text-wrap: balance;">{c.chiffre}</span>
+          <span class="discret">{c.chiffreLegende}</span>
+        </p>
+        <p style="font-size: 0.97rem;">{c.explication}</p>
+        <details class="mt-auto pt-2">
+          <summary class="lien-source" style="list-style: none; display: inline;">détails et sources</summary>
+          <ul class="mt-2 pl-5" style="font-size: 0.88rem;">
+            {c.details.map((d) => <li class="mt-1">{d}</li>)}
+          </ul>
+          <p class="discret mt-2" style="font-size: 0.8rem;">
+            <a href={c.source} target="_blank" rel="noopener">{c.sourceTitre} ↗</a> · vérifié le {c.verifie}
+            {c.sourcesComplementaires?.length ? (
+              <span>
+                <br />aussi :{" "}
+                {c.sourcesComplementaires.map((s, k) => (
+                  <span>{k > 0 && " · "}<a href={s.url} target="_blank" rel="noopener">{s.titre}</a></span>
+                ))}
+              </span>
+            ) : null}
+          </p>
+        </details>
+      </article>
+    ))}
+  </div>
+)}

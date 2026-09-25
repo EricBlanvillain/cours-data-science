@@ -1,0 +1,73 @@
+---
+/** La carte du machine learning : supervisé / non supervisé, puis les cinq familles de problèmes. */
+---
+<figure class="large">
+  <svg class="schema" viewBox="0 0 920 476" role="img" aria-labelledby="cm-titre cm-desc">
+    <title id="cm-titre">La carte du machine learning</title>
+    <desc id="cm-desc">Un arbre : le machine learning se divise en apprentissage supervisé (régression, classification) et non supervisé (clustering, réduction de dimension, détection d'anomalies).</desc>
+
+    <!-- racine -->
+    <rect x="300" y="20" width="320" height="64" rx="14" class="plein" />
+    <text x="460" y="47" text-anchor="middle" font-size="21" font-weight="700" class="sur-plein">Machine learning</text>
+    <text x="460" y="70" text-anchor="middle" font-size="14" class="sur-plein">apprendre une règle à partir d'exemples</text>
+
+    <!-- branches niveau 1 -->
+    <g class="trait" stroke-width="2.5" fill="none">
+      <path d="M460 84 V118 H230 V150" />
+      <path d="M460 84 V118 H690 V150" />
+    </g>
+    <rect x="80" y="150" width="300" height="82" rx="14" class="fond-2 trait" stroke-width="2" />
+    <text x="230" y="182" text-anchor="middle" class="encre" font-size="20" font-weight="700">Supervisé</text>
+    <text x="230" y="208" text-anchor="middle" class="encre-2" font-size="14.5">on montre des exemples avec la bonne réponse</text>
+
+    <rect x="540" y="150" width="300" height="82" rx="14" class="fond-2 trait" stroke-width="2" />
+    <text x="690" y="182" text-anchor="middle" class="encre" font-size="20" font-weight="700">Non supervisé</text>
+    <text x="690" y="208" text-anchor="middle" class="encre-2" font-size="14.5">pas de réponse : la machine cherche une structure</text>
+
+    <!-- branches niveau 2 -->
+    <g class="trait" stroke-width="2.5" fill="none">
+      <path d="M230 232 V266 H140 V300" />
+      <path d="M230 232 V266 H320 V300" />
+      <path d="M690 232 V266 H540 V300" />
+      <path d="M690 232 V300" />
+      <path d="M690 232 V266 H840 V300" />
+    </g>
+
+    <!-- feuilles supervisé -->
+    <rect x="60" y="300" width="160" height="136" rx="14" class="fond-3 plein-trait" stroke-width="2" />
+    <text x="140" y="330" text-anchor="middle" class="encre" font-size="18" font-weight="700">Régression</text>
+    <text x="140" y="356" text-anchor="middle" class="encre-2" font-size="13.5">prédire un nombre</text>
+    <text x="140" y="380" text-anchor="middle" class="encre-2" font-size="13.5">« quelle température</text>
+    <text x="140" y="398" text-anchor="middle" class="encre-2" font-size="13.5">demain ? »</text>
+
+    <rect x="240" y="300" width="160" height="136" rx="14" class="fond-3 plein-trait" stroke-width="2" />
+    <text x="320" y="330" text-anchor="middle" class="encre" font-size="18" font-weight="700">Classification</text>
+    <text x="320" y="356" text-anchor="middle" class="encre-2" font-size="13.5">prédire une catégorie</text>
+    <text x="320" y="380" text-anchor="middle" class="encre-2" font-size="13.5">« ce mail est-il</text>
+    <text x="320" y="398" text-anchor="middle" class="encre-2" font-size="13.5">un spam ? »</text>
+
+    <!-- feuilles non supervisé -->
+    <rect x="470" y="300" width="140" height="136" rx="14" class="fond-2 trait" stroke-width="2" />
+    <text x="540" y="330" text-anchor="middle" class="encre" font-size="18" font-weight="700">Clustering</text>
+    <text x="540" y="356" text-anchor="middle" class="encre-2" font-size="13.5">regrouper ce qui</text>
+    <text x="540" y="374" text-anchor="middle" class="encre-2" font-size="13.5">se ressemble</text>
+    <text x="540" y="398" text-anchor="middle" class="encre-2" font-size="13.5">« quels profils</text>
+    <text x="540" y="416" text-anchor="middle" class="encre-2" font-size="13.5">de clients ? »</text>
+
+    <rect x="620" y="300" width="140" height="136" rx="14" class="fond-2 trait" stroke-width="2" />
+    <text x="690" y="324" text-anchor="middle" class="encre" font-size="17" font-weight="700">Réduction</text>
+    <text x="690" y="344" text-anchor="middle" class="encre" font-size="17" font-weight="700">de dimension</text>
+    <text x="690" y="370" text-anchor="middle" class="encre-2" font-size="13.5">résumer 100</text>
+    <text x="690" y="388" text-anchor="middle" class="encre-2" font-size="13.5">colonnes en 2</text>
+    <text x="690" y="412" text-anchor="middle" class="encre-2" font-size="13.5">« une carte »</text>
+
+    <rect x="770" y="300" width="140" height="136" rx="14" class="fond-2 trait" stroke-width="2" />
+    <text x="840" y="324" text-anchor="middle" class="encre" font-size="17" font-weight="700">Détection</text>
+    <text x="840" y="344" text-anchor="middle" class="encre" font-size="17" font-weight="700">d'anomalies</text>
+    <text x="840" y="370" text-anchor="middle" class="encre-2" font-size="13.5">repérer ce qui</text>
+    <text x="840" y="388" text-anchor="middle" class="encre-2" font-size="13.5">sort du lot</text>
+    <text x="840" y="412" text-anchor="middle" class="encre-2" font-size="13.5">« paiement louche »</text>
+
+    <text x="460" y="462" text-anchor="middle" class="encre-2" font-size="13.5">Les deux cases grisées sont celles du cours : c'est là que vivent Titanic, la météo et le prix des appartements.</text>
+  </svg>
+</figure>

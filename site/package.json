@@ -1,0 +1,30 @@
+{
+  "name": "cours-data-science-site",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Site du cours Data Science & IA : leçons en MDX, îlots React, sortie statique",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/relativize.mjs",
+    "preview": "astro preview",
+    "audit": "node scripts/audit-contrast.mjs",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "8.0.2",
+    "@astrojs/react": "7.0.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/ibm-plex-serif": "5.3.0",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tailwindcss": "4.3.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  }
+}

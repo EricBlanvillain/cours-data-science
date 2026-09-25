@@ -1,0 +1,66 @@
+---
+import Base from "../layouts/Base.astro";
+import { seances, blocs } from "../data/seances";
+
+const parBloc = [0, 1, 2, 3, 4].map((b) => ({
+  bloc: b as keyof typeof blocs,
+  titre: blocs[b as keyof typeof blocs],
+  liste: seances.filter((s) => s.bloc === b),
+}));
+const total = seances.length;
+---
+
+<Base titre="Les séances" largeur="large">
+  {/* Ouverture sombre : le seul endroit de la page où le cuivre parle, sur ce qui n'est pas encore fait. */}
+  <section slot="hero" class="sombre hero">
+    <div class="conteneur">
+      <p class="etiquette">Cours Data Science &amp; IA · {total} séances de 1 h 30</p>
+      <h1 class="hero-titre">Comprendre les données et l'IA, en construisant.</h1>
+      <p class="hero-texte">
+        Python, données, machine learning, puis l'IA générative. Quinze minutes d'explication, une heure de pratique,
+        quinze minutes de partage. Ce site porte l'explication ; la pratique se fait dans les notebooks.
+      </p>
+      <p class="hero-compteur" data-compteur data-fini="non">
+        <span class="hero-compteur-nombre ouvert" data-restantes>{total}</span>
+        <span class="mono-caps" data-restantes-mot>séances restantes</span>
+      </p>
+      <p class="hero-ligne mono-caps">Portfolio GitHub · score Kaggle · un assistant IA construit soi-même</p>
+    </div>
+  </section>
+
+  <div class="space-y-16 pt-14">
+    {parBloc.map(({ titre, liste }) => (
+      <section>
+        <h2 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--encre-2);">{titre}</h2>
+        <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" style="list-style: none; padding: 0;">
+          {liste.map((s) => (
+            <li class="carte carte-seance flex flex-col gap-3" data-seance={s.numero}>
+              <div class="flex items-baseline justify-between gap-3 mono-caps">
+                <span>Séance {String(s.numero).padStart(2, "0")}</span>
+                <span aria-label={`niveau ${s.niveau}`}>{s.niveau.replace(/⭐/g, "★")}</span>
+              </div>
+              <h3>
+                {s.slug ? (
+                  <a href={`/lecons/${s.slug}`} class="no-underline" style="color: var(--encre);">{s.titre}</a>
+                ) : (
+                  s.titre
+                )}
+              </h3>
+              <p class="discret" style="font-size: 0.95rem;">{s.resume}</p>
+              <p class="mono-caps etat-seance mt-auto pt-3">
+                <span class="pastille-ouverte" aria-hidden="true"></span><span data-etat-libelle>À venir</span>
+                {!s.slug && <span class="etat-note"> · leçon sur le site à venir, notebooks disponibles</span>}
+              </p>
+              {s.slug && <a href={`/lecons/${s.slug}`} class="bouton principal self-start no-underline">Ouvrir la leçon →</a>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <p class="discret mt-16" style="max-width: 46rem;">
+    Une séance terminée ouvre la suivante : c'est un garde-fou, pas une serrure. Tout s'affiche toujours, et l'état est gardé
+    dans ce navigateur, sur cet appareil. Sur une autre machine, on repart de zéro : c'est normal.
+  </p>
+</Base>

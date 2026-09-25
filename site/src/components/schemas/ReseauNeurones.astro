@@ -1,0 +1,68 @@
+---
+/**
+ * Un réseau de neurones à trois couches, sur l'exemple pomme / melon de la leçon :
+ * ce qui entre (des nombres), une couche cachée, ce qui sort (une décision).
+ */
+const entrees = ["poids (g)", "largeur (cm)", "couleur (0 à 1)"];
+const cachee = 4;
+const sorties = ["pomme", "melon"];
+const xE = 150, xC = 460, xS = 770;
+const yE = (i: number) => 120 + i * 100;
+const yC = (i: number) => 112 + i * 88;
+const yS = (i: number) => 170 + i * 100;
+---
+<figure class="large">
+  <svg class="schema" viewBox="0 0 920 500" role="img" aria-labelledby="rn-titre rn-desc">
+    <title id="rn-titre">Un réseau de neurones à trois couches</title>
+    <desc id="rn-desc">Trois entrées numériques (poids, largeur, couleur) sont reliées à quatre neurones cachés, eux-mêmes reliés à deux sorties : pomme ou melon. Chaque lien porte un poids appris.</desc>
+
+    <!-- connexions : chaque trait est un « poids », un nombre que l'apprentissage ajuste -->
+    <g class="trait" stroke-width="1.6" fill="none" opacity="0.9">
+      {entrees.map((_, i) => Array.from({ length: cachee }, (_, j) => <line x1={xE + 34} y1={yE(i)} x2={xC - 34} y2={yC(j)} />))}
+      {Array.from({ length: cachee }, (_, j) => sorties.map((_, k) => <line x1={xC + 34} y1={yC(j)} x2={xS - 34} y2={yS(k)} />))}
+    </g>
+    <!-- un lien mis en avant : le poids que l'on regarde -->
+    <line x1={xE + 34} y1={yE(0)} x2={xC - 34} y2={yC(0)} class="plein-trait" stroke-width="4" />
+
+    <!-- entrées -->
+    {entrees.map((e, i) => (
+      <g>
+        <circle cx={xE} cy={yE(i)} r="34" class="fond-2 trait" stroke-width="2.5" />
+        <text x={xE} y={yE(i) + 6} text-anchor="middle" class="encre" font-size="18" font-weight="700">x{i + 1}</text>
+        <text x={xE - 48} y={yE(i) + 6} text-anchor="end" class="encre-2" font-size="15">{e}</text>
+      </g>
+    ))}
+    <!-- couche cachée -->
+    {Array.from({ length: cachee }, (_, j) => (
+      <g>
+        <circle cx={xC} cy={yC(j)} r="34" class="fond-3 plein-trait" stroke-width="2.5" />
+        <text x={xC} y={yC(j) + 6} text-anchor="middle" class="encre" font-size="15" font-weight="700">Σ → f</text>
+      </g>
+    ))}
+    <!-- sorties -->
+    {sorties.map((s, k) => (
+      <g>
+        <circle cx={xS} cy={yS(k)} r="34" class={k === 1 ? "plein" : "fond-2 trait"} stroke-width="2.5" />
+        <text x={xS} y={yS(k) + 6} text-anchor="middle" font-size="15" font-weight="700" class={k === 1 ? "sur-plein mono" : "encre mono"}>{k === 1 ? "0,93" : "0,07"}</text>
+        <text x={xS + 48} y={yS(k) + 6} class="encre-2" font-size="16">{s}</text>
+      </g>
+    ))}
+
+    <!-- l'étiquette du poids, au premier plan (dessinée après les nœuds) -->
+    <text x="305" y="97" text-anchor="middle" class="encre mono" font-size="12.5" font-weight="500">un poids, ajusté à chaque erreur ↓</text>
+
+    <!-- légendes de colonnes -->
+    <g class="encre" font-size="17" font-weight="700" text-anchor="middle">
+      <text x={xE} y="40">Ce qui entre</text>
+      <text x={xC} y="40">Couche cachée</text>
+      <text x={xS} y="40">Ce qui sort</text>
+    </g>
+    <g class="encre-2" font-size="13.5" text-anchor="middle">
+      <text x={xE} y="60">des nombres, toujours</text>
+      <text x={xC} y="60">chaque neurone additionne, puis décide</text>
+      <text x={xS} y="60">une probabilité par réponse</text>
+    </g>
+    <text x="460" y="466" text-anchor="middle" class="encre-2" font-size="13.5">Apprendre = régler tous les poids pour que la sortie colle aux exemples.</text>
+    <text x="460" y="486" text-anchor="middle" class="encre-2" font-size="13.5">Avec des millions de poids et des dizaines de couches, c'est du deep learning.</text>
+  </svg>
+</figure>

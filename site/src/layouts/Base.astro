@@ -1,0 +1,96 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+
+interface Props {
+  titre: string;
+  description?: string;
+  /** largeur du contenu : "lecture" (leçon) ou "large" (pages à écrans) */
+  largeur?: "lecture" | "large";
+}
+const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{titre} · Cours Data Science & IA</title>
+    {/*
+      Progression des séances, gardée dans CE navigateur, sur CET appareil (localStorage).
+      Porté de l'ancien site (useProgress.ts : clé, chargement tolérant, écriture tolérante), sans React :
+      un script classique en ligne, pour qu'il tourne aussi quand dist/ est ouvert depuis le disque.
+      Trois états : « à venir », « ouverte », « terminée ». Terminer N ouvre N+1. La séance 0 est ouverte d'office.
+      Rien n'est bloqué : une séance à venir s'affiche avec un bandeau. ?ouvrir=N ouvre une séance à la main,
+      ?reinitialiser=1 remet tout à zéro (pour un nouveau groupe).
+    */}
+    <script is:inline>
+      (function () {
+        var CLE = "cours-data-science-progression"; // ancienne clé : atelier-data-ia-progress
+        var DERNIERE = 12;
+        function charger() {
+          try {
+            var brut = localStorage.getItem(CLE);
+            if (brut) { var p = JSON.parse(brut); return { terminees: Array.isArray(p.terminees) ? p.terminees : [], ouvertes: Array.isArray(p.ouvertes) ? p.ouvertes : [] }; }
+          } catch (e) { /* localStorage indisponible : on repart de zéro */ }
+          return { terminees: [], ouvertes: [] };
+        }
+        var etatMemo = charger();
+        function ecrire(e) { etatMemo = e; try { localStorage.setItem(CLE, JSON.stringify(e)); } catch (err) { /* ignore */ } rafraichir(); }
+        function etat(n) {
+          if (etatMemo.terminees.indexOf(n) >= 0) return "terminee";
+          if (n === 0 || etatMemo.terminees.indexOf(n - 1) >= 0 || etatMemo.ouvertes.indexOf(n) >= 0) return "ouverte";
+          return "a-venir";
+        }
+        function sans(liste, n) { return liste.filter(function (x) { return x !== n; }); }
+        var api = {
+          etat: etat,
+          terminer: function (n) { if (etatMemo.terminees.indexOf(n) < 0) ecrire({ terminees: etatMemo.terminees.concat([n]), ouvertes: etatMemo.ouvertes }); },
+          annuler: function (n) { ecrire({ terminees: sans(etatMemo.terminees, n), ouvertes: etatMemo.ouvertes }); },
+          ouvrir: function (n) { if (etatMemo.ouvertes.indexOf(n) < 0) ecrire({ terminees: etatMemo.terminees, ouvertes: etatMemo.ouvertes.concat([n]) }); },
+          reinitialiser: function () { ecrire({ terminees: [], ouvertes: [] }); },
+          restantes: function () { var r = 0; for (var i = 0; i <= DERNIERE; i++) if (etat(i) !== "terminee") r++; return r; },
+          rafraichir: rafraichir,
+        };
+        var LIBELLES = { "a-venir": "À venir", ouverte: "Ouverte", terminee: "Terminée" };
+        function rafraichir() {
+          document.querySelectorAll("[data-seance]").forEach(function (el) {
+            var n = Number(el.getAttribute("data-seance")); var e = etat(n);
+            el.setAttribute("data-etat", e);
+            var lab = el.querySelector("[data-etat-libelle]"); if (lab) lab.textContent = LIBELLES[e];
+          });
+          document.querySelectorAll("[data-restantes]").forEach(function (el) {
+            var r = api.restantes(); el.textContent = String(r);
+            var bloc = el.closest("[data-compteur]"); if (bloc) { bloc.setAttribute("data-fini", r === 0 ? "oui" : "non"); var mot = bloc.querySelector("[data-restantes-mot]"); if (mot) mot.textContent = r > 1 ? "séances restantes" : (r === 1 ? "séance restante" : "séance restante : parcours terminé"); }
+          });
+        }
+        // Paramètres d'URL : ?ouvrir=N (ouvrir une séance à la main), ?reinitialiser=1 (nouveau groupe)
+        try {
+          var q = new URLSearchParams(location.search);
+          if (q.get("reinitialiser") === "1") api.reinitialiser();
+          var o = q.get("ouvrir"); if (o !== null && !isNaN(Number(o))) api.ouvrir(Number(o));
+        } catch (e) { /* ignore */ }
+        window.progression = api;
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", rafraichir); else rafraichir();
+      })();
+    </script>
+  </head>
+  <body>
+    <Nav />
+    <slot name="hero" />
+    <main class:list={["conteneur pb-24", largeur === "large" ? "" : ""]}>
+      <slot />
+    </main>
+    <footer class="conteneur pied">
+      <p>Cours Data Science &amp; IA · 13 séances · notebooks et exercices sur <a href="https://github.com/EricBlanvillain/cours-data-science">GitHub</a></p>
+      <p>
+        <span>Progression gardée dans ce navigateur, sur cet appareil · </span>
+        <button type="button" class="lien-mono" data-reinit-1 onclick="this.hidden=true; this.nextElementSibling.hidden=false;">Réinitialiser</button>
+        <button type="button" class="lien-mono ouvert" hidden data-reinit-2 onclick="window.progression.reinitialiser(); this.hidden=true; this.previousElementSibling.hidden=false;">Confirmer la remise à zéro</button>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -17,3 +17,8 @@ lora*/
 results/
 runs/
 logs/
+
+# site Astro
+site/node_modules/
+site/dist/
+site/.astro/

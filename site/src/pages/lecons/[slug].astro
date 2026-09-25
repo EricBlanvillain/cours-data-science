@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { seances } from "../../data/seances";
+
+export async function getStaticPaths() {
+  const lecons = await getCollection("lecons");
+  return lecons.map((lecon) => ({ params: { slug: lecon.id }, props: { lecon } }));
+}
+
+const { lecon } = Astro.props;
+const { Content, headings } = await render(lecon);
+const sections = headings.filter((h) => h.depth === 2);
+const n = lecon.data.numero;
+const suivante = seances.find((s) => s.numero === n + 1);
+---
+
+<Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume}>
+  <section slot="hero" class="sombre hero hero-lecon">
+    <div class="conteneur">
+      <p class="etiquette">Séance {String(n).padStart(2, "0")} · {lecon.data.niveau.replace(/⭐/g, "★")} · {lecon.data.duree}</p>
+      <h1 class="hero-titre">{lecon.data.titre}</h1>
+      <p class="hero-texte">{lecon.data.resume}</p>
+      {lecon.data.livrable && <p class="hero-ligne"><span class="mono-caps">On repart avec</span> · {lecon.data.livrable}</p>}
+    </div>
+  </section>
+
+  <div data-seance={n} data-seance-page>
+    {/* Séance pas encore ouverte sur cet appareil : on le dit, on ne bloque rien. */}
+    <div class="encart ouvert-bord mt-10 bandeau-a-venir" style="max-width: 46rem;">
+      <p class="mono-caps ouvert"><span class="pastille-ouverte" aria-hidden="true"></span>On n'a pas encore fait celle-là</p>
+      <p class="mt-2">Sur cet appareil, la séance précédente n'est pas marquée terminée. Tu peux lire quand même : rien n'est fermé, c'est juste pour ne pas partir devant par accident.</p>
+    </div>
+
+    {sections.length > 1 && (
+      <nav aria-label="Sommaire" class="mt-10" style="max-width: 46rem;">
+        <ol class="flex flex-wrap gap-x-6 gap-y-2 mono-caps" style="list-style: none; padding: 0;">
+          {sections.map((s, i) => (
+            <li><a href={`#${s.slug}`} class="no-underline" style="color: var(--encre-2);"><span style="color: var(--encre);">{String(i + 1).padStart(2, "0")}</span> {s.text}</a></li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <article class="prose mt-14">
+      <Content />
+    </article>
+
+    {/* Terminer la séance : c'est l'élève qui le dit, depuis ici. Ouvre la suivante. */}
+    <section class="mt-20 pt-8 fin-de-seance" style="max-width: 46rem; border-top: 1px solid var(--trait);">
+      <p class="mono-caps">Cette séance, sur cet appareil : <span data-etat-libelle>À venir</span></p>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button type="button" class="bouton principal bouton-terminer" onclick={`window.progression.terminer(${n})`}>Marquer la séance terminée</button>
+        <button type="button" class="bouton bouton-annuler" onclick={`window.progression.annuler(${n})`}>Annuler « terminée »</button>
+        {suivante?.slug && <a class="bouton lien-suivante no-underline" href={`/lecons/${suivante.slug}`}>Séance suivante →</a>}
+      </div>
+      <p class="discret mt-4">Terminer ouvre la séance suivante. L'état est gardé dans ce navigateur, sur cet appareil : sur une autre machine, on repart de zéro, et ce n'est pas un bug.</p>
+    </section>
+
+    <p class="mt-12 mono-caps"><a href="/" class="no-underline" style="color: var(--encre-2);">← Toutes les séances</a></p>
+  </div>
+</Base>

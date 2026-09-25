@@ -1,0 +1,28 @@
+---
+const chemin = Astro.url.pathname;
+const liens = [
+  { href: "/", label: "Les séances", actif: chemin === "/" || chemin === "/index.html" },
+  { href: "/lecons/seance-00-faire-connaissance", label: "Séance 0", actif: chemin.includes("seance-00") },
+];
+---
+
+{/* L'en-tête est sur fond encre en toute circonstance, comme le hero : c'est l'ouverture sombre du site. */}
+<header class="sombre entete">
+  <div class="conteneur flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-4">
+    <a href="/" class="no-underline" style="font-family: var(--font-serif); font-weight: 600; font-size: 1.05rem; color: var(--encre);">
+      Data Science &amp; IA
+    </a>
+    <nav aria-label="Navigation principale" class="flex gap-7 mono-caps">
+      {liens.map((l) => (
+        <a
+          href={l.href}
+          aria-current={l.actif ? "page" : undefined}
+          class="no-underline"
+          style={l.actif ? "color: var(--encre); text-decoration: underline; text-underline-offset: 0.4em;" : "color: var(--encre-2);"}
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
