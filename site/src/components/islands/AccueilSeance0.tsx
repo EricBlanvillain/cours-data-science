@@ -25,7 +25,7 @@ const OUTILS = ["ChatGPT", "Claude", "Gemini", "Midjourney", "Aucun"];
 const ETAPES = ["Accueil", "C'est quoi l'IA ?", "IA ou pas ?", "Déjà fait", "Le parcours"];
 const COLAB = "https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb";
 
-/* Qui je suis : quatre encarts, un libellé et une ligne. Le quatrième est là pour les parents ; s'il faut couper, c'est lui. */
+/* Qui je suis : quatre lignes, un libellé en mono à gauche, une ligne en sans à droite. Le quatrième est là pour les parents. */
 const QUI: [string, string][] = [
   ["Conseil", "Banque, assurance, industrie"],
   ["Data et IA", "Modèles, agents, mise en production"],
@@ -155,14 +155,11 @@ export default function AccueilSeance0() {
             ))}
           </ol>
           <p className="etiquette" style={{ marginTop: "0.4rem" }}>Qui je suis</p>
-          <ul className="grille-cartes" style={{ "--bandes": 2, "--carte-min": "8.5rem", marginTop: "-0.3rem" } as CSSProperties}>
+          <dl className="lignes" style={{ marginTop: "-0.5rem" }}>
             {QUI.map(([libelle, ligne]) => (
-              <li key={libelle} className="carte" style={{ padding: "0.75rem 0.9rem" }}>
-                <p className="mono-caps" style={{ color: "var(--encre-2)" }}>{libelle}</p>
-                <p style={{ fontSize: "0.85rem", lineHeight: 1.35 }}>{ligne}</p>
-              </li>
+              <div key={libelle}><dt className="mono-caps">{libelle}</dt><dd>{ligne}</dd></div>
             ))}
-          </ul>
+          </dl>
           <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
         </section>
       )}

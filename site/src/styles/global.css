@@ -265,6 +265,16 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 .prose > details > * + * { margin-top: 0.9em; }
 .prose > details[open] > summary { color: var(--encre); margin-bottom: 0.9em; }
 
+/* Lignes libellé / contenu : le mono mesure à gauche (colonne fixe), la sans explique à droite, un filet entre les lignes,
+   ni cadre ni fond. */
+.lignes { margin: 0; }
+.lignes > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); column-gap: 1rem; align-items: baseline; padding: 0.18rem 0; border-bottom: 1px solid var(--trait); line-height: 1.25; }
+.lignes > div:first-child { border-top: 1px solid var(--trait); }
+.lignes dt { color: var(--encre-2); }
+.lignes dd { margin: 0; font-size: 0.9rem; }
+@media (max-width: 480px) { .lignes > div { grid-template-columns: 5.5rem minmax(0, 1fr); } }
+
+
 /* Le mini-quiz : une option = un bouton radio ; juste et faux se lisent à la forme et au libellé, pas à la couleur. */
 .quiz-option { width: 100%; display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto; column-gap: 0.6rem; align-items: baseline; text-align: left; font: inherit; font-size: 0.95rem; line-height: 1.35; color: var(--encre); background: var(--fond-2); border: 1px solid var(--trait-fort); padding: 0.55rem 0.8rem; cursor: pointer; }
 .quiz-option:disabled { cursor: default; }
