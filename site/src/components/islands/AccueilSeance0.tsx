@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import Affirmation, { type Avis } from "./Affirmation";
 
 /**
  * Les cinq écrans de la séance 0, portés depuis seances/seance-00-faire-connaissance/accueil.html.
@@ -47,9 +48,10 @@ type Etat = {
   langages: [string[], string[]];
   outils: [string[], string[]];
   reve: [string, string];
+  avis: Avis;
 };
 
-const initial: Etat = { prenoms: ["", ""], ia: ["", ""], quiz: {}, langages: [[], []], outils: [[], []], reve: ["", ""] };
+const initial: Etat = { prenoms: ["", ""], ia: ["", ""], quiz: {}, langages: [[], []], outils: [[], []], reve: ["", ""], avis: null };
 
 export default function AccueilSeance0() {
   const [ecran, setEcran] = useState(1);
@@ -161,6 +163,7 @@ export default function AccueilSeance0() {
             ))}
           </dl>
           <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
+          <Affirmation avis={etat.avis} onAvis={(a) => set("avis", a)} />
         </section>
       )}
 

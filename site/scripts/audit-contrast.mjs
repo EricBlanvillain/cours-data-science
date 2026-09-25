@@ -72,7 +72,12 @@ const ETATS = [
       const q = ile("ClassifOuRegression"); saisir(q.querySelector("input"), "Le meilleur film de tous les temps");
       await w(150); q.querySelector("form").requestSubmit(); await w(300); btn(q, "Une étiquette").click(); await w(300);` },
 
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran1", pilote: "" },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran1", pilote: `
+      const r = ile("AccueilSeance0"); if (!r.querySelector(".debat-affirmation.ouvert")) throw new Error("l'affirmation devrait être cuivre avant le clic");` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran1-avis-donne", pilote: `
+      const r = ile("AccueilSeance0"); btn(r, "Plutôt d'accord").click(); await w(250);
+      if (r.querySelector(".debat-affirmation.ouvert")) throw new Error("plus de cuivre après le clic");
+      if (!r.textContent.includes("Les deux camps ont des arguments")) throw new Error("les arguments devraient être dépliés");` },
   { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-champs-remplis", pilote: `
       const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300);
       saisir(r.querySelector("#prenom0"), "Inès"); saisir(r.querySelector("#ia0"), "Un programme qui apprend"); await w(200);` },
