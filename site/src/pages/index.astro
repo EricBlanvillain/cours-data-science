@@ -35,8 +35,8 @@ const total = seances.length;
         <h2 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--encre-2);">{titre}</h2>
         {/* Cinq bandes alignées sur toute la rangée : sur-titre, titre, description, pied, action.
             Le pied répond à deux questions distinctes : ce qui est disponible sur le site (ne change jamais) et où en est
-            l'élève (porte le cuivre, sur « pas encore ouverte » seulement). La bande d'action garde sa hauteur même vide :
-            une séance pas encore ouverte n'annonce pas la porte, le titre reste cliquable, rien n'est bloqué. */}
+            l'élève (porte le cuivre sur « en cours » seulement : la séance qu'on fait). La bande d'action garde sa hauteur même vide :
+            une séance pas encore faite n'annonce pas la porte, le titre reste cliquable, rien n'est bloqué. */}
         <GrilleCartes bandes={5} class="mt-5">
           {liste.map((s) => {
             const lecon = s.slug ? `/lecons/${s.slug}` : null;
@@ -54,7 +54,7 @@ const total = seances.length;
               <div class="pt-3">
                 <p class="mono-caps" style="color: var(--encre-2);">{lecon ? "Leçon en ligne · notebooks" : "Notebooks seuls · leçon à écrire"}</p>
                 <p class="mono-caps etat-seance mt-1">
-                  <span class="pastille" aria-hidden="true"></span><span data-etat-libelle>Pas encore ouverte</span>
+                  <span class="pastille" aria-hidden="true"></span><span data-etat-libelle>Pas encore faite</span>
                 </p>
               </div>
               <div class="bande-action">

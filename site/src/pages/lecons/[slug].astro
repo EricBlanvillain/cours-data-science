@@ -31,7 +31,7 @@ const aUnQuiz = (quiz[n] ?? []).length > 0;
   </section>
 
   <div data-seance={n} data-seance-page>
-    {/* Séance pas encore ouverte sur cet appareil : on le dit, on ne bloque rien. */}
+    {/* Séance pas encore faite sur cet appareil : on le dit, on ne bloque rien. */}
     <div class="encart ouvert-bord mt-10 bandeau-a-venir" style="max-width: 46rem;">
       <p class="mono-caps ouvert"><span class="pastille-ouverte" aria-hidden="true"></span>On n'a pas encore fait celle-là</p>
       <p class="mt-2">Sur cet appareil, la séance précédente n'est pas marquée terminée. Tu peux lire quand même : rien n'est fermé, c'est juste pour ne pas partir devant par accident.</p>
@@ -80,7 +80,7 @@ const aUnQuiz = (quiz[n] ?? []).length > 0;
 
     {/* Terminer la séance : c'est l'élève qui le dit, depuis ici. Ouvre la suivante. */}
     <section class="mt-20 pt-8 fin-de-seance" style="max-width: 46rem; border-top: 1px solid var(--trait);">
-      <p class="mono-caps">Cette séance, sur cet appareil : <span data-etat-libelle>Pas encore ouverte</span></p>
+      <p class="mono-caps">Cette séance, sur cet appareil : <span data-etat-libelle>Pas encore faite</span></p>
       <div class="mt-4 flex flex-wrap gap-3">
         <button type="button" class="bouton principal bouton-terminer" onclick={`window.progression.terminer(${n})`}>Marquer la séance terminée</button>
         <button type="button" class="bouton bouton-annuler" onclick={`window.progression.annuler(${n})`}>Annuler « terminée »</button>

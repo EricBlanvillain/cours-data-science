@@ -310,7 +310,7 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 /* ------------------------------------------------------------------
    Progression des séances (trois états, posés par le script de Base.astro sur data-etat, cartes et barre latérale).
    Un seul cuivre : la séance EN COURS (data-etat="ouverte"), le même fait montré sur sa carte et dans la barre. Terminée = pastille
-   pleine encre ; pas encore ouverte = pastille vide. Douze séances futures en cuivre, ce serait douze faits distincts.
+   pleine encre ; pas encore faite = pastille vide. Douze séances futures en cuivre, ce serait douze faits distincts.
    ------------------------------------------------------------------ */
 .pastille { display: inline-block; box-sizing: border-box; width: 0.5em; height: 0.5em; border-radius: 50%; border: 1px solid var(--trait-fort); vertical-align: middle; margin-right: 0.45em; }
 .pastille.invisible { border-color: transparent; }
@@ -318,7 +318,7 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 [data-etat="ouverte"] .pastille { background: var(--cuivre-plein); border-color: var(--cuivre-plein); }
 .etat-seance { color: var(--encre-2); }
 [data-etat="ouverte"] .etat-seance { color: var(--cuivre-texte); }
-/* La bande d'action d'une carte de séance : hauteur d'un bouton réservée même vide (pas encore ouverte = aucune action). */
+/* La bande d'action d'une carte de séance : hauteur d'un bouton réservée même vide (pas encore faite = aucune action). */
 .bande-action { min-height: 2.9rem; align-self: end; }
 .action-ouverte, .action-terminee { display: none; }
 [data-etat="ouverte"] .action-ouverte { display: inline-block; }

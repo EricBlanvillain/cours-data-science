@@ -72,28 +72,31 @@ const ETATS = [
       const q = ile("ClassifOuRegression"); saisir(q.querySelector("input"), "Le meilleur film de tous les temps");
       await w(150); q.querySelector("form").requestSubmit(); await w(300); btn(q, "Une étiquette").click(); await w(300);` },
 
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran1", pilote: `
-      const r = ile("AccueilSeance0"); if (!r.querySelector(".debat-affirmation.ouvert")) throw new Error("l'affirmation devrait être cuivre avant le clic");` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran1-avis-donne", pilote: `
-      const r = ile("AccueilSeance0"); btn(r, "Plutôt d'accord").click(); await w(250);
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran1", pilote: "" },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-affirmation-sans-avis", pilote: `
+      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300);
+      if (!r.querySelector(".debat-affirmation.ouvert")) throw new Error("l'affirmation devrait être cuivre avant le clic");` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-avis-donne", pilote: `
+      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300); btn(r, "Plutôt d'accord").click(); await w(250);
       if (r.querySelector(".debat-affirmation.ouvert")) throw new Error("plus de cuivre après le clic");
       if (!r.textContent.includes("Les deux camps ont des arguments")) throw new Error("les arguments devraient être dépliés");` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran2-champs-remplis", pilote: `
-      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(300);
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran3-champs-remplis", pilote: `
+      const r = ile("AccueilSeance0"); for (let i = 0; i < 2; i++) { btn(r, "Suivant").click(); await w(250); }
       saisir(r.querySelector("#prenom0"), "Inès"); saisir(r.querySelector("#ia0"), "Un programme qui apprend"); await w(200);` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran3-sans-reponse", pilote: `
-      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(250); btn(r, "Suivant").click(); await w(300);
-      if (!r.textContent.includes("sans réponse")) throw new Error("marqueur cuivre absent");` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran3-repondu-pourquoi-ouvert", pilote: `
-      const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(250); btn(r, "Suivant").click(); await w(300);
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran4-sans-reponse", pilote: `
+      const r = ile("AccueilSeance0"); for (let i = 0; i < 3; i++) { btn(r, "Suivant").click(); await w(250); }
+      if (r.querySelectorAll(".grille-cartes .bouton.actif").length !== 0) throw new Error("aucun Oui/Non ne devrait être pressé");` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran4-repondu-pourquoi-ouvert", pilote: `
+      const r = ile("AccueilSeance0"); for (let i = 0; i < 3; i++) { btn(r, "Suivant").click(); await w(250); }
       for (const b of [...r.querySelectorAll("button")].filter((x) => x.textContent.trim() === "Non")) { b.click(); await w(80); }
       btn(r, "Pourquoi").click(); await w(300);
-      if (r.textContent.includes("sans réponse")) throw new Error("le cuivre devrait avoir disparu");` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran4", pilote: `
-      const r = ile("AccueilSeance0"); for (let i = 0; i < 3; i++) { btn(r, "Suivant").click(); await w(250); }
+      if (r.querySelectorAll(".grille-cartes .bouton.actif").length !== 6) throw new Error("les six réponses devraient être pressées");` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran5", pilote: `
+      const r = ile("AccueilSeance0"); for (let i = 0; i < 4; i++) { btn(r, "Suivant").click(); await w(250); }
       r.querySelectorAll("input[type=checkbox]")[1].click(); await w(200);` },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran5-recap", pilote: `
-      const r = ile("AccueilSeance0"); for (let i = 0; i < 4; i++) { btn(r, "Suivant").click(); await w(250); }` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran6-recap-ouvert", pilote: `
+      const r = ile("AccueilSeance0"); for (let i = 0; i < 5; i++) { btn(r, "Suivant").click(); await w(250); }
+      r.querySelector("#recap-details").open = true; await w(200);` },
 
   // La barre latérale : ses quatre états de pastille, repliée, et le menu du mobile (seul état mesuré à 420 px).
   { page: "lecons/seance-01-introduction-ia.html", id: "barre-quatre-pastilles", pilote: `

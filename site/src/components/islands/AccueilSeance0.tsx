@@ -8,22 +8,22 @@ import Affirmation, { type Avis } from "./Affirmation";
 
 const QUIZ = [
   { id: "correcteur", titre: "Le correcteur orthographique du téléphone", ia: "oui",
-    pourquoi: "Oui, aujourd'hui. Celui d'il y a quinze ans comparait tes mots à un dictionnaire. Celui de ton téléphone a appris sur des millions de textes ce que tu vas probablement taper : c'est du machine learning, et c'est le même mécanisme que ChatGPT, en tout petit." },
+    pourquoi: "Oui. Il a appris sur des millions de textes ce que tu vas probablement taper. C'est du machine learning, le même mécanisme que ChatGPT, en tout petit." },
   { id: "youtube", titre: "Les recommandations YouTube", ia: "oui",
-    pourquoi: "Oui. Personne n'a écrit la règle « après cette vidéo, propose celle-là ». Un modèle a appris, sur ce que regardent des centaines de millions de personnes, ce qui te fera rester. On en reparle : c'est aussi là que se cachent les biais." },
+    pourquoi: "Oui. Personne n'a écrit la règle « après cette vidéo, propose celle-là ». Un modèle l'a apprise sur ce que regardent des centaines de millions de personnes." },
   { id: "chatgpt", titre: "ChatGPT", ia: "oui",
-    pourquoi: "Oui, et c'est la version la plus récente : le deep learning. Il ne fait qu'une chose, prédire le mot suivant, mais il l'a appris sur une bonne partie d'Internet. On le construira en miniature à la séance 9." },
+    pourquoi: "Oui, dans sa version la plus récente : le deep learning. Il prédit le mot suivant, appris sur une bonne partie d'Internet. On le construit en miniature à la séance 9." },
   { id: "gps", titre: "Le GPS qui calcule l'itinéraire le plus rapide", ia: "oui",
-    pourquoi: "Oui, mais pas celle qu'on croit : rien n'est appris. Le plus court chemin est calculé par un algorithme écrit à la main dans les années 1950, avec des règles. C'est de l'IA « classique » : un programme qui imite un raisonnement humain, sans exemples." },
+    pourquoi: "Oui, mais rien n'est appris : un algorithme des années 1950, écrit à la main, cherche le plus court chemin. C'est de l'IA « classique », un raisonnement fait de règles." },
   { id: "snapchat", titre: "Un filtre Snapchat", ia: "oui",
-    pourquoi: "Oui. Pour poser des oreilles de chat au bon endroit, il faut d'abord trouver le visage, les yeux, la bouche, trente fois par seconde. C'est un réseau de neurones entraîné sur des millions de visages." },
+    pourquoi: "Oui. Pour poser des oreilles de chat au bon endroit, il faut trouver le visage trente fois par seconde : c'est un réseau de neurones entraîné sur des millions de visages." },
   { id: "calculatrice", titre: "La calculatrice", ia: "non",
-    pourquoi: "Non. Elle applique des règles fixes et n'imite aucune capacité humaine : personne ne dit qu'une calculatrice « réfléchit ». C'est la frontière : de l'informatique, très utile, mais pas de l'IA. Un tableur non plus." },
+    pourquoi: "Non. Elle applique des règles fixes, et personne ne dit qu'une calculatrice « réfléchit ». C'est de l'informatique, très utile, mais pas de l'IA. Un tableur non plus." },
 ] as const;
 
 const LANGAGES = ["Scratch", "Python", "JavaScript", "Mods de jeu", "HTML", "Rien pour l'instant"];
 const OUTILS = ["ChatGPT", "Claude", "Gemini", "Midjourney", "Aucun"];
-const ETAPES = ["Accueil", "C'est quoi l'IA ?", "IA ou pas ?", "Déjà fait", "Le parcours"];
+const ETAPES = ["Accueil", "Une affirmation", "C'est quoi l'IA ?", "IA ou pas ?", "Déjà fait", "Le parcours"];
 const COLAB = "https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb";
 
 /* Qui je suis : quatre lignes, un libellé en mono à gauche, une ligne en sans à droite. Le quatrième est là pour les parents. */
@@ -56,8 +56,8 @@ const initial: Etat = { prenoms: ["", ""], ia: ["", ""], quiz: {}, langages: [[]
 export default function AccueilSeance0() {
   const [ecran, setEcran] = useState(1);
   const [etat, setEtat] = useState<Etat>(initial);
-  const [pourquoiOuverts, setPourquoiOuverts] = useState<Record<string, boolean>>({});
-  const [copie, setCopie] = useState(false);
+  const [pourquoiOuvert, setPourquoiOuvert] = useState<string | null>(null);   // une explication à la fois, sous la grille
+  const [copie, setCopie] = useState<null | "ok" | "manuel">(null);
   const racine = useRef<HTMLDivElement>(null);
 
   const nom = (i: 0 | 1) => etat.prenoms[i].trim() || `Participant ${i + 1}`;
@@ -99,10 +99,18 @@ export default function AccueilSeance0() {
     const plage = document.createRange(); plage.selectNodeContents(el);
     const sel = window.getSelection(); sel?.removeAllRanges(); sel?.addRange(plage);
   }
+  // Copie du récap : l'API presse-papiers d'abord ; si elle est refusée (page servie sans HTTPS, permission absente),
+  // on ouvre le repli, on sélectionne le texte et on tente la copie classique ; à défaut, le texte reste sélectionné pour Cmd/Ctrl + C.
   async function copier() {
-    selectionner();
-    try { await navigator.clipboard.writeText(recap); } catch { try { document.execCommand("copy"); } catch {} }
-    setCopie(true); setTimeout(() => setCopie(false), 2000);
+    let ok = false;
+    // l'API peut rester en attente d'une permission sans jamais répondre : au-delà de 1,5 s on passe au repli
+    try { await Promise.race([navigator.clipboard.writeText(recap), new Promise((_, refuse) => setTimeout(() => refuse(new Error("délai")), 1500))]); ok = true; } catch { /* refusé ou trop long : repli ci-dessous */ }
+    if (!ok) {
+      const det = document.getElementById("recap-details") as HTMLDetailsElement | null; if (det) det.open = true;
+      selectionner();
+      try { ok = document.execCommand("copy"); } catch { ok = false; }
+    }
+    setCopie(ok ? "ok" : "manuel"); setTimeout(() => setCopie(null), 4000);
   }
   // Changer d'écran ramène au début de l'écran (le haut des cinq écrans), pas au haut de la page : le hero est déjà lu.
   function aller(n: number) {
@@ -141,8 +149,8 @@ export default function AccueilSeance0() {
       {/* ---------------- Écran 1 ---------------- */}
       {ecran === 1 && (
         <section className="grid gap-12">
-          {/* Quatre groupes, deux écarts : gap-2 ou gap-3 (0,5 ou 0,75 rem) dans un groupe, gap-12 (3 rem) entre groupes : au moins trois fois plus.
-              Le seul cadre de l'écran est celui de la case affirmation : c'est la seule chose cliquable. */}
+          {/* Trois groupes, deux écarts : gap-2 ou gap-3 (0,5 ou 0,75 rem) dans un groupe, gap-12 (3 rem) entre groupes : au moins trois fois plus.
+              Plus aucun cadre sur cet écran : la case affirmation a son propre écran. */}
           <div className="grid gap-3">
           <p className="etiquette">Séance 0 · Faire connaissance</p>
           <h1 style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)" }}>Data Science &amp; IA<br />en 12 séances</h1>
@@ -168,15 +176,19 @@ export default function AccueilSeance0() {
             ))}
           </dl>
           </div>
-          <div className="grid gap-4">
-          <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
-          <Affirmation avis={etat.avis} onAvis={(a) => set("avis", a)} />
-          </div>
         </section>
       )}
 
       {/* ---------------- Écran 2 ---------------- */}
       {ecran === 2 && (
+        <section className="grid gap-4">
+          <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
+          <Affirmation avis={etat.avis} onAvis={(a) => set("avis", a)} />
+        </section>
+      )}
+
+      {/* ---------------- Écran 3 ---------------- */}
+      {ecran === 3 && (
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>C'est quoi l'IA, pour toi ?</h2>
           <p style={{ color: "var(--encre-2)" }}>Pas de bonne réponse. Écris ce qui te vient, en une phrase ou en trois mots. On en reparle à la fin.</p>
@@ -197,25 +209,20 @@ export default function AccueilSeance0() {
         </section>
       )}
 
-      {/* ---------------- Écran 3 ---------------- */}
-      {ecran === 3 && (
+      {/* ---------------- Écran 4 ---------------- */}
+      {ecran === 4 && (
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>Est-ce de l'IA ?</h2>
           <p style={{ color: "var(--encre-2)" }}>Répondez ensemble, à l'instinct. Puis cliquez sur « Pourquoi ? » : la réponse n'est pas toujours celle qu'on croit.</p>
-          {/* Quatre bandes alignées sur les six cartes : titre, statut, boutons, pied (« Pourquoi ? » et son explication).
-              Le cuivre ne marque que le statut « sans réponse » ; la bordure reste le filet neutre, comme partout. */}
-          <ul className="grille-cartes" style={{ "--bandes": 4, "--carte-min": "15rem" } as CSSProperties}>
+          {/* Trois bandes alignées sur les six cartes : titre, boutons, « Pourquoi ? ». Le bouton pressé montre la réponse ;
+              l'explication s'affiche SOUS la grille, une à la fois, pour que la rangée ne grandisse pas. */}
+          <ul className="grille-cartes" style={{ "--bandes": 3, "--carte-min": "15rem" } as CSSProperties}>
             {QUIZ.map((q) => {
               const rep = etat.quiz[q.id];
-              const ouvert = !!pourquoiOuverts[q.id];
+              const ouvert = pourquoiOuvert === q.id;
               return (
-                <li key={q.id} className="carte">
+                <li key={q.id} className="carte" style={{ padding: "0.9rem 1.1rem" }}>
                   <h3 style={{ fontSize: "1.1rem" }}>{q.titre}</h3>
-                  {rep ? (
-                    <p className="mono-caps" style={{ color: "var(--encre-2)" }}>Répondu : {rep}</p>
-                  ) : (
-                    <p className="mono-caps ouvert"><span className="pastille-ouverte" />sans réponse</p>
-                  )}
                   <div style={{ display: "flex", gap: "0.4rem" }}>
                     {(["oui", "non"] as const).map((v) => (
                       <button key={v} type="button" className={"bouton" + (rep === v ? " actif" : "")} onClick={() => set("quiz", { ...etat.quiz, [q.id]: v })}>
@@ -223,30 +230,29 @@ export default function AccueilSeance0() {
                       </button>
                     ))}
                   </div>
-                  {/* pas .bande-pied : le lien reste sous les boutons, l'explication ouverte pousse vers le bas */}
                   <div>
-                    <button type="button" className="lien-source" onClick={() => setPourquoiOuverts((o) => ({ ...o, [q.id]: !ouvert }))}>
+                    <button type="button" className="lien-source" aria-expanded={ouvert} onClick={() => setPourquoiOuvert(ouvert ? null : q.id)}>
                       {ouvert ? "Masquer" : "Pourquoi ?"}
                     </button>
-                    {ouvert && (
-                      <p style={{ marginTop: "0.6rem", fontSize: "0.9rem", lineHeight: 1.4, padding: "0.6rem 0.75rem", background: "var(--fond-3)", borderLeft: "2px solid var(--encre)" }}>
-                        <b style={{ display: "block" }}>{q.ia === "oui" ? "C'est de l'IA" : "Ce n'est pas de l'IA"}</b>
-                        <span>{q.pourquoi}</span>
-                      </p>
-                    )}
                   </div>
                 </li>
               );
             })}
           </ul>
+          {pourquoiOuvert && (() => { const q = QUIZ.find((x) => x.id === pourquoiOuvert)!; return (
+            <p className="encart" aria-live="polite" style={{ fontSize: "0.92rem", lineHeight: 1.4 }}>
+              <b style={{ display: "block" }}>{q.titre} · {q.ia === "oui" ? "c'est de l'IA" : "ce n'est pas de l'IA"}</b>
+              <span>{q.pourquoi}</span>
+            </p>
+          ); })()}
         </section>
       )}
 
-      {/* ---------------- Écran 4 ---------------- */}
-      {ecran === 4 && (
+      {/* ---------------- Écran 5 ---------------- */}
+      {ecran === 5 && (
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>Ce que tu as déjà fait</h2>
-          <p style={{ color: "var(--encre-2)" }}>Coche tout ce qui te concerne. « Rien pour l'instant » est une réponse parfaitement normale : c'est le point de départ de tout le monde.</p>
+          <p style={{ color: "var(--encre-2)" }}>Coche tout ce qui te concerne. « Rien pour l'instant » est le point de départ de tout le monde.</p>
           <ul className="grille-cartes" style={{ "--bandes": 3, "--carte-min": "16rem" } as CSSProperties}>
             {([0, 1] as const).map((i) => (
               <li key={i} className="carte">
@@ -254,7 +260,7 @@ export default function AccueilSeance0() {
                 {([["langages", "Langages déjà touchés", LANGAGES], ["outils", "Outils d'IA déjà utilisés", OUTILS]] as const).map(([cle, label, valeurs]) => (
                   <fieldset key={cle} style={{ border: 0, padding: 0 }}>
                     <legend className="discret" style={{ marginBottom: "0.3rem" }}>{label}</legend>
-                    <div style={{ display: "grid", gap: "0.35rem" }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem 1.1rem" }}>
                       {valeurs.map((v) => (
                         <label key={v} style={{ display: "flex", gap: "0.6rem", alignItems: "center", cursor: "pointer" }}>
                           <input type="checkbox" style={{ width: 20, height: 20, accentColor: "var(--encre)" }} checked={etat[cle][i].includes(v)} onChange={() => basculer(cle, i, v)} />
@@ -274,7 +280,7 @@ export default function AccueilSeance0() {
               {([0, 1] as const).map((i) => (
                 <div key={i}>
                   <label className="discret" htmlFor={`reve${i}`}>{nom(i)}</label>
-                  <textarea id={`reve${i}`} className="champ" rows={4} style={{ marginTop: "0.3rem" }} placeholder="Un truc qui trie mes photos, qui me rappelle mes entraînements, qui résume mes cours…" value={etat.reve[i]} onChange={(e) => setPaire("reve", i, e.target.value)} />
+                  <textarea id={`reve${i}`} className="champ" rows={2} style={{ marginTop: "0.3rem" }} placeholder="Un truc qui trie mes photos, qui me rappelle mes entraînements, qui résume mes cours…" value={etat.reve[i]} onChange={(e) => setPaire("reve", i, e.target.value)} />
                 </div>
               ))}
             </div>
@@ -282,30 +288,34 @@ export default function AccueilSeance0() {
         </section>
       )}
 
-      {/* ---------------- Écran 5 ---------------- */}
-      {ecran === 5 && (
+      {/* ---------------- Écran 6 ---------------- */}
+      {ecran === 6 && (
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>Le parcours, en quatre blocs</h2>
           <p style={{ color: "var(--encre-2)" }}>Une séance de 1 h 30 à la fois. La leçon se fait toujours ensemble ; seul le carnet d'exercices se fait entre deux séances.</p>
-          <div style={{ display: "grid", gap: "0.6rem" }}>
+          {/* Quatre blocs, une rangée de quatre cartes : bloc et séances, ce qu'on fait, ce qu'on gagne. */}
+          <ul className="grille-cartes" style={{ "--bandes": 3, "--carte-min": "11rem" } as CSSProperties}>
             {BLOCS.map((b) => (
-              <div key={b.n} className="carte" style={{ display: "grid", gridTemplateColumns: "minmax(6rem, 8rem) 1fr 1fr", gap: "1rem", alignItems: "center", padding: "0.8rem 1.1rem" }}>
+              <li key={b.n} className="carte" style={{ padding: "0.9rem 1rem" }}>
                 <div className="mono" style={{ fontWeight: 500 }}>{b.n}<span className="discret" style={{ display: "block", fontWeight: 400 }}>{b.s}</span></div>
-                <div style={{ fontSize: "0.95rem" }}>{b.quoi}</div>
-                <div style={{ fontSize: "0.92rem", fontWeight: 600 }}>{b.gain}</div>
-              </div>
+                <p style={{ fontSize: "0.92rem", lineHeight: 1.35 }}>{b.quoi}</p>
+                <p style={{ fontSize: "0.9rem", lineHeight: 1.35, fontWeight: 600 }}>{b.gain}</p>
+              </li>
             ))}
-          </div>
-          <h3 style={{ marginTop: "0.5rem" }}>Ce que vous avez répondu aujourd'hui</h3>
-          <p className="discret">Le bloc ci-dessous se sélectionne d'un clic ; il servira à choisir les jeux de données des prochaines séances.</p>
-          <pre id="recap-seance0" className="carte" style={{ whiteSpace: "pre-wrap", fontSize: "0.78rem", lineHeight: 1.5, margin: 0, userSelect: "all" }}>{recap}</pre>
+          </ul>
+          {/* Le récap n'est plus à l'écran projeté : un bouton le copie, un repli fermé le montre. */}
           <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", flexWrap: "wrap" }}>
-            <button type="button" className="bouton" onClick={selectionner}>Tout sélectionner</button>
-            <button type="button" className="bouton" onClick={copier}>Copier</button>
-            {copie && <span className="mono" style={{ fontSize: "0.8rem" }}>Copié.</span>}
+            <button type="button" className="bouton principal" onClick={copier}>Copier le récap</button>
+            <span className="discret">Il servira à choisir les jeux de données des prochaines séances.</span>
+            {copie === "ok" && <span className="mono" style={{ fontSize: "0.8rem" }}>Copié.</span>}
+            {copie === "manuel" && <span className="mono" style={{ fontSize: "0.8rem" }}>Le récap est ouvert et sélectionné : Cmd/Ctrl + C.</span>}
           </div>
+          <details id="recap-details">
+            <summary className="lien-source" style={{ listStyle: "none", display: "inline", cursor: "pointer" }}>Voir le récap</summary>
+            <pre id="recap-seance0" className="carte" style={{ whiteSpace: "pre-wrap", fontSize: "0.78rem", lineHeight: 1.5, margin: "0.6rem 0 0", userSelect: "all" }}>{recap}</pre>
+          </details>
           <p style={{ textAlign: "right", borderTop: "1px solid var(--trait)", paddingTop: "0.8rem", marginTop: "0.5rem" }}>
-            <a href={COLAB} target="_blank" rel="noopener" className="discret" style={{ textDecoration: "none" }}>Ouvrir le notebook de la séance 0 dans Colab →</a>
+            <a href={COLAB} target="_blank" rel="noopener" className="discret" style={{ textDecoration: "none" }}>Ouvrir le notebook de la séance 0 dans Colab ↗</a>
           </p>
         </section>
       )}

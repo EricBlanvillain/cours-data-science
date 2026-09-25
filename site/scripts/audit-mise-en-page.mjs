@@ -6,7 +6,9 @@
  *     l'autre, les cartes ont la même hauteur, le pied (.bande-pied) colle au bas, chaque carte a exactement --bandes enfants ;
  *  2. l'en-tête : le bord gauche du logo et le bord droit du dernier lien de navigation sont AU PIXEL PRÈS à la même place sur
  *     l'accueil, le glossaire, la séance 0 et la séance 1 ; le pied de page aussi. Le conteneur est le même partout (1360 px) ;
- *  3. la prose : aucun bloc de texte direct de .prose, ni hero-texte, ne dépasse son plafond (46 rem, 36 rem pour le hero).
+ *  3. la prose : aucun bloc de texte direct de .prose, ni hero-texte, ne dépasse son plafond (46 rem, 36 rem pour le hero) ;
+ *  4. les écrans de la séance 0 : chacun, atteint aux flèches du clavier, se termine au-dessus de la barre épinglée dans une
+ *     fenêtre de 1440 × 900 (zone visible), l'affirmation dépliée comprise. 1280 × 720 est mesuré et rapporté, sans faire échouer.
  *
  * Lancer :  npm run build && npm run audit:mise-en-page       Sort en code 1 à la moindre faute, 2 s'il ne peut pas mesurer.
  */
@@ -29,11 +31,29 @@ const PAGES = [
   { page: "index.html", id: "accueil", pilote: "" },
   { page: "glossaire.html", id: "glossaire", pilote: "" },
   { page: "lecons/seance-00-faire-connaissance.html", id: "seance-0", pilote: "" },
-  { page: "lecons/seance-00-faire-connaissance.html", id: "seance-0-ecran-3", pilote: `const r = ile("AccueilSeance0"); btn(r, "Suivant").click(); await w(250); btn(r, "Suivant").click(); await w(300);` },
+  { page: "lecons/seance-00-faire-connaissance.html", id: "seance-0-ecran-4-quiz", pilote: `const r = ile("AccueilSeance0"); for (let i = 0; i < 3; i++) { btn(r, "Suivant").click(); await w(250); }` },
   { page: "lecons/seance-01-introduction-ia.html", id: "seance-1", pilote: "" },
   { page: "lecons/seance-01-introduction-ia.html", id: "seance-1-quiz-repondu", pilote: `const q = ile("ClassifOuRegression"); btn(q, "Combien de vues").click(); await w(300);` },
 ];
 const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1"];
+
+// 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
+//    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.
+const ECRANS = (largeur) => ({ page: "lecons/seance-00-faire-connaissance.html", id: "ecrans-" + largeur, pilote: `
+      const r = ile("AccueilSeance0"); const sec = () => r.querySelector("section"); const haut = () => r.getBoundingClientRect().top + window.scrollY;
+      const barre = r.querySelector(".barre-ecrans").getBoundingClientRect().height; const dispo = window.innerHeight - barre - 12;
+      const fleche = () => document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+      const noms = [...r.querySelectorAll("ol.mono li")].map((li) => li.textContent.trim()); const res = [];
+      for (let n = 0; n < noms.length; n++) {
+        if (n > 0) { fleche(); await w(250); }
+        const h = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut());
+        let ouvert = null;
+        if (noms[n] === "Une affirmation") { btn(r, "Plutôt d'accord").click(); await w(250); ouvert = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut()); }
+        if (noms[n] === "IA ou pas ?") { btn(r, "Pourquoi").click(); await w(250); ouvert = Math.round(sec().getBoundingClientRect().bottom + window.scrollY - haut()); }
+        res.push({ nom: noms[n], hauteur: h, ouvert: ouvert });
+      }
+      window.__ecrans = { fenetre: window.innerHeight, barre: Math.round(barre), dispo: Math.round(dispo), ecrans: res };` });
+
 
 if (!fs.existsSync(path.join(DIST, "index.html"))) { console.error("Pas de dist/index.html : lance `npm run build` d'abord."); process.exit(2); }
 if (!fs.existsSync(CHROME)) { console.error(`Chrome introuvable (${CHROME}). Donne son chemin dans la variable CHROME.`); process.exit(2); }
@@ -94,6 +114,7 @@ const MESURE = (pilote) => `
   document.querySelectorAll('.hero-texte').forEach(function (el) { var wdt = el.getBoundingClientRect().width; if (wdt > 36 * rem + 1) out.proseDebords.push({ quoi: 'hero-texte', largeur: Math.round(wdt), plafond: Math.round(36 * rem) }); });
 
   var pre = document.createElement('pre'); pre.id = '__mep'; pre.textContent = JSON.stringify(out); document.body.appendChild(pre);
+  if (window.__ecrans) { var pe = document.createElement('pre'); pe.id = '__ecrans'; pe.textContent = JSON.stringify(window.__ecrans); document.body.appendChild(pe); }
 })();
 </script></body>`;
 
@@ -103,7 +124,7 @@ const server = http.createServer((req, res) => {
   const p = path.join(DIST, decodeURIComponent(chemin));
   if (!fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { "Content-Type": MIME[path.extname(p)] || "application/octet-stream" });
-  if (p.endsWith(".html")) { const etat = PAGES.find((e) => e.id === new URLSearchParams(query).get("etat")); res.end(fs.readFileSync(p, "utf8").replace("</body>", MESURE(etat ? etat.pilote : ""))); }
+  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); res.end(fs.readFileSync(p, "utf8").replace("</body>", MESURE(etat ? etat.pilote : ""))); }
   else fs.createReadStream(p).pipe(res);
 });
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
@@ -136,7 +157,24 @@ for (const largeur of LARGEURS) {
     }
   } else { fautes++; lignes.push(`@${largeur} : en-tête mesuré sur ${ids.length} page(s) au lieu de ${PAGES_EN_TETE.length}`); }
 }
+const FENETRES = [[1440, 900], [1280, 720]];
+for (const [L, H] of FENETRES) {
+  const etat = ECRANS(L);
+  let stdout = "";
+  try { ({ stdout } = await execFileP(CHROME, ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${L},${H + 121}`, "--virtual-time-budget=9000", "--dump-dom", `http://127.0.0.1:${PORT}/${etat.page}?etat=${etat.id}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 60000 })); } catch (e) { stdout = e.stdout || ""; }
+  const m = stdout.match(/<pre id="__ecrans">(.*?)<\/pre>/s);
+  if (!m) { fautes++; lignes.push(`écrans de la séance 0 @${L}×${H} : non mesurés`); continue; }
+  const r = JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, "&"));
+  const strict = L === 1440;
+  lignes.push(`écrans de la séance 0 @${L}×${r.fenetre} (barre ${r.barre} px, ${r.dispo} px disponibles)${strict ? "" : " · information, ne fait pas échouer"} :`);
+  for (const e of r.ecrans) {
+    const pire = Math.max(e.hauteur, e.ouvert ?? 0);
+    const ok = pire <= r.dispo;
+    lignes.push(`   ${ok ? "  " : "!!"} ${e.nom.padEnd(18)} ${String(e.hauteur).padStart(4)} px${e.ouvert !== null ? ` (déplié ${e.ouvert} px)` : ""} → ${ok ? "tient" : "déborde de " + (pire - r.dispo) + " px"}`);
+    if (!ok && strict) fautes++;
+  }
+}
 server.close();
 console.log(lignes.join("\n"));
-console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * LARGEURS.length} mesures sur ${LARGEURS.join(", ")} px : grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond${fautes ? ` · ${fautes} faute(s)` : ""}`);
+console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * LARGEURS.length} mesures sur ${LARGEURS.join(", ")} px : grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond, écrans de la séance 0 dans 1440 × 900${fautes ? ` · ${fautes} faute(s)` : ""}`);
 process.exit(fautes === 0 ? 0 : 1);

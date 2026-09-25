@@ -12,7 +12,7 @@ npm install          # une fois
 npm run dev          # http://localhost:4321, rechargement à chaud
 npm run build        # construit dist/ puis le rend ouvrable hors ligne (scripts/relativize.mjs)
 npm run preview      # sert dist/ comme le ferait un hébergeur
-npm run audit        # après un build : audit de contraste et règle du cuivre sur 32 états (clics compris), en clair et en sombre
+npm run audit        # après un build : audit de contraste et règle du cuivre sur 33 états (clics compris), en clair et en sombre
 npm run audit:mise-en-page   # après un build : bandes des grilles de cartes alignées, en-tête au pixel près sur quatre pages, prose sous 46 rem
 ```
 
@@ -42,7 +42,7 @@ src/styles/global.css           thème clair / sombre, registres typographiques,
 src/styles/palette.mjs          la palette, source unique pour l'audit
 scripts/relativize.mjs          post-build : chemins relatifs (pages, polices) + vérification des cibles et de l'absence de ressource externe
 scripts/audit-contrast.mjs      mesure chaque texte contre son fond composité dans Chrome headless, sans dépendance
-scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose
+scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose, écrans de la séance 0 dans 1440 × 900
 ```
 
 ## Écrire une leçon
@@ -108,9 +108,9 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
 - Le pied d'une carte de séance a trois éléments, dans cet ordre, qui répondent à des questions distinctes :
   1. **disponibilité** : « Leçon en ligne · notebooks » ou « Notebooks seuls · leçon à écrire ». Un fait sur le site, il ne change
      jamais pour un élève donné, jamais cuivre.
-  2. **état de l'élève** : « Pas encore ouverte » (pastille vide), « En cours » (pastille cuivre), « Terminée »
+  2. **état de l'élève** : « Pas encore faite » (pastille vide), « En cours » (pastille cuivre), « Terminée »
      (pastille pleine). Sa progression sur cet appareil ; c'est lui qui porte le cuivre, sur « En cours » seulement.
-  3. **action** : vide si pas encore ouverte (le déblocage sert à ne pas commencer la suivante par accident, on n'annonce pas la
+  3. **action** : vide si pas encore faite (le déblocage sert à ne pas commencer la suivante par accident, on n'annonce pas la
      porte ; le titre reste cliquable) ; « Ouvrir la leçon → » ou « Ouvrir les notebooks ↗ » si en cours ; « Relire la leçon → »
      ou « Revoir les notebooks ↗ » si terminée. La bande garde la hauteur d'un bouton même vide.
 - Trois registres IBM Plex : le serif parle (titres), le sans explique (corps), le mono mesure (labels `.etiquette`, chiffres
@@ -131,7 +131,7 @@ colonne de prose garde son plafond de 46 rem quelle que soit la page : dans le t
 ## En séance : les raccourcis clavier
 
 - **Écrans de la séance 0** : `←` et `→` changent d'écran, où que soit le focus (sauf dans un champ de saisie, où les flèches
-  déplacent le curseur). La navigation est épinglée au bas de la fenêtre : jauge, position (« 2 / 5 · C'est quoi l'IA ? »),
+  déplacent le curseur). La navigation est épinglée au bas de la fenêtre : jauge, position (« 2 / 6 · Une affirmation »),
   Précédent, Suivant. Changer d'écran ramène au début de l'écran, pas au haut de la page.
 - **Frise de la séance 1** : cliquer une fois sur la bande, puis `←` `→` d'un jalon à l'autre, `Début` et `Fin` pour les bouts.
 - **Mini-quiz** : `Tab` jusqu'au quiz, `1` à `4` pour choisir, `Entrée` pour valider puis passer à la suivante.
@@ -143,7 +143,7 @@ colonne de prose garde son plafond de 46 rem quelle que soit la page : dans le t
 de la page en avant). Elle montre les blocs en sur-titre, les séances numérotées avec une pastille, un séparateur, les pages
 transverses **qui existent** (aujourd'hui : Glossaire ; pas d'entrée grisée pour ce qui n'est pas écrit), et en bas
 « Séances terminées · N / 13 » avec sa jauge. Mêmes faits et même vocabulaire que les cartes : terminée = pastille pleine, texte
-neutre ; en cours = pastille cuivre, texte appuyé ; pas encore ouverte = pastille vide, texte neutre ; leçon en préparation =
+neutre ; en cours = pastille cuivre, texte appuyé ; pas encore faite = pastille vide, texte neutre ; leçon en préparation =
 titre en retrait sans lien, libellé « Notebooks seuls · leçon à écrire », la pastille suit la progression. Repliable (bouton en
 tête du contenu, état gardé dans le navigateur, clé `cours-data-science-barre`) ; sous 900 px, c'est un menu en haut, fermé par
 défaut. Sans JavaScript, dépliée sur grand écran.
@@ -162,9 +162,9 @@ corrige le fichier. Infos pratiques, quiz final et recherche viendront plus tard
 
 ## Progression des séances (déblocage)
 
-Trois états par séance, gardés dans le navigateur (localStorage, clé `cours-data-science-progression`) : pas encore ouverte
+Trois états par séance, gardés dans le navigateur (localStorage, clé `cours-data-science-progression`) : pas encore faite
 (`a-venir` dans le code), en cours (`ouverte` dans le code), terminée. La séance 0 est ouverte d'office ; terminer la séance N (bouton en bas de la leçon)
-ouvre la N+1. Rien n'est bloqué : une séance pas encore ouverte s'affiche avec un bandeau cuivre. Pour ouvrir une séance à la main : `?ouvrir=3` dans l'URL. Pour un nouveau
+ouvre la N+1. Rien n'est bloqué : une séance pas encore faite s'affiche avec un bandeau cuivre. Pour ouvrir une séance à la main : `?ouvrir=3` dans l'URL. Pour un nouveau
 groupe : le lien « Réinitialiser » du pied de page, ou `?reinitialiser=1`. L'état est propre à l'appareil : une autre machine
 repart de zéro, et c'est voulu. Le script vit dans `src/layouts/Base.astro` (classique, en ligne : il tourne aussi depuis le disque)
 et expose `window.progression` (`etat`, `terminer`, `annuler`, `ouvrir`, `reinitialiser`, `restantes`).

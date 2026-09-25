@@ -46,8 +46,8 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
       Progression des séances, gardée dans CE navigateur, sur CET appareil (localStorage).
       Porté de l'ancien site (useProgress.ts : clé, chargement tolérant, écriture tolérante), sans React :
       un script classique en ligne, pour qu'il tourne aussi quand dist/ est ouvert depuis le disque.
-      Trois états : « pas encore ouverte » (a-venir dans le code), « en cours » (ouverte dans le code), « terminée ». Terminer N ouvre N+1.
-      La séance 0 est ouverte d'office. Rien n'est bloqué : une séance pas encore ouverte s'affiche avec un bandeau.
+      Trois états : « pas encore faite » (a-venir dans le code), « en cours » (ouverte dans le code), « terminée ». Terminer N ouvre N+1.
+      La séance 0 est ouverte d'office. Rien n'est bloqué : une séance pas encore faite s'affiche avec un bandeau.
       ?ouvrir=N ouvre une séance à la main, ?reinitialiser=1 remet tout à zéro (pour un nouveau groupe).
     */}
     <script is:inline>
@@ -80,7 +80,7 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
           terminees: nbTerminees,
           rafraichir: rafraichir,
         };
-        var LIBELLES = { "a-venir": "Pas encore ouverte", ouverte: "En cours", terminee: "Terminée" };
+        var LIBELLES = { "a-venir": "Pas encore faite", ouverte: "En cours", terminee: "Terminée" };
         function rafraichir() {
           document.querySelectorAll("[data-seance]").forEach(function (el) {
             var n = Number(el.getAttribute("data-seance")); var e = etat(n);
