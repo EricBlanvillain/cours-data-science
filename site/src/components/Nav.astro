@@ -3,7 +3,11 @@ const chemin = Astro.url.pathname;
 const liens = [
   { href: "/", label: "Les séances", actif: chemin === "/" || chemin === "/index.html" },
   { href: "/lecons/seance-00-faire-connaissance", label: "Séance 0", actif: chemin.includes("seance-00") },
+  { href: "/glossaire", label: "Glossaire", actif: chemin.includes("glossaire") },
 ];
+/* Le thème : système (défaut), clair, sombre. Choix gardé dans le navigateur (script dans Base.astro, window.theme).
+   Raison pratique : on lit à trois autour d'un portable, l'après-midi ; le réglage de la machine n'est pas toujours le bon. */
+const themes = [["systeme", "Système"], ["clair", "Clair"], ["sombre", "Sombre"]] as const;
 ---
 
 {/* L'en-tête est sur fond encre en toute circonstance, comme le hero : c'est l'ouverture sombre du site. */}
@@ -12,17 +16,26 @@ const liens = [
     <a href="/" class="no-underline" style="font-family: var(--font-serif); font-weight: 600; font-size: 1.05rem; color: var(--encre);">
       Data Science &amp; IA
     </a>
-    <nav aria-label="Navigation principale" class="flex gap-7 mono-caps">
-      {liens.map((l) => (
-        <a
-          href={l.href}
-          aria-current={l.actif ? "page" : undefined}
-          class="no-underline"
-          style={l.actif ? "color: var(--encre); text-decoration: underline; text-underline-offset: 0.4em;" : "color: var(--encre-2);"}
-        >
-          {l.label}
-        </a>
-      ))}
-    </nav>
+    <div class="flex flex-wrap items-center gap-x-7 gap-y-2">
+      <nav aria-label="Navigation principale" class="flex gap-7 mono-caps">
+        {liens.map((l) => (
+          <a
+            href={l.href}
+            aria-current={l.actif ? "page" : undefined}
+            class="no-underline"
+            style={l.actif ? "color: var(--encre); text-decoration: underline; text-underline-offset: 0.4em;" : "color: var(--encre-2);"}
+          >
+            {l.label}
+          </a>
+        ))}
+      </nav>
+      <div class="theme" role="group" aria-label="Thème">
+        {themes.map(([valeur, libelle]) => (
+          <button type="button" class="choix-theme" data-theme-choix={valeur} aria-pressed={valeur === "systeme" ? "true" : "false"} onclick={`window.theme.appliquer("${valeur}")`}>
+            {libelle}
+          </button>
+        ))}
+      </div>
+    </div>
   </div>
 </header>

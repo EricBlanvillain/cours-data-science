@@ -1,0 +1,24 @@
+---
+import { getEntry, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+/* La page est le fichier docs/glossaire.md du dépôt, rendu tel quel (collection `docs`). Rien n'est recopié ici. */
+const doc = await getEntry("docs", "glossaire");
+if (!doc) throw new Error("docs/glossaire.md introuvable : la collection `docs` pointe sur ../docs");
+const { Content } = await render(doc);
+---
+
+<Base titre="Glossaire" description="Les mots du parcours, dans l'ordre où on les rencontre." barre>
+  <section slot="hero" class="sombre hero hero-lecon">
+    <div class="conteneur">
+      <p class="etiquette">Page transverse · même texte que docs/glossaire.md</p>
+      <h1 class="hero-titre">Glossaire</h1>
+      <p class="hero-texte">Les mots du parcours, dans l'ordre où on les rencontre, bloc par bloc. Un mot qui manque ou une définition à corriger : c'est dans le fichier du dépôt, la page suit.</p>
+    </div>
+  </section>
+
+  {/* .doc : le fichier commence par son propre « # Glossaire », déjà porté par le hero */}
+  <article class="prose doc mt-10">
+    <Content />
+  </article>
+</Base>

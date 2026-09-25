@@ -33,7 +33,7 @@
 
 /* ------------------------------------------------------------------
    Rôles. Même palette que src/styles/palette.mjs (l'audit vérifie la concordance).
-   LE CUIVRE MARQUE CE QUI N'EST PAS RÉSOLU : question sans réponse, exercice pas fait, séance pas commencée,
+   LE CUIVRE MARQUE CE QUI N'EST PAS RÉSOLU : question sans réponse, exercice pas fait, la séance en cours (une seule),
    source en désaccord. Nulle part ailleurs.
    --cuivre-texte est la seule valeur de cuivre légale pour du texte sur le fond courant ;
    --cuivre-plein n'est jamais une couleur de texte : il porte du texte crème.
@@ -54,8 +54,11 @@
   --bouton-texte: #fbfaf8;
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
 }
+/* Sombre : soit le système le demande et personne n'a forcé le clair, soit l'interrupteur de l'en-tête a forcé le sombre
+   (data-theme posé sur <html> par Base.astro avant le premier rendu). Les deux blocs sont volontairement identiques :
+   le CSS ne sait pas écrire « média OU attribut » sans les répéter. Modifier l'un = modifier l'autre. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="clair"]) {
     --fond: #1e2226;                                /* ink-raised : le corps ; l'en-tête et le hero restent en ink (#14171a) */
     --fond-2: #1e2226;
     --fond-3: #2a2f34;                              /* ink-soft */
@@ -69,6 +72,21 @@
     --bouton-texte: #14171a;
   }
 }
+:root[data-theme="sombre"] {
+  color-scheme: dark;
+  --fond: #1e2226;
+  --fond-2: #1e2226;
+  --fond-3: #2a2f34;
+  --encre: #fbfaf8;
+  --encre-2: color-mix(in srgb, #fbfaf8 72%, #1e2226);
+  --trait: color-mix(in srgb, #fbfaf8 12%, transparent);
+  --trait-fort: color-mix(in srgb, #fbfaf8 32%, transparent);
+  --cuivre-texte: #e06a33;
+  --cuivre-plein: #c24a16;
+  --bouton-fond: #fbfaf8;
+  --bouton-texte: #14171a;
+}
+:root[data-theme="clair"] { color-scheme: light; }
 
 /* Typographie large : ça se lit à deux ou trois sur un portable. */
 html {
@@ -101,8 +119,11 @@ code, kbd, pre { font-family: var(--font-mono); }
 code { font-size: 0.9em; background: var(--fond-3); padding: 0.08em 0.35em; }
 kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-width: 2px; padding: 0 0.4em; }
 
-/* Le conteneur unique : 1120 px, la largeur de l'en-tête, pour que tout tombe sur la même verticale. */
+/* Le conteneur unique : 1120 px, la largeur de l'en-tête, pour que tout tombe sur la même verticale.
+   Sur les pages à barre latérale (body.page-barre), 1360 px, en-tête et hero compris : la largeur en plus va aux cartes,
+   à la frise et au sommaire ; la colonne de prose garde son plafond de 46 rem, dans le texte lu rien ne change. */
 .conteneur { width: 100%; max-width: 1120px; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+.page-barre .conteneur { max-width: 1360px; }
 @media (min-width: 640px) { .conteneur { padding-left: 2rem; padding-right: 2rem; } }
 
 /* ------------------------------------------------------------------
@@ -117,6 +138,11 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
   background: var(--fond); color: var(--encre);
 }
 .entete { border-bottom: 1px solid var(--trait); }
+/* L'interrupteur de thème : trois positions, la pressée est soulignée comme le lien de la page courante. */
+.theme { display: flex; gap: 0.1rem; }
+.choix-theme { font: inherit; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: var(--tracking-label); font-weight: 500; background: none; border: 0; padding: 0.3rem 0.45rem; color: var(--encre-2); cursor: pointer; }
+.choix-theme[aria-pressed="true"] { color: var(--encre); text-decoration: underline; text-underline-offset: 0.4em; }
+@media (hover: hover) { .choix-theme:hover { color: var(--encre); } }
 .hero { position: relative; padding: 5.5rem 0 3.5rem; }
 @media (min-width: 640px) { .hero { padding: 7rem 0 4.5rem; } }
 .hero-lecon { padding-top: 4.5rem; padding-bottom: 3.5rem; }
@@ -148,11 +174,34 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 .prose hr { border: 0; border-top: 1px solid var(--trait); }
 .prose figure { margin: 0; }
 .prose figcaption { color: var(--encre-2); font-size: 0.9rem; margin-top: 0.6rem; }
+/* Tableaux (glossaire) : en-têtes en mono capitales, terme en serif, un filet entre les lignes. */
+.prose table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.prose th { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: var(--tracking-label); font-weight: 500; color: var(--encre-2); text-align: left; padding: 0.5rem 0.6rem 0.5rem 0; border-bottom: 1px solid var(--trait-fort); }
+.prose td { padding: 0.65rem 0.6rem 0.65rem 0; border-bottom: 1px solid var(--trait); vertical-align: top; }
+.prose td:first-child { font-family: var(--font-serif); font-weight: 600; min-width: 8rem; padding-right: 1rem; }
+.prose.doc > h1 { display: none; }   /* le fichier porte son propre titre ; le hero de la page l'a déjà dit */
 
 /* ------------------------------------------------------------------
    Composants partagés
    ------------------------------------------------------------------ */
 .carte { background: var(--fond-2); border: 1px solid var(--trait); padding: 1.2rem 1.35rem; }
+
+/* La grille de cartes alignées : LA primitive pour toute rangée de cartes.
+   La rangée impose ses bandes à chacune de ses cartes : une carte est une sous-grille (subgrid) étendue sur --bandes
+   lignes, donc la bande n (sur-titre, titre, description, pied…) démarre à la même hauteur d'une carte à l'autre, quelle
+   que soit la longueur des textes, et toutes les cartes d'une rangée font la même hauteur. Le pied (.bande-pied) colle
+   au bas. Contrat : chaque carte a EXACTEMENT --bandes enfants directs ; un contenu optionnel se met dans la bande qui
+   l'accueille, jamais en enfant direct supplémentaire (il déborderait dans une ligne implicite et casserait l'alignement).
+   Usage : <ul class="grille-cartes" style="--bandes: 4; --carte-min: 16rem"><li class="carte">…4 enfants…</li></ul>
+   (composant GrilleCartes.astro côté Astro ; les classes directement côté React). .en-ligne : une seule rangée qui
+   défile horizontalement (frise), chaque carte large de --carte-min. */
+.grille-cartes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--carte-min, 16rem), 100%), 1fr)); gap: 1rem; list-style: none; padding: 0; }
+.grille-cartes.en-ligne { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: var(--carte-min, 19rem); }
+.grille-cartes > .carte { display: grid; grid-template-rows: subgrid; grid-row: span var(--bandes, 4); row-gap: 0.6rem; min-width: 0; margin: 0; }
+.grille-cartes > .carte > * { min-width: 0; margin: 0; }
+.grille-cartes > .carte > .bande-pied { align-self: end; }
+.prose .grille-cartes { padding: 0; }                 /* prime sur .prose ul / .prose li + li */
+.prose .grille-cartes > li { margin: 0; }
 .encart { border-left: 2px solid var(--encre); background: var(--fond-3); padding: 0.9rem 1.2rem; }
 .etiquette { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--encre-2); font-weight: 500; }
 .discret { color: var(--encre-2); font-size: 0.85rem; }
@@ -200,20 +249,36 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 .schema .fond-2 { fill: var(--fond-2); }
 .schema .fond-3 { fill: var(--fond-3); }
 
+/* Séance 0 : la navigation des écrans est épinglée au bas de la fenêtre. Le corps de la page est rembourré d'autant
+   (.avec-barre-basse, posé sur <body> par l'îlot) pour que rien ne passe dessous, pied de page compris. */
+.barre-ecrans { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--fond); border-top: 1px solid var(--trait); }
+.barre-ecrans-jauge { height: 3px; background: var(--fond-3); }
+.barre-ecrans-jauge > div { height: 100%; background: var(--encre); transition: width .4s var(--ease); }
+.barre-ecrans-ligne { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 2rem 0.75rem; }
+.avec-barre-basse main { padding-bottom: 7.5rem; }
+.avec-barre-basse .pied { padding-bottom: 7.5rem; }
+
 /* Défilement horizontal */
 .defile-x { overflow-x: auto; scrollbar-width: thin; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
 
 /* ------------------------------------------------------------------
-   Progression des séances (trois états, posés par le script de Base.astro sur data-etat).
-   Seul « à venir » est cuivre : c'est ce qui n'est pas résolu.
+   Progression des séances (trois états, posés par le script de Base.astro sur data-etat, cartes et barre latérale).
+   Un seul cuivre : la séance EN COURS (data-etat="ouverte"), le même fait montré sur sa carte et dans la barre. Terminée = pastille
+   pleine encre ; pas encore ouverte = pastille vide. Douze séances futures en cuivre, ce serait douze faits distincts.
    ------------------------------------------------------------------ */
+.pastille { display: inline-block; box-sizing: border-box; width: 0.5em; height: 0.5em; border-radius: 50%; border: 1px solid var(--trait-fort); vertical-align: middle; margin-right: 0.45em; }
+.pastille.invisible { border-color: transparent; }
+[data-etat="terminee"] .pastille { background: var(--encre); border-color: var(--encre); }
+[data-etat="ouverte"] .pastille { background: var(--cuivre-plein); border-color: var(--cuivre-plein); }
 .etat-seance { color: var(--encre-2); }
-.etat-note { text-transform: none; letter-spacing: 0; font-weight: 400; }
-[data-etat="a-venir"] .etat-seance { color: var(--cuivre-texte); }
-[data-etat="a-venir"] .etat-seance .etat-note { color: var(--encre-2); }
-[data-etat="ouverte"] .etat-seance .pastille-ouverte, [data-etat="terminee"] .etat-seance .pastille-ouverte { display: none; }
+[data-etat="ouverte"] .etat-seance { color: var(--cuivre-texte); }
+/* La bande d'action d'une carte de séance : hauteur d'un bouton réservée même vide (pas encore ouverte = aucune action). */
+.bande-action { min-height: 2.9rem; align-self: end; }
+.action-ouverte, .action-terminee { display: none; }
+[data-etat="ouverte"] .action-ouverte { display: inline-block; }
+[data-etat="terminee"] .action-terminee { display: inline-block; }
 [data-etat="ouverte"].carte-seance { border-color: var(--encre); }
 [data-etat="terminee"].carte-seance { opacity: 0.72; }
 .bandeau-a-venir { display: none; }
@@ -222,3 +287,39 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 [data-etat="terminee"] .bouton-terminer { display: none; }
 [data-etat="terminee"] .bouton-annuler, [data-etat="terminee"] .lien-suivante { display: inline-block; }
 .hero .bouton.principal, .sombre .bouton.principal { background: #fbfaf8; color: #14171a; border-color: #fbfaf8; }
+
+/* ------------------------------------------------------------------
+   La barre latérale (leçons, pages transverses). Grand écran : colonne collante à gauche du contenu, repliable
+   (html[data-barre]). Sous 900 px : menu en haut, fermé par défaut (html[data-menu]). Le bouton de bascule tient la
+   première ligne du <main>, sur toute la largeur.
+   ------------------------------------------------------------------ */
+.avec-laterale { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 2.4rem; align-items: start; }
+.barre-bascule { grid-column: 1 / -1; padding: 1.2rem 0 0; }
+.contenu { min-width: 0; }
+.laterale nav ol { list-style: none; padding: 0; margin: 0.45rem 0 0; }
+.laterale .etiquette { margin-top: 1.5rem; }
+.laterale .etiquette:first-child { margin-top: 0; }
+.laterale li + li { margin-top: 0.1rem; }
+.laterale a, .laterale .sans-lien { display: grid; grid-template-columns: 0.5em 1.4rem minmax(0, 1fr); column-gap: 0.45rem; align-items: baseline; padding: 0.28rem 0.5rem 0.28rem 0.6rem; text-decoration: none; color: var(--encre-2); font-size: 0.84rem; line-height: 1.3; }
+.laterale .pastille { margin: 0; position: relative; top: -0.05em; }
+.laterale .num { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: var(--tracking-field); }
+.laterale [data-etat="ouverte"] .titre, .laterale [data-etat="ouverte"] .num { color: var(--encre); font-weight: 600; }   /* en cours : texte appuyé */
+.laterale .sans-lecon .titre { padding-left: 0.55rem; }                                                                  /* leçon en préparation : en retrait */
+.laterale .prep { grid-column: 3; padding-left: 0.55rem; font-family: var(--font-mono); font-size: 0.58rem; text-transform: uppercase; letter-spacing: var(--tracking-label); font-weight: 400; }
+.laterale [aria-current="page"] { box-shadow: inset 2px 0 0 var(--encre); }                                               /* la page où l'on est */
+.laterale [aria-current="page"] .titre { color: var(--encre); }
+@media (hover: hover) { .laterale a:hover .titre { color: var(--encre); } }
+.laterale hr { border: 0; border-top: 1px solid var(--trait); margin: 1.3rem 0 0.9rem; }
+.laterale-compteur { margin-top: 1.8rem; padding-top: 1rem; border-top: 1px solid var(--trait); color: var(--encre-2); }
+.laterale-compteur .chiffre { color: var(--encre); }
+.jauge { height: 3px; background: var(--fond-3); margin-top: 0.55rem; }
+.jauge > span { display: block; height: 100%; background: var(--encre); transition: width .4s var(--ease); }
+@media (min-width: 901px) {
+  html:not([data-barre="repliee"]) .avec-laterale { grid-template-columns: 12.5rem minmax(0, 1fr); }
+  html[data-barre="repliee"] .laterale { display: none; }
+  .laterale { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; padding: 1.1rem 0 2rem; scrollbar-width: thin; }
+}
+@media (max-width: 900px) {
+  .laterale { display: none; padding: 0.6rem 0 1.2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--trait); }
+  html[data-menu="ouvert"] .laterale { display: block; }
+}

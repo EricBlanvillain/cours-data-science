@@ -16,4 +16,10 @@ const lecons = defineCollection({
   }),
 });
 
-export const collections = { lecons };
+// Les pages transverses lues telles quelles depuis docs/ à la racine du dépôt : une seule source de vérité.
+// Aujourd'hui : docs/glossaire.md → /glossaire. Corriger le fichier corrige la page.
+const docs = defineCollection({
+  loader: glob({ pattern: "glossaire.md", base: "../docs" }),
+});
+
+export const collections = { lecons, docs };

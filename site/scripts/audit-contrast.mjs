@@ -89,6 +89,28 @@ const ETATS = [
       r.querySelectorAll("input[type=checkbox]")[1].click(); await w(200);` },
   { page: "lecons/seance-00-faire-connaissance.html", id: "s0-ecran5-recap", pilote: `
       const r = ile("AccueilSeance0"); for (let i = 0; i < 4; i++) { btn(r, "Suivant").click(); await w(250); }` },
+
+  // La barre latérale : ses quatre états de pastille, repliée, et le menu du mobile (seul état mesuré à 420 px).
+  { page: "lecons/seance-01-introduction-ia.html", id: "barre-quatre-pastilles", pilote: `
+      window.progression.terminer(0); await w(150);
+      const b = document.getElementById("laterale"); if (!b || b.offsetParent === null) throw new Error("barre absente ou repliée");
+      for (const e of ["terminee", "ouverte", "a-venir"]) if (!b.querySelector('[data-etat="' + e + '"]')) throw new Error("pastille manquante : " + e);
+      if (!b.querySelector(".sans-lecon")) throw new Error("aucune leçon en préparation dans la barre");
+      if (!b.querySelector('[aria-current="page"][data-seance="1"]')) throw new Error("la séance de la page n'est pas mise en avant");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "barre-repliee", pilote: `
+      document.querySelector("[data-bascule-barre]").click(); await w(200);
+      if (document.getElementById("laterale").offsetParent !== null) throw new Error("la barre devrait être repliée");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "barre-menu-mobile-ouvert", largeur: 420, pilote: `
+      if (document.getElementById("laterale").offsetParent !== null) throw new Error("sur mobile le menu est fermé par défaut");
+      document.querySelector("[data-bascule-barre]").click(); await w(200);
+      if (document.getElementById("laterale").offsetParent === null) throw new Error("le menu devrait être ouvert");` },
+  // Le thème forcé : la page doit prendre le fond demandé quel que soit le réglage système (mesuré dans les deux passes).
+  { page: "lecons/seance-01-introduction-ia.html", id: "theme-force-clair", fond: "clair", pilote: `
+      window.theme.appliquer("clair"); await w(150);
+      if (document.querySelector('[data-theme-choix="clair"]').getAttribute("aria-pressed") !== "true") throw new Error("bouton Clair pas pressé");` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "theme-force-sombre", fond: "sombre", pilote: `
+      window.theme.appliquer("sombre"); await w(150);` },
+  { page: "glossaire.html", id: "glossaire", pilote: "" },
 ];
 
 /* Ce que l'audit ne mesure pas, dit explicitement. */
@@ -97,7 +119,7 @@ const NON_COUVERTS = [
   "boutons désactivés (Précédent au premier écran, Suivant au dernier) : mesurés mais exclus du verdict, WCAG les exempte",
   "transitions et animations : désactivées pendant la mesure, chaque état est mesuré à son terme",
   "sélection de texte (::selection) et zoom navigateur : non simulés",
-  "largeurs mobiles (< 720 px) : une seule largeur mesurée, 1280 px",
+  "largeurs mobiles : une seule largeur mesurée, 1280 px, sauf l'état barre-menu-mobile-ouvert (420 px)",
 ];
 
 const hexOk = (v) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v);
@@ -124,6 +146,7 @@ const MESURE = (pilote) => `
   // l'état actif garde son ancien fond et l'audit mesure un état intermédiaire qui n'existe pas à l'écran.
   var st = document.createElement('style'); st.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }'; document.head.appendChild(st);
   try { localStorage.removeItem('cours-data-science-progression'); if (window.progression) window.progression.reinitialiser(); } catch (e) {}
+  try { localStorage.removeItem('cours-data-science-theme'); localStorage.removeItem('cours-data-science-barre'); if (window.theme) window.theme.appliquer('systeme'); document.documentElement.setAttribute('data-barre', 'depliee'); document.documentElement.removeAttribute('data-menu'); if (window.barre) window.barre.rafraichir(); } catch (e) {}
   var erreurPilote = null;
   await w(1600);
   try { await (async function () { ${pilote} })(); } catch (e) { erreurPilote = String(e); }
@@ -176,7 +199,7 @@ await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
 
 // Chrome est lancé en asynchrone : un appel bloquant empêcherait ce même processus de servir les pages à Chrome.
 async function mesurer(etat, sombre) {
-  const args = ["--headless=new", "--disable-gpu", "--hide-scrollbars", "--window-size=1280,900", "--virtual-time-budget=8000", "--dump-dom"];
+  const args = ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${etat.largeur || 1280},900`, "--virtual-time-budget=8000", "--dump-dom"];
   if (sombre) args.push("--force-dark-mode");
   let stdout = "";
   try { ({ stdout } = await execFileP(CHROME, [...args, `http://127.0.0.1:${PORT}/${etat.page}?etat=${etat.id}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 60000 })); } catch (e) { stdout = e.stdout || ""; }
@@ -197,7 +220,8 @@ for (const etat of ETATS) {
     const res = await mesurer(etat, mode === "sombre");
     if (!res) { nonAtteints.push(`${ou} : page non mesurée`); continue; }
     if (res.erreurPilote) { nonAtteints.push(`${ou} : ${res.erreurPilote}`); }
-    if (res.ground !== attendu[mode]) fautes.push({ where: ou, text: "(fond de page)", bg: res.ground, note: `fond attendu ${attendu[mode]}` });
+    const fondAttendu = attendu[etat.fond || mode];   // un thème forcé impose son fond quelle que soit la passe
+    if (res.ground !== fondAttendu) fautes.push({ where: ou, text: "(fond de page)", bg: res.ground, note: `fond attendu ${fondAttendu}` });
     const vus = new Set(); let nbCuivre = 0;
     for (const t of res.text) {
       const k = t.text + t.fg + t.bg + t.size; if (vus.has(k)) continue; vus.add(k);

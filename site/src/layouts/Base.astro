@@ -1,14 +1,19 @@
 ---
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
+import Laterale from "../components/Laterale.astro";
 
 interface Props {
   titre: string;
   description?: string;
   /** largeur du contenu : "lecture" (leçon) ou "large" (pages à écrans) */
   largeur?: "lecture" | "large";
+  /** pose la barre latérale (leçons, pages transverses) */
+  barre?: boolean;
+  /** numéro de la séance de la page, pour la mettre en avant dans la barre */
+  courant?: number;
 }
-const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture" } = Astro.props;
+const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture", barre = false, courant } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,12 +25,30 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{titre} · Cours Data Science & IA</title>
     {/*
+      Thème : système (défaut), clair, sombre. Choix gardé dans le navigateur (localStorage), posé sur <html data-theme>
+      AVANT le premier rendu pour ne pas voir la page changer de couleur. Script classique en ligne : il tourne aussi
+      quand dist/ est ouvert depuis le disque. Expose window.theme = { lire, appliquer }.
+    */}
+    <script is:inline>
+      (function () {
+        var CLE = "cours-data-science-theme";
+        function lire() { try { var v = localStorage.getItem(CLE); return v === "clair" || v === "sombre" ? v : "systeme"; } catch (e) { return "systeme"; } }
+        function poser(m) {
+          if (m === "systeme") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", m);
+          document.querySelectorAll("[data-theme-choix]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-theme-choix") === m)); });
+        }
+        window.theme = { lire: lire, appliquer: function (m) { try { if (m === "systeme") localStorage.removeItem(CLE); else localStorage.setItem(CLE, m); } catch (e) { /* ignore */ } poser(m); } };
+        poser(lire());
+        document.addEventListener("DOMContentLoaded", function () { poser(lire()); });
+      })();
+    </script>
+    {/*
       Progression des séances, gardée dans CE navigateur, sur CET appareil (localStorage).
       Porté de l'ancien site (useProgress.ts : clé, chargement tolérant, écriture tolérante), sans React :
       un script classique en ligne, pour qu'il tourne aussi quand dist/ est ouvert depuis le disque.
-      Trois états : « à venir », « ouverte », « terminée ». Terminer N ouvre N+1. La séance 0 est ouverte d'office.
-      Rien n'est bloqué : une séance à venir s'affiche avec un bandeau. ?ouvrir=N ouvre une séance à la main,
-      ?reinitialiser=1 remet tout à zéro (pour un nouveau groupe).
+      Trois états : « pas encore ouverte » (a-venir dans le code), « en cours » (ouverte dans le code), « terminée ». Terminer N ouvre N+1.
+      La séance 0 est ouverte d'office. Rien n'est bloqué : une séance pas encore ouverte s'affiche avec un bandeau.
+      ?ouvrir=N ouvre une séance à la main, ?reinitialiser=1 remet tout à zéro (pour un nouveau groupe).
     */}
     <script is:inline>
       (function () {
@@ -46,16 +69,18 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
           return "a-venir";
         }
         function sans(liste, n) { return liste.filter(function (x) { return x !== n; }); }
+        function nbTerminees() { var t = 0; for (var i = 0; i <= DERNIERE; i++) if (etat(i) === "terminee") t++; return t; }
         var api = {
           etat: etat,
           terminer: function (n) { if (etatMemo.terminees.indexOf(n) < 0) ecrire({ terminees: etatMemo.terminees.concat([n]), ouvertes: etatMemo.ouvertes }); },
           annuler: function (n) { ecrire({ terminees: sans(etatMemo.terminees, n), ouvertes: etatMemo.ouvertes }); },
           ouvrir: function (n) { if (etatMemo.ouvertes.indexOf(n) < 0) ecrire({ terminees: etatMemo.terminees, ouvertes: etatMemo.ouvertes.concat([n]) }); },
           reinitialiser: function () { ecrire({ terminees: [], ouvertes: [] }); },
-          restantes: function () { var r = 0; for (var i = 0; i <= DERNIERE; i++) if (etat(i) !== "terminee") r++; return r; },
+          restantes: function () { return DERNIERE + 1 - nbTerminees(); },
+          terminees: nbTerminees,
           rafraichir: rafraichir,
         };
-        var LIBELLES = { "a-venir": "À venir", ouverte: "Ouverte", terminee: "Terminée" };
+        var LIBELLES = { "a-venir": "Pas encore ouverte", ouverte: "En cours", terminee: "Terminée" };
         function rafraichir() {
           document.querySelectorAll("[data-seance]").forEach(function (el) {
             var n = Number(el.getAttribute("data-seance")); var e = etat(n);
@@ -66,6 +91,10 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
             var r = api.restantes(); el.textContent = String(r);
             var bloc = el.closest("[data-compteur]"); if (bloc) { bloc.setAttribute("data-fini", r === 0 ? "oui" : "non"); var mot = bloc.querySelector("[data-restantes-mot]"); if (mot) mot.textContent = r > 1 ? "séances restantes" : (r === 1 ? "séance restante" : "séance restante : parcours terminé"); }
           });
+          // La barre latérale : « Séances terminées · N / 13 » et sa jauge (encre : ce qui est fait est résolu).
+          var t = nbTerminees();
+          document.querySelectorAll("[data-terminees]").forEach(function (el) { el.textContent = String(t); });
+          document.querySelectorAll("[data-jauge]").forEach(function (el) { el.style.width = (t / (DERNIERE + 1) * 100).toFixed(1) + "%"; });
         }
         // Paramètres d'URL : ?ouvrir=N (ouvrir une séance à la main), ?reinitialiser=1 (nouveau groupe)
         try {
@@ -77,12 +106,52 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
         if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", rafraichir); else rafraichir();
       })();
     </script>
+    {/*
+      La barre latérale : dépliée par défaut sur grand écran, l'état replié est gardé dans le navigateur ; sous 900 px
+      c'est un menu en haut, fermé par défaut, jamais mémorisé. <html data-barre> est posé avant le rendu pour éviter
+      un saut de mise en page. Expose window.barre = { basculer, rafraichir }.
+    */}
+    <script is:inline>
+      (function () {
+        var CLE = "cours-data-science-barre";
+        var h = document.documentElement;
+        var mobile = window.matchMedia("(max-width: 900px)");
+        function memorisee() { try { return localStorage.getItem(CLE) === "repliee" ? "repliee" : "depliee"; } catch (e) { return "depliee"; } }
+        h.setAttribute("data-barre", memorisee());
+        function libelles() {
+          var ouverte = mobile.matches ? h.getAttribute("data-menu") === "ouvert" : h.getAttribute("data-barre") !== "repliee";
+          document.querySelectorAll("[data-bascule-barre]").forEach(function (b) {
+            b.setAttribute("aria-expanded", String(ouverte));
+            b.textContent = mobile.matches ? (ouverte ? "Fermer le menu" : "Séances et pages ▾") : (ouverte ? "← Masquer les séances" : "Afficher les séances →");
+          });
+        }
+        window.barre = {
+          basculer: function () {
+            if (mobile.matches) { h.setAttribute("data-menu", h.getAttribute("data-menu") === "ouvert" ? "ferme" : "ouvert"); }
+            else { var n = h.getAttribute("data-barre") === "repliee" ? "depliee" : "repliee"; h.setAttribute("data-barre", n); try { localStorage.setItem(CLE, n); } catch (e) { /* ignore */ } }
+            libelles();
+          },
+          rafraichir: libelles,
+        };
+        mobile.addEventListener("change", libelles);
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", libelles); else libelles();
+      })();
+    </script>
   </head>
-  <body>
+  {/* Pages à barre latérale : le conteneur passe à 1360 px, en-tête et hero compris ; la prose garde ses 46 rem (voir .page-barre). */}
+  <body class:list={[barre && "page-barre"]}>
     <Nav />
     <slot name="hero" />
-    <main class:list={["conteneur pb-24", largeur === "large" ? "" : ""]}>
-      <slot />
+    <main class:list={["conteneur pb-24", barre && "avec-laterale"]}>
+      {barre && (
+        <p class="barre-bascule">
+          <button type="button" class="lien-mono" data-bascule-barre aria-controls="laterale" aria-expanded="true" onclick="window.barre.basculer()">← Masquer les séances</button>
+        </p>
+      )}
+      {barre && <Laterale courant={courant} />}
+      <div class="contenu">
+        <slot />
+      </div>
     </main>
     <footer class="conteneur pied">
       <p>Cours Data Science &amp; IA · 13 séances · notebooks et exercices sur <a href="https://github.com/EricBlanvillain/cours-data-science">GitHub</a></p>

@@ -1,0 +1,69 @@
+---
+/**
+ * La barre latérale des pages de leçon et des pages transverses : les blocs en sur-titre, les séances numérotées avec
+ * une pastille, un séparateur, les pages transverses qui existent, et en bas le compteur des séances terminées.
+ * Elle porte les mêmes faits que les cartes de l'accueil, avec le même vocabulaire :
+ *   terminée            pastille pleine, texte neutre
+ *   en cours            pastille cuivre, texte appuyé      ← le seul cuivre : la séance en cours, comme sur sa carte
+ *   pas encore ouverte  pastille vide, texte neutre
+ *   leçon en préparation  titre en retrait, sans lien, même libellé que sur la carte ; la pastille suit la progression
+ * L'état est posé par le script de progression (data-etat sur chaque [data-seance]). `courant` = la séance de la page.
+ * Repliable (window.barre, état gardé dans le navigateur) ; remplacée par un menu en haut sous 900 px.
+ */
+import { seances, blocs } from "../data/seances";
+
+interface Props { courant?: number }
+const { courant } = Astro.props;
+const chemin = Astro.url.pathname;
+
+const parBloc = [0, 1, 2, 3, 4].map((b) => ({
+  titre: blocs[b as keyof typeof blocs],
+  liste: seances.filter((s) => s.bloc === b),
+}));
+/* Ne mettre ici que ce qui existe : pas d'entrée grisée pour une page à venir. */
+const transverses = [{ href: "/glossaire", label: "Glossaire", actif: chemin.includes("glossaire") }];
+const total = seances.length;
+---
+
+<aside class="laterale" id="laterale">
+  <nav aria-label="Séances et pages">
+    {parBloc.map(({ titre, liste }) => (
+      <>
+        <p class="etiquette">{titre}</p>
+        <ol>
+          {liste.map((s) => (
+            <li data-seance={s.numero} class:list={[!s.slug && "sans-lecon"]} aria-current={s.numero === courant ? "page" : undefined}>
+              {s.slug ? (
+                <a href={`/lecons/${s.slug}`}>
+                  <span class="pastille" aria-hidden="true"></span>
+                  <span class="num">{String(s.numero).padStart(2, "0")}</span>
+                  <span class="titre">{s.titre}</span>
+                </a>
+              ) : (
+                <span class="sans-lien">
+                  <span class="pastille" aria-hidden="true"></span>
+                  <span class="num">{String(s.numero).padStart(2, "0")}</span>
+                  <span class="titre">{s.titre}</span>
+                  <span class="prep">Notebooks seuls · leçon à écrire</span>
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </>
+    ))}
+    <hr />
+    <ol>
+      {transverses.map((t) => (
+        <li aria-current={t.actif ? "page" : undefined}>
+          <a href={t.href}><span class="pastille invisible" aria-hidden="true"></span><span class="num"></span><span class="titre">{t.label}</span></a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <div class="laterale-compteur">
+    <p class="mono-caps">Séances terminées</p>
+    <p class="chiffre" style="font-size: 1.15rem; margin-top: 0.15rem;"><span data-terminees>0</span> / {total}</p>
+    <div class="jauge" aria-hidden="true"><span data-jauge style="width: 0%"></span></div>
+  </div>
+</aside>

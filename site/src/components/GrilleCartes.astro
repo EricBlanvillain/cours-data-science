@@ -1,0 +1,20 @@
+---
+/**
+ * Grille de cartes alignées (voir .grille-cartes dans global.css) : la rangée impose ses bandes à toutes ses cartes.
+ * Chaque enfant est une carte (class="carte") qui a exactement `bandes` enfants directs ; le dernier peut porter
+ * class="bande-pied" pour coller au bas. `liste` rend un <ul> (les enfants sont alors des <li>), sinon un <div>.
+ */
+interface Props {
+  bandes: number;
+  /** largeur minimale d'une carte ; la grille place autant de colonnes que possible */
+  min?: string;
+  liste?: boolean;
+  class?: string;
+}
+const { bandes, min = "16rem", liste = true, class: classe = "" } = Astro.props;
+const Balise = liste ? "ul" : "div";
+---
+
+<Balise class:list={["grille-cartes", classe]} style={`--bandes: ${bandes}; --carte-min: ${min};`}>
+  <slot />
+</Balise>

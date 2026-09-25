@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { questions, type Question } from "../../data/questions";
 
 type Verdict = Question["reponse"] | "inconnu";
@@ -122,38 +122,41 @@ export default function ClassifOuRegression() {
       </form>
 
       {/* Les deux panneaux */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(16rem, 1fr))", gap: "1rem" }}>
+      {/* Deux panneaux, cinq bandes alignées : forme, titre, définition, exemples, verdict. */}
+      <ul className="grille-cartes" style={{ "--bandes": 5, "--carte-min": "16rem" } as CSSProperties}>
         {(["classification", "regression"] as const).map((k) => {
           const actif = verdict === k;
           const eteint = verdict !== null && verdict !== "inconnu" && !actif;
           return (
-            <section
+            <li
               key={k}
               className="carte"
               aria-live={actif ? "polite" : undefined}
               style={{
                 borderColor: actif ? "var(--encre)" : "var(--trait)",
-                borderWidth: actif ? 2 : 1,
+                boxShadow: actif ? "inset 0 0 0 1px var(--encre)" : "none",   /* trait épaissi sans bouger la mise en page */
                 background: actif ? "var(--fond-3)" : "var(--fond-2)",
                 opacity: eteint ? 0.45 : 1,
                 transition: "opacity .25s var(--ease), border-color .25s var(--ease)",
               }}
             >
               <p className="etiquette">{PANNEAUX[k].forme}</p>
-              <h3 style={{ marginTop: "0.2rem" }}>{PANNEAUX[k].titre}</h3>
-              <p style={{ marginTop: "0.5rem" }}>{PANNEAUX[k].def}</p>
-              <p className="discret" style={{ marginTop: "0.5rem" }}>{PANNEAUX[k].exemples}</p>
-              {actif && (
-                <p style={{ marginTop: "0.9rem", fontWeight: 600 }}>
-                  « {question} » → {PANNEAUX[k].titre.toLowerCase()}.
-                  <br />
-                  <span style={{ fontWeight: 400 }}>{pourquoi}</span>
-                </p>
-              )}
-            </section>
+              <h3>{PANNEAUX[k].titre}</h3>
+              <p>{PANNEAUX[k].def}</p>
+              <p className="discret">{PANNEAUX[k].exemples}</p>
+              <div>
+                {actif && (
+                  <p style={{ fontWeight: 600 }}>
+                    « {question} » → {PANNEAUX[k].titre.toLowerCase()}.
+                    <br />
+                    <span style={{ fontWeight: 400 }}>{pourquoi}</span>
+                  </p>
+                )}
+              </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
 
       {/* Quand la forme de la question ne suffit pas : on fait trancher l'élève */}
       {verdict === "inconnu" && !choixManuel && (

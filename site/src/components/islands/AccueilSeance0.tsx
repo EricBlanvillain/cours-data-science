@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 /**
  * Les cinq écrans de la séance 0, portés depuis seances/seance-00-faire-connaissance/accueil.html.
@@ -25,6 +25,14 @@ const OUTILS = ["ChatGPT", "Claude", "Gemini", "Midjourney", "Aucun"];
 const ETAPES = ["Accueil", "C'est quoi l'IA ?", "IA ou pas ?", "Déjà fait", "Le parcours"];
 const COLAB = "https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb";
 
+/* Qui je suis : quatre encarts, un libellé et une ligne. Le quatrième est là pour les parents ; s'il faut couper, c'est lui. */
+const QUI: [string, string][] = [
+  ["Conseil", "Banque, assurance, industrie"],
+  ["Data et IA", "Modèles, agents, mise en production"],
+  ["Terrain", "6 ans · 8 pays"],
+  ["Formation", "CentraleSupélec · ESSEC"],
+];
+
 const BLOCS = [
   { n: "Bloc 1", s: "séances 1 à 3", quoi: "Les bases solides : ce qu'est l'IA, Python pour les données, SQL et Git.", gain: "Un premier projet d'analyse en ligne sur GitHub." },
   { n: "Bloc 2", s: "séances 4 à 6", quoi: "Le métier : collecter, nettoyer, analyser, raconter, puis entraîner un premier modèle.", gain: "Un tableau de bord présenté à l'oral et un modèle évalué." },
@@ -48,6 +56,7 @@ export default function AccueilSeance0() {
   const [etat, setEtat] = useState<Etat>(initial);
   const [pourquoiOuverts, setPourquoiOuverts] = useState<Record<string, boolean>>({});
   const [copie, setCopie] = useState(false);
+  const racine = useRef<HTMLDivElement>(null);
 
   const nom = (i: 0 | 1) => etat.prenoms[i].trim() || `Participant ${i + 1}`;
   const NB = ETAPES.length;
@@ -93,22 +102,35 @@ export default function AccueilSeance0() {
     try { await navigator.clipboard.writeText(recap); } catch { try { document.execCommand("copy"); } catch {} }
     setCopie(true); setTimeout(() => setCopie(false), 2000);
   }
-  function aller(n: number) { setEcran(Math.max(1, Math.min(NB, n))); window.scrollTo(0, 0); }
+  // Changer d'écran ramène au début de l'écran (le haut des cinq écrans), pas au haut de la page : le hero est déjà lu.
+  function aller(n: number) {
+    setEcran(Math.max(1, Math.min(NB, n)));
+    requestAnimationFrame(() => { const el = racine.current; if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 12 }); });
+  }
+
+  // Flèches ← → où que soit le focus (sauf dans un champ) : en séance on avance sans chercher le bouton.
+  useEffect(() => {
+    function surTouche(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = (e.target as HTMLElement).tagName?.toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select") return;
+      if (e.key === "ArrowRight") { e.preventDefault(); aller(ecran + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); aller(ecran - 1); }
+    }
+    document.addEventListener("keydown", surTouche);
+    return () => document.removeEventListener("keydown", surTouche);
+  }, [ecran]);
+
+  // La barre épinglée en bas couvre la fin de la page : on rembourre le bas du <main> et du pied (voir .avec-barre-basse).
+  useEffect(() => {
+    document.body.classList.add("avec-barre-basse");
+    return () => document.body.classList.remove("avec-barre-basse");
+  }, []);
 
   return (
-    <div
-      onKeyDown={(e) => {
-        const tag = (e.target as HTMLElement).tagName.toLowerCase();
-        if (tag === "input" || tag === "textarea") return;
-        if (e.key === "ArrowRight") aller(ecran + 1);
-        if (e.key === "ArrowLeft") aller(ecran - 1);
-      }}
-    >
-      {/* progression */}
-      <div style={{ height: 4, background: "var(--fond-3)", overflow: "hidden" }}>
-        <div style={{ height: "100%", width: `${(ecran / NB) * 100}%`, background: "var(--encre)", transition: "width .4s var(--ease)" }} />
-      </div>
-      <ol className="mono" style={{ display: "flex", justifyContent: "space-between", listStyle: "none", padding: 0, margin: "0.5rem 0 1.5rem", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "var(--tracking-label)", color: "var(--encre-2)" }}>
+    <div ref={racine}>
+      {/* les cinq étapes, en repère ; la jauge et les commandes sont dans la barre épinglée en bas */}
+      <ol className="mono" style={{ display: "flex", justifyContent: "space-between", listStyle: "none", padding: "0 0 0.6rem", margin: "0 0 1.2rem", borderBottom: "1px solid var(--trait)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "var(--tracking-label)", color: "var(--encre-2)" }}>
         {ETAPES.map((t, i) => (
           <li key={t} style={i + 1 === ecran ? { color: "var(--encre)", fontWeight: 500 } : undefined}>{t}</li>
         ))}
@@ -132,13 +154,16 @@ export default function AccueilSeance0() {
               </li>
             ))}
           </ol>
-          <div className="encart">
-            <p className="etiquette">Qui je suis</p>
-            <p style={{ marginTop: "0.3rem" }}>Je suis consultant data et intelligence artificielle.</p>
-            <p style={{ marginTop: "0.4rem" }}>Concrètement : les entreprises ont des données partout, dans des fichiers, des bases, des applications, et elles n'arrivent pas à s'en servir. Mon travail, c'est de rendre ces données utilisables et de construire les outils qui vont avec.</p>
-            <p style={{ marginTop: "0.4rem" }}>Master en data science à CentraleSupélec, diplômé de l'ESSEC. Six ans à faire ça, dans la finance, l'assurance, et aujourd'hui l'industrie.</p>
-            <p style={{ marginTop: "0.4rem" }}>Ce parcours, je l'ai écrit entièrement : les treize séances, les notebooks, les projets. Vous n'allez pas suivre un tutoriel. Vous allez construire vos propres outils, et vous les gardez.</p>
-          </div>
+          <p className="etiquette" style={{ marginTop: "0.4rem" }}>Qui je suis</p>
+          <ul className="grille-cartes" style={{ "--bandes": 2, "--carte-min": "8.5rem", marginTop: "-0.3rem" } as CSSProperties}>
+            {QUI.map(([libelle, ligne]) => (
+              <li key={libelle} className="carte" style={{ padding: "0.75rem 0.9rem" }}>
+                <p className="mono-caps" style={{ color: "var(--encre-2)" }}>{libelle}</p>
+                <p style={{ fontSize: "0.85rem", lineHeight: 1.35 }}>{ligne}</p>
+              </li>
+            ))}
+          </ul>
+          <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
         </section>
       )}
 
@@ -147,16 +172,20 @@ export default function AccueilSeance0() {
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>C'est quoi l'IA, pour toi ?</h2>
           <p style={{ color: "var(--encre-2)" }}>Pas de bonne réponse. Écris ce qui te vient, en une phrase ou en trois mots. On en reparle à la fin.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(16rem, 1fr))", gap: "1rem" }}>
+          <ul className="grille-cartes" style={{ "--bandes": 2, "--carte-min": "16rem" } as CSSProperties}>
             {([0, 1] as const).map((i) => (
-              <div key={i} className="carte" style={{ display: "grid", gap: "0.4rem" }}>
-                <label className="discret" htmlFor={`prenom${i}`}>Prénom</label>
-                <input id={`prenom${i}`} className="champ" autoComplete="off" placeholder="Prénom" value={etat.prenoms[i]} onChange={(e) => setPaire("prenoms", i, e.target.value)} />
-                <label className="discret" htmlFor={`ia${i}`} style={{ marginTop: "0.5rem" }}>L'IA, c'est…</label>
-                <textarea id={`ia${i}`} className="champ" rows={5} placeholder="Par exemple : un robot qui parle, un programme qui devine, ChatGPT…" value={etat.ia[i]} onChange={(e) => setPaire("ia", i, e.target.value)} />
-              </div>
+              <li key={i} className="carte">
+                <div style={{ display: "grid", gap: "0.4rem" }}>
+                  <label className="discret" htmlFor={`prenom${i}`}>Prénom</label>
+                  <input id={`prenom${i}`} className="champ" autoComplete="off" placeholder="Prénom" value={etat.prenoms[i]} onChange={(e) => setPaire("prenoms", i, e.target.value)} />
+                </div>
+                <div style={{ display: "grid", gap: "0.4rem" }}>
+                  <label className="discret" htmlFor={`ia${i}`}>L'IA, c'est…</label>
+                  <textarea id={`ia${i}`} className="champ" rows={5} placeholder="Par exemple : un robot qui parle, un programme qui devine, ChatGPT…" value={etat.ia[i]} onChange={(e) => setPaire("ia", i, e.target.value)} />
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       )}
 
@@ -165,14 +194,20 @@ export default function AccueilSeance0() {
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>Est-ce de l'IA ?</h2>
           <p style={{ color: "var(--encre-2)" }}>Répondez ensemble, à l'instinct. Puis cliquez sur « Pourquoi ? » : la réponse n'est pas toujours celle qu'on croit.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(15rem, 1fr))", gap: "0.9rem", alignItems: "start" }}>
+          {/* Quatre bandes alignées sur les six cartes : titre, statut, boutons, pied (« Pourquoi ? » et son explication).
+              Le cuivre ne marque que le statut « sans réponse » ; la bordure reste le filet neutre, comme partout. */}
+          <ul className="grille-cartes" style={{ "--bandes": 4, "--carte-min": "15rem" } as CSSProperties}>
             {QUIZ.map((q) => {
               const rep = etat.quiz[q.id];
               const ouvert = !!pourquoiOuverts[q.id];
               return (
-                <div key={q.id} className={"carte" + (rep ? "" : " ouvert-bord")} style={{ display: "grid", gap: "0.55rem" }}>
+                <li key={q.id} className="carte">
                   <h3 style={{ fontSize: "1.1rem" }}>{q.titre}</h3>
-                  {!rep && <span className="etiquette ouvert"><span className="pastille-ouverte" />sans réponse</span>}
+                  {rep ? (
+                    <p className="mono-caps" style={{ color: "var(--encre-2)" }}>Répondu : {rep}</p>
+                  ) : (
+                    <p className="mono-caps ouvert"><span className="pastille-ouverte" />sans réponse</p>
+                  )}
                   <div style={{ display: "flex", gap: "0.4rem" }}>
                     {(["oui", "non"] as const).map((v) => (
                       <button key={v} type="button" className={"bouton" + (rep === v ? " actif" : "")} onClick={() => set("quiz", { ...etat.quiz, [q.id]: v })}>
@@ -180,19 +215,22 @@ export default function AccueilSeance0() {
                       </button>
                     ))}
                   </div>
-                  <button type="button" className="lien-source" style={{ justifySelf: "start" }} onClick={() => setPourquoiOuverts((o) => ({ ...o, [q.id]: !ouvert }))}>
-                    {ouvert ? "Masquer" : "Pourquoi ?"}
-                  </button>
-                  {ouvert && (
-                    <p style={{ fontSize: "0.9rem", lineHeight: 1.4, padding: "0.6rem 0.75rem", borderRadius: 4, background: "var(--fond-3)", borderLeft: "2px solid var(--encre)" }}>
-                      <b style={{ display: "block" }}>{q.ia === "oui" ? "C'est de l'IA" : "Ce n'est pas de l'IA"}</b>
-                      <span>{q.pourquoi}</span>
-                    </p>
-                  )}
-                </div>
+                  {/* pas .bande-pied : le lien reste sous les boutons, l'explication ouverte pousse vers le bas */}
+                  <div>
+                    <button type="button" className="lien-source" onClick={() => setPourquoiOuverts((o) => ({ ...o, [q.id]: !ouvert }))}>
+                      {ouvert ? "Masquer" : "Pourquoi ?"}
+                    </button>
+                    {ouvert && (
+                      <p style={{ marginTop: "0.6rem", fontSize: "0.9rem", lineHeight: 1.4, padding: "0.6rem 0.75rem", background: "var(--fond-3)", borderLeft: "2px solid var(--encre)" }}>
+                        <b style={{ display: "block" }}>{q.ia === "oui" ? "C'est de l'IA" : "Ce n'est pas de l'IA"}</b>
+                        <span>{q.pourquoi}</span>
+                      </p>
+                    )}
+                  </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </section>
       )}
 
@@ -201,26 +239,26 @@ export default function AccueilSeance0() {
         <section style={{ display: "grid", gap: "0.9rem" }}>
           <h2>Ce que tu as déjà fait</h2>
           <p style={{ color: "var(--encre-2)" }}>Coche tout ce qui te concerne. « Rien pour l'instant » est une réponse parfaitement normale : c'est le point de départ de tout le monde.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(16rem, 1fr))", gap: "1rem" }}>
+          <ul className="grille-cartes" style={{ "--bandes": 3, "--carte-min": "16rem" } as CSSProperties}>
             {([0, 1] as const).map((i) => (
-              <div key={i} className="carte" style={{ display: "grid", gap: "0.3rem" }}>
+              <li key={i} className="carte">
                 <h3>{nom(i)}</h3>
                 {([["langages", "Langages déjà touchés", LANGAGES], ["outils", "Outils d'IA déjà utilisés", OUTILS]] as const).map(([cle, label, valeurs]) => (
-                  <fieldset key={cle} style={{ border: 0, padding: 0, margin: "0.4rem 0 0" }}>
+                  <fieldset key={cle} style={{ border: 0, padding: 0 }}>
                     <legend className="discret" style={{ marginBottom: "0.3rem" }}>{label}</legend>
                     <div style={{ display: "grid", gap: "0.35rem" }}>
                       {valeurs.map((v) => (
                         <label key={v} style={{ display: "flex", gap: "0.6rem", alignItems: "center", cursor: "pointer" }}>
-                          <input type="checkbox" style={{ width: 20, height: 20, accentColor: "var(--accent)" }} checked={etat[cle][i].includes(v)} onChange={() => basculer(cle, i, v)} />
+                          <input type="checkbox" style={{ width: 20, height: 20, accentColor: "var(--encre)" }} checked={etat[cle][i].includes(v)} onChange={() => basculer(cle, i, v)} />
                           {v}
                         </label>
                       ))}
                     </div>
                   </fieldset>
                 ))}
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
           <div className="carte" style={{ borderColor: "var(--encre)", borderWidth: 2 }}>
             <h3>La question qui compte</h3>
             <p style={{ marginTop: "0.3rem" }}>Si tu pouvais construire un outil qui te simplifie la vie, ce serait quoi ?</p>
@@ -264,11 +302,14 @@ export default function AccueilSeance0() {
         </section>
       )}
 
-      {/* navigation */}
-      <nav aria-label="Écrans" style={{ position: "sticky", bottom: 0, marginTop: "1.5rem", padding: "0.8rem 0 1rem", background: "linear-gradient(to top, var(--fond) 70%, transparent)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-        <button type="button" className="bouton" onClick={() => aller(ecran - 1)} disabled={ecran === 1}>← Précédent</button>
-        <span className="discret">{ecran} / {NB}</span>
-        <button type="button" className="bouton principal" onClick={() => aller(ecran + 1)} disabled={ecran === NB}>Suivant →</button>
+      {/* navigation épinglée au bas de la fenêtre : jauge, position et commandes au même endroit, sans défiler */}
+      <nav aria-label="Écrans" className="barre-ecrans">
+        <div className="barre-ecrans-jauge" aria-hidden="true"><div style={{ width: `${(ecran / NB) * 100}%` }} /></div>
+        <div className="conteneur barre-ecrans-ligne">
+          <button type="button" className="bouton" onClick={() => aller(ecran - 1)} disabled={ecran === 1}>← Précédent</button>
+          <span className="mono-caps" style={{ color: "var(--encre-2)" }}><span style={{ color: "var(--encre)" }}>{ecran} / {NB}</span> · {ETAPES[ecran - 1]}</span>
+          <button type="button" className="bouton principal" onClick={() => aller(ecran + 1)} disabled={ecran === NB}>Suivant →</button>
+        </div>
       </nav>
     </div>
   );

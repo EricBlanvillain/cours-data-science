@@ -1,22 +1,25 @@
 ---
-/** Les trois cartes « Pourquoi maintenant », alimentées par src/data/causes.ts. Sources repliées. */
+/** Les trois cartes « Pourquoi maintenant », alimentées par src/data/causes.ts. Sources repliées.
+ *  min 14rem : trois cartes de front dès 1280 px de fenêtre (colonne de 902 px), barre latérale dépliée. */
 import { causes } from "../data/causes";
+import GrilleCartes from "./GrilleCartes.astro";
 ---
 {causes.length === 0 ? (
   <p class="encart">Les cartes n'ont pas encore de données : remplis <code>src/data/causes.ts</code>.</p>
 ) : (
-  <div class="large grid gap-4 lg:grid-cols-3">
+  <GrilleCartes bandes={6} liste={false} class="large" min="14rem">
+    {/* Six bandes alignées : étiquette, titre, accroche, chiffre, explication, pied (détails et sources). */}
     {causes.map((c, i) => (
-      <article class="carte flex flex-col gap-3">
+      <article class="carte">
         <p class="etiquette">Cause {i + 1}</p>
         <h3>{c.titre}</h3>
         <p style="color: var(--encre-2);">{c.accroche}</p>
-        <p class="my-1">
+        <p>
           <span class="chiffre" style="font-size: 1.7rem; line-height: 1.15; display: block; text-wrap: balance;">{c.chiffre}</span>
           <span class="discret">{c.chiffreLegende}</span>
         </p>
         <p style="font-size: 0.97rem;">{c.explication}</p>
-        <details class="mt-auto pt-2">
+        <details class="bande-pied pt-2">
           <summary class="lien-source" style="list-style: none; display: inline;">détails et sources</summary>
           <ul class="mt-2 pl-5" style="font-size: 0.88rem;">
             {c.details.map((d) => <li class="mt-1">{d}</li>)}
@@ -35,5 +38,5 @@ import { causes } from "../data/causes";
         </details>
       </article>
     ))}
-  </div>
+  </GrilleCartes>
 )}

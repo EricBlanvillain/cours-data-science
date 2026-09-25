@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { jalons, periodes, type Periode } from "../../data/frise";
 
 const ORDRE: Periode[] = ["fondations", "hivers", "renaissance", "deep-learning", "transformers", "boom"];
@@ -83,7 +83,9 @@ export default function Frise() {
             if (e.key === "Home") { e.preventDefault(); aller(0); }
             if (e.key === "End") { e.preventDefault(); aller(liste.length - 1); }
           }}
-          style={{ display: "flex", gap: "0.9rem", listStyle: "none", padding: "0.25rem 1.5rem 1rem", margin: 0, scrollPaddingLeft: "1.5rem" }}
+          /* Une seule rangée qui défile : quatre bandes alignées sur les 35 cartes (en-tête, titre, phrase, pied). */
+          className="grille-cartes en-ligne defile-x"
+          style={{ "--bandes": 4, "--carte-min": "19rem", padding: "0.25rem 1.5rem 1rem", scrollPaddingLeft: "1.5rem" } as CSSProperties}
         >
           {liste.map((j, i) => {
             const nouvellePeriode = i === 0 || liste[i - 1].periode !== j.periode;
@@ -92,24 +94,22 @@ export default function Frise() {
                 key={`${j.annee}-${j.titre}`}
                 className="carte"
                 style={{
-                  flex: "0 0 19rem",
                   scrollSnapAlign: "start",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.45rem",
                   borderColor: i === courant ? "var(--encre)" : "var(--trait)",
                   transition: "border-color .25s var(--ease)",
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "0.5rem" }}>
-                  <span className="chiffre" style={{ fontSize: "1.7rem", lineHeight: 1 }}>{j.annee}</span>
-                  {nouvellePeriode && <span className="etiquette" style={{ textAlign: "right" }}>{periodes[j.periode].titre}</span>}
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "0.5rem" }}>
+                    <span className="chiffre" style={{ fontSize: "1.7rem", lineHeight: 1 }}>{j.annee}</span>
+                    {nouvellePeriode && <span className="etiquette" style={{ textAlign: "right" }}>{periodes[j.periode].titre}</span>}
+                  </div>
+                  {j.date && <span className="discret" style={{ display: "block", marginTop: "0.35rem" }}>{j.date}</span>}
                 </div>
-                {j.date && <span className="discret">{j.date}</span>}
                 <h3 style={{ fontSize: "1.1rem" }}>{j.titre}</h3>
-                {j.desaccord && <span className="etiquette ouvert"><span className="pastille-ouverte" />sources en désaccord</span>}
                 <p style={{ fontSize: "0.95rem", lineHeight: 1.4 }}>{j.phrase}</p>
-                <div style={{ marginTop: "auto", paddingTop: "0.4rem" }}>
+                <div className="bande-pied" style={{ paddingTop: "0.4rem" }}>
+                  {j.desaccord && <p className="mono-caps ouvert" style={{ marginBottom: "0.45rem" }}><span className="pastille-ouverte" />sources en désaccord</p>}
                   <button
                     type="button"
                     className="lien-source"

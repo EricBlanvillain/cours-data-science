@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
-import { seances, blocs } from "../data/seances";
+import GrilleCartes from "../components/GrilleCartes.astro";
+import { seances, blocs, DEPOT } from "../data/seances";
 
 const parBloc = [0, 1, 2, 3, 4].map((b) => ({
   bloc: b as keyof typeof blocs,
@@ -32,29 +33,47 @@ const total = seances.length;
     {parBloc.map(({ titre, liste }) => (
       <section>
         <h2 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--encre-2);">{titre}</h2>
-        <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" style="list-style: none; padding: 0;">
-          {liste.map((s) => (
-            <li class="carte carte-seance flex flex-col gap-3" data-seance={s.numero}>
+        {/* Cinq bandes alignées sur toute la rangée : sur-titre, titre, description, pied, action.
+            Le pied répond à deux questions distinctes : ce qui est disponible sur le site (ne change jamais) et où en est
+            l'élève (porte le cuivre, sur « pas encore ouverte » seulement). La bande d'action garde sa hauteur même vide :
+            une séance pas encore ouverte n'annonce pas la porte, le titre reste cliquable, rien n'est bloqué. */}
+        <GrilleCartes bandes={5} class="mt-5">
+          {liste.map((s) => {
+            const lecon = s.slug ? `/lecons/${s.slug}` : null;
+            const notebooks = `${DEPOT}/tree/main/seances/${s.dossier}`;
+            return (
+            <li class="carte carte-seance" data-seance={s.numero}>
               <div class="flex items-baseline justify-between gap-3 mono-caps">
                 <span>Séance {String(s.numero).padStart(2, "0")}</span>
                 <span aria-label={`niveau ${s.niveau}`}>{s.niveau.replace(/⭐/g, "★")}</span>
               </div>
               <h3>
-                {s.slug ? (
-                  <a href={`/lecons/${s.slug}`} class="no-underline" style="color: var(--encre);">{s.titre}</a>
-                ) : (
-                  s.titre
-                )}
+                {lecon ? <a href={lecon} class="no-underline" style="color: var(--encre);">{s.titre}</a> : s.titre}
               </h3>
               <p class="discret" style="font-size: 0.95rem;">{s.resume}</p>
-              <p class="mono-caps etat-seance mt-auto pt-3">
-                <span class="pastille-ouverte" aria-hidden="true"></span><span data-etat-libelle>À venir</span>
-                {!s.slug && <span class="etat-note"> · leçon sur le site à venir, notebooks disponibles</span>}
-              </p>
-              {s.slug && <a href={`/lecons/${s.slug}`} class="bouton principal self-start no-underline">Ouvrir la leçon →</a>}
+              <div class="pt-3">
+                <p class="mono-caps" style="color: var(--encre-2);">{lecon ? "Leçon en ligne · notebooks" : "Notebooks seuls · leçon à écrire"}</p>
+                <p class="mono-caps etat-seance mt-1">
+                  <span class="pastille" aria-hidden="true"></span><span data-etat-libelle>Pas encore ouverte</span>
+                </p>
+              </div>
+              <div class="bande-action">
+                {lecon ? (
+                  <>
+                    <a href={lecon} class="bouton principal no-underline action-ouverte">Ouvrir la leçon →</a>
+                    <a href={lecon} class="lien-mono action-terminee">Relire la leçon →</a>
+                  </>
+                ) : (
+                  <>
+                    <a href={notebooks} class="bouton no-underline action-ouverte" target="_blank" rel="noopener">Ouvrir les notebooks ↗</a>
+                    <a href={notebooks} class="lien-mono action-terminee" target="_blank" rel="noopener">Revoir les notebooks ↗</a>
+                  </>
+                )}
+              </div>
             </li>
-          ))}
-        </ul>
+            );
+          })}
+        </GrilleCartes>
       </section>
     ))}
   </div>

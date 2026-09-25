@@ -15,7 +15,7 @@ const n = lecon.data.numero;
 const suivante = seances.find((s) => s.numero === n + 1);
 ---
 
-<Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume}>
+<Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume} barre courant={n}>
   <section slot="hero" class="sombre hero hero-lecon">
     <div class="conteneur">
       <p class="etiquette">Séance {String(n).padStart(2, "0")} · {lecon.data.niveau.replace(/⭐/g, "★")} · {lecon.data.duree}</p>
@@ -48,7 +48,7 @@ const suivante = seances.find((s) => s.numero === n + 1);
 
     {/* Terminer la séance : c'est l'élève qui le dit, depuis ici. Ouvre la suivante. */}
     <section class="mt-20 pt-8 fin-de-seance" style="max-width: 46rem; border-top: 1px solid var(--trait);">
-      <p class="mono-caps">Cette séance, sur cet appareil : <span data-etat-libelle>À venir</span></p>
+      <p class="mono-caps">Cette séance, sur cet appareil : <span data-etat-libelle>Pas encore ouverte</span></p>
       <div class="mt-4 flex flex-wrap gap-3">
         <button type="button" class="bouton principal bouton-terminer" onclick={`window.progression.terminer(${n})`}>Marquer la séance terminée</button>
         <button type="button" class="bouton bouton-annuler" onclick={`window.progression.annuler(${n})`}>Annuler « terminée »</button>
