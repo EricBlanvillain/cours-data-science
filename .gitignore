@@ -10,6 +10,8 @@ train.csv
 test.csv
 # projets avancés : données téléchargées et modèles entraînés
 data/
+# …mais pas les données du site (séances, frise, causes, quiz), qui sont du code, pas des jeux de données
+!site/src/data/
 *.keras
 *.h5
 *.safetensors
@@ -22,3 +24,6 @@ logs/
 site/node_modules/
 site/dist/
 site/.astro/
+
+# réglages locaux de Claude Code (propres à la machine, pas au cours)
+.claude/
