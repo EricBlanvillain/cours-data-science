@@ -1,0 +1,25 @@
+---
+/**
+ * La rangée de boutons d'une séance : la leçon dans Colab, le carnet d'exercices dans Colab, le dossier sur GitHub.
+ * Trois destinations externes, donc ↗ (convention du site). Les URL se construisent depuis le dépôt et le dossier de la
+ * séance : un seul endroit à corriger si le dépôt bouge. Même composant sur toutes les leçons.
+ */
+import { DEPOT } from "../data/seances";
+
+interface Props {
+  /** nom du dossier sous seances/ */
+  dossier: string;
+  /** nom du fichier de la leçon, ex. 02_python_pour_la_data.ipynb */
+  lecon: string;
+  /** nom du carnet d'exercices, ex. 02_exercices.ipynb */
+  exercices: string;
+  nbExercices?: number;
+}
+const { dossier, lecon, exercices, nbExercices = 12 } = Astro.props;
+const colab = (fichier: string) => `https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/${dossier}/${fichier}`;
+---
+<p class="large boutons-seance">
+  <a class="bouton principal" href={colab(lecon)} target="_blank" rel="noopener">Ouvrir la leçon dans Colab ↗</a>
+  <a class="bouton" href={colab(exercices)} target="_blank" rel="noopener">Les {nbExercices} exercices ↗</a>
+  <a class="bouton" href={`${DEPOT}/tree/main/seances/${dossier}`} target="_blank" rel="noopener">Le dossier sur GitHub ↗</a>
+</p>

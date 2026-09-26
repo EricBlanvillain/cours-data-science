@@ -6,6 +6,7 @@ resume: On fait connaissance, on regarde ce que chacun a déjà touché, on inst
 livrable: Un notebook Colab qui tourne, une liste de 3 idées de projets, et un compte GitHub avec un premier dépôt.
 ---
 import AccueilSeance0 from "../../components/islands/AccueilSeance0";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
 
 ## Les trente premières minutes
 
@@ -22,11 +23,7 @@ Le reste de la séance se passe dans Colab, ensemble. Rien n'est renvoyé à la 
 - **Les trois comptes** (10 min) : Google Colab, Kaggle, GitHub, et la création du premier dépôt `mon-portfolio-ia`. C'est la seule étape qui doit être finie avant de partir.
 - **Le jeu du nombre mystère** (10 min) : d'abord des coups prédéfinis, puis la stratégie du milieu.
 
-<p class="large" style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.5rem;">
-  <a class="bouton principal" href="https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_faire_connaissance.ipynb" target="_blank" rel="noopener">Ouvrir la leçon dans Colab ↗</a>
-  <a class="bouton" href="https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/seance-00-faire-connaissance/00_exercices.ipynb" target="_blank" rel="noopener">Les 12 exercices ↗</a>
-  <a class="bouton" href="https://github.com/EricBlanvillain/cours-data-science/tree/main/seances/seance-00-faire-connaissance" target="_blank" rel="noopener">Le dossier sur GitHub ↗</a>
-</p>
+<BoutonsSeance dossier="seance-00-faire-connaissance" lecon="00_faire_connaissance.ipynb" exercices="00_exercices.ipynb" />
 
 Dans Colab, pense à *Fichier → Enregistrer une copie dans Drive* : sans ça, tout disparaît à la fermeture de l'onglet.
 

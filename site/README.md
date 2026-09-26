@@ -13,6 +13,7 @@ npm run dev          # http://localhost:4321, rechargement à chaud
 npm run build        # construit dist/ puis le rend ouvrable hors ligne (scripts/relativize.mjs)
 npm run preview      # sert dist/ comme le ferait un hébergeur
 npm run audit        # après un build : audit de contraste et règle du cuivre sur 33 états (clics compris), en clair et en sombre
+npm run lint:lecons          # les règles des leçons (aussi en tête de npm run build)
 npm run audit:mise-en-page   # après un build : bandes des grilles de cartes alignées, en-tête au pixel près sur quatre pages, prose sous 46 rem
 ```
 
@@ -41,6 +42,7 @@ src/pages/                      accueil et page de leçon générique (la séanc
 src/styles/global.css           thème clair / sombre, registres typographiques, classes partagées
 src/styles/palette.mjs          la palette, source unique pour l'audit
 scripts/relativize.mjs          post-build : chemins relatifs (pages, polices) + vérification des cibles et de l'absence de ressource externe
+scripts/lint-lecons.mjs         les règles des leçons : vocabulaire des blocs, 625 mots, replis, titres, flèches, annonces de figure, quiz
 scripts/audit-contrast.mjs      mesure chaque texte contre son fond composité dans Chrome headless, sans dépendance
 scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose, écrans de la séance 0 dans 1440 × 900
 ```
@@ -62,6 +64,30 @@ livrable: Ce qu'on repart avec.
 puis du Markdown. Un composant s'importe en tête du fichier et se pose dans le texte
 (`<TroisCercles />`, ou `<Frise client:load />` pour un composant React). Ajoute ensuite le `slug`
 dans `src/data/seances.ts` pour que la carte de la page d'accueil devienne cliquable.
+
+## Blocs d'une leçon
+
+Le vocabulaire est fermé : une leçon n'utilise que ces blocs, et `npm run lint:lecons` (lancé en tête de `npm run build`, donc par
+Vercel) refuse tout import qui n'en fait pas partie, une prose visible au-delà de 625 mots, un `<details>` sans `<summary>`, un
+titre hors `##`/`###`, une flèche qui ment, une phrase qui annonce une figure, un frontmatter incomplet ou un quiz absent.
+
+| Bloc | Quand | Exemple |
+|---|---|---|
+| Section `##` | Une idée par section ; le titre entre dans le sommaire et dans le compte des sections | `## Pourquoi maintenant` |
+| Sous-section `###` | Réservée à l'exercice de la leçon, « À toi : … » | `### À toi : le Playground` |
+| Prose | Une ou deux phrases avant une figure, moins de 80 mots par bloc, jamais un récapitulatif après | `Trois mots que tout le monde mélange.` |
+| Repli `<details>` | Nuance, aparté, « pour l'élève curieux », ce qui n'est pas pour tous | `<details><summary>L'ancêtre : la régression linéaire, 1805</summary>…</details>` |
+| Schéma SVG | Une figure statique écrite à la main aux tokens, `components/schemas/*.astro`, légende d'une ligne au plus, classe `grand` si elle défile au téléphone | `<TroisCercles />` |
+| Courbe | Une série chiffrée sourcée, `schemas/Courbe.astro` nourri par un fichier de `src/data/` | `<Courbe id="…" points={…} log />` |
+| Cartes numérotées | Un bloc de 2 à 4 cartes dépouillées, motif `chiffre` (numéro, mot, chiffre, ligne) ou `verdict` (numéro, mot, question, verdict) ; données dans `src/data/` | `<CartesNumerotees cartes={conditions} motif="verdict" />` |
+| Causes | Les trois courbes « Pourquoi maintenant » de la séance 1, spécifiques à cette leçon | `<Causes />` |
+| Îlot interactif | Ce qui réagit au clic ou au clavier, `components/islands/*` avec `client:load` : frise, jeu classification / régression, écrans de la séance 0 | `<Frise client:load />` |
+| Boutons de séance | La rangée Colab leçon, Colab exercices, dossier GitHub, en ↗ ; `BoutonsSeance.astro` construit les URL | `<BoutonsSeance dossier="seance-02-python-pour-la-data" lecon="02_python_pour_la_data.ipynb" exercices="02_exercices.ipynb" />` |
+| Liste courte | Le déroulé du notebook ou trois consignes, une ligne par puce | `- **Python répond ?** puis le diagnostic (15 min)…` |
+| Tableau de référence | Une fiche à retrouver ensuite, quatre colonnes au plus, en Markdown | `| Verbe | La question | La ligne pandas | Exemple |` |
+| Bloc de code | Deux ou trois lignes à retenir telles quelles, en ```python | `df.head()` `df.shape` `df.describe()` |
+
+Le cadre autour (objectifs, mini-quiz, à retenir, navigation) vient du frontmatter et de la page de leçon, pas du MDX.
 
 ## Une figure remplace son explication
 
