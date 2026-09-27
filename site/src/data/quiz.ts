@@ -111,4 +111,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "add choisit les fichiers, commit crée le point de sauvegarde avec son message, push envoie les commits sur GitHub. Un push avant le commit n'a rien de nouveau à envoyer.",
     },
   ],
+  4: [
+    {
+      question: "Dans le tableau abîmé, « fire », « Fire » suivi d'un espace, et « Fire » comptent comme trois types différents. Quelle ligne en fait un seul ?",
+      options: ["df[\"Type 1\"].str.strip().str.capitalize()", "df[\"Type 1\"].dropna()", "df.drop_duplicates()", "df[\"Type 1\"].astype(float)"],
+      bonne: 0,
+      explication: "strip enlève l'espace invisible au bout, capitalize remet une majuscule devant et des minuscules derrière. Le tableau passe de 56 valeurs à 30 ; les lettres inversées comme « Fier » demandent ensuite un dictionnaire de corrections.",
+    },
+    {
+      question: "Pour convertir la colonne HP, le notebook écrit astype(float) et pas astype(int). Pourquoi ?",
+      options: ["Les points de vie ont des virgules", "Il reste des cases vides, et NaN ne rentre pas dans une colonne d'entiers", "float est plus rapide", "int ne sait pas lire le texte"],
+      bonne: 1,
+      explication: "NaN est lui-même un nombre à virgule : une colonne d'entiers ne peut pas le contenir. On passe par float, on remplit les vides, et seulement ensuite on repasse en int.",
+    },
+    {
+      question: "Après réparation, le HP moyen vaut 69,1 contre 69,3 dans le tableau propre. Qu'est-ce que ça veut dire ?",
+      options: ["Le nettoyage a raté", "Il manque des Pokémon", "Les 40 cases remplies par 65 ne valent pas les vraies valeurs effacées : la moyenne bouge un peu", "pandas arrondit mal"],
+      bonne: 2,
+      explication: "Remplir, c'est remplacer une valeur perdue par une valeur raisonnable, pas par la vraie. Un petit écart est normal ; ce qui compte, c'est que le journal dise d'où il vient.",
+    },
+    {
+      question: "La PokéAPI renvoie data, un JSON. Quelle ligne donne le type de Pikachu ?",
+      options: ["data[\"type\"]", "data[\"types\"][\"name\"]", "data[\"types\"][0][\"type\"][\"name\"]", "data.type"],
+      bonne: 2,
+      explication: "types est une liste (un Pokémon peut en avoir deux), d'où le [0] ; chaque élément est un dictionnaire qui contient type, lui-même un dictionnaire qui contient name. On descend niveau par niveau jusqu'à « electric ».",
+    },
+  ],
 };

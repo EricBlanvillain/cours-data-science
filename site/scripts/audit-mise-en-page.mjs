@@ -39,8 +39,10 @@ const PAGES = [
   { page: "lecons/seance-02-python-pour-la-data.html", id: "seance-2-quel-graphique-juste", pilote: `const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Barres").click(); await w(300);` },
   { page: "lecons/seance-03-sql-et-git.html", id: "seance-3", pilote: "" },
   { page: "lecons/seance-03-sql-et-git.html", id: "seance-3-quelle-commande-juste", pilote: `const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);` },
+  { page: "lecons/seance-04-collecter-nettoyer.html", id: "seance-4", pilote: "" },
+  { page: "lecons/seance-04-collecter-nettoyer.html", id: "seance-4-vides-juste", pilote: `const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300); btn(g, "Garder").click(); await w(300);` },
 ];
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.

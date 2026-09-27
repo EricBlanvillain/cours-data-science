@@ -1,0 +1,62 @@
+---
+/**
+ * Le tableau Pokémon abîmé par abimer(seed=42) : six lignes réelles, et les cinq dégâts numérotés sur les cases qu'ils
+ * touchent, avec leur compte sur tout le tableau (src/data/nettoyage.ts).
+ */
+import { lignesAbimees, avant, doublons, dates, typesValides } from "../../data/nettoyage";
+const X = 40, Y = 88, H = 32;
+const col = { nom: X + 36, type1: X + 176, hp: X + 276, date: X + 356 };
+const LARG = 500;
+const pastille = (x: number, y: number, n: number) => ({ x, y, n });
+const marques = [
+  pastille(X + 20, Y + 3 * H + 16, 1), pastille(X + 20, Y + 4 * H + 16, 1),
+  pastille(col.type1 + 60, Y + 0 * H + 16, 2), pastille(col.type1 + 60, Y + 1 * H + 16, 2),
+  pastille(col.hp + 52, Y + 0 * H + 16, 3),
+  pastille(col.hp + 52, Y + 2 * H + 16, 4),
+  pastille(col.date + 112, Y + 3 * H + 16, 5), pastille(col.date + 112, Y + 5 * H + 16, 5),
+];
+const degats = [
+  { mot: "doublons", ligne: `${doublons} lignes recopiées, comme Growlithe`, chiffre: `${avant.lignes} lignes au lieu de 800` },
+  { mot: "fautes de frappe", ligne: "water, Fire␣, Fier : trois « Feu » pour l'ordinateur", chiffre: `${avant.typesDifferents} valeurs de Type 1 au lieu de ${typesValides}` },
+  { mot: "nombres en texte", ligne: "« 75␣ » avec un espace : pas de moyenne possible", chiffre: "HP est une colonne de texte" },
+  { mot: "cases vides", ligne: "NaN, Not a Number : la case a été effacée", chiffre: `${avant.videsType1} Type 1, ${avant.videsHP} HP` },
+  { mot: "dates en trois formats", ligne: "2024-10-17, 05/03/2024, 28 sept 2024", chiffre: `${dates.iso} + ${dates.fr} + ${dates.lettres}` },
+];
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 350" role="img" aria-labelledby="cd4-titre cd4-desc">
+    <title id="cd4-titre">Le tableau Pokémon abîmé et ses cinq dégâts</title>
+    <desc id="cd4-desc">Six lignes du tableau abîmé : Palpitoad de type water, Charizard de type Fier, Charmeleon sans HP, Growlithe en double, des HP écrits comme « 75 » avec un espace, des dates en trois formats. À droite, les cinq dégâts et leur nombre sur tout le tableau : 810 lignes au lieu de 800, 56 valeurs de Type 1 au lieu de 18, HP en texte, 40 Type 1 et 41 HP vides, des dates en trois formats.</desc>
+
+    <text x={X} y="28" class="encre" font-size="16" font-weight="700">df, après abimer(seed=42)</text>
+    <text x={X} y="48" class="encre-2" font-size="12.5">six lignes réelles sur {avant.lignes}</text>
+    <rect x={X} y={Y - 24} width={LARG} height="24" class="plein" />
+    <g class="sur-plein mono" font-size="12" font-weight="700">
+      <text x={col.nom} y={Y - 7}>Name</text><text x={col.type1} y={Y - 7}>Type 1</text><text x={col.hp} y={Y - 7}>HP</text><text x={col.date} y={Y - 7}>date_capture</text>
+    </g>
+    {lignesAbimees.map((l, i) => (
+      <g>
+        <rect x={X} y={Y + i * H} width={LARG} height={H} class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x={col.nom} y={Y + i * H + 21} class="encre mono" font-size="12.5">{l.nom}</text>
+        <text x={col.type1} y={Y + i * H + 21} class="encre mono" font-size="12.5">{l.type1}</text>
+        <text x={col.hp} y={Y + i * H + 21} class={(l.hp === null ? "encre-2" : "encre") + " mono"} font-size="12.5">{l.hp === null ? "NaN" : `"${l.hp.replace(" ", "␣")}"`}</text>
+        <text x={col.date} y={Y + i * H + 21} class="encre mono" font-size="12.5">{l.date}</text>
+      </g>
+    ))}
+    {marques.map((m) => (
+      <g><circle cx={m.x} cy={m.y} r="9" class="plein" /><text x={m.x} y={m.y + 4} text-anchor="middle" class="sur-plein mono" font-size="11" font-weight="700">{m.n}</text></g>
+    ))}
+    <text x={X} y={Y + 6 * H + 24} class="encre-2" font-size="12">␣ marque un espace invisible à la fin du texte.</text>
+
+    {degats.map((d, i) => (
+      <g>
+        <circle cx="596" cy={40 + i * 62} r="11" class="plein" />
+        <text x="596" y={44 + i * 62} text-anchor="middle" class="sur-plein mono" font-size="12" font-weight="700">{i + 1}</text>
+        <text x="616" y={44 + i * 62} class="encre" font-size="13.5" font-weight="700">{d.mot}</text>
+        <text x="616" y={62 + i * 62} class="encre mono" font-size="12">{d.chiffre}</text>
+        <text x="616" y={79 + i * 62} class="encre-2" font-size="12">{d.ligne}</text>
+      </g>
+    ))}
+  </svg>
+  <figcaption>Cinq dégâts, ceux que la vraie vie fait subir à tout tableau.</figcaption>
+</figure>

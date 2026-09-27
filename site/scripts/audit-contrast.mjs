@@ -146,6 +146,16 @@ const ETATS = [
   { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-faux", pilote: `
       const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git push").click(); await w(300);
       if (!g.textContent.includes("pas celle-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-initiale", pilote: "" },
+  { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-vides-ouvert", pilote: `
+      const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300);
+      if (!g.textContent.includes("case ouverte")) throw new Error("le cuivre « case ouverte » manque");` },
+  { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-vides-juste", pilote: `
+      const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300); btn(g, "Garder").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-vides-faux", pilote: `
+      const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300); btn(g, "Supprimer").click(); await w(300);
+      if (!g.textContent.includes("pas ce choix-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

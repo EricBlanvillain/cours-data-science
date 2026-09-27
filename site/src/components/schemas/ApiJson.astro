@@ -1,0 +1,50 @@
+---
+/**
+ * Une API en une image : une URL, une réponse JSON imbriquée, une ligne de tableau. Les valeurs de Pikachu viennent de la
+ * PokéAPI (https://pokeapi.co/api/v2/pokemon/pikachu, lu le 27/09/2026 ; src/data/nettoyage.ts).
+ */
+import { pikachu as p } from "../../data/nettoyage";
+const json = [
+  { t: "{", n: 0 },
+  { t: `"name": "${p.name}",`, n: 1 },
+  { t: `"height": ${p.height},`, n: 1 },
+  { t: `"weight": ${p.weight},`, n: 1 },
+  { t: `"types": [ { "type": { "name": "${p.type}" } } ],`, n: 1, fort: true },
+  { t: `"stats": [ { "stat": { "name": "hp" }, "base_stat": ${p.hp} },`, n: 1 },
+  { t: `{ "stat": { "name": "attack" }, "base_stat": ${p.attack} }, … ],`, n: 5.6 },
+  { t: `… ${p.cles - 5} autres clés`, n: 1, discret: true },
+  { t: "}", n: 0 },
+];
+const cols = ["nom", "type", "taille", "poids", "hp", "attack", "defense", "speed"];
+const vals = [p.name, p.type, p.height, p.weight, p.hp, p.attack, p.defense, p.speed];
+const xs = [0, 76, 150, 204, 256, 296, 356, 420].map((v) => 430 + v);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 350" role="img" aria-labelledby="aj-titre aj-desc">
+    <title id="aj-titre">Une API : une URL, une réponse JSON, une ligne de tableau</title>
+    <desc id="aj-desc">En haut à gauche, l'URL de la PokéAPI pour Pikachu, appelée avec requests.get. Au milieu, la réponse JSON : name pikachu, height 4, weight 60, types avec electric rangé trois niveaux plus bas, stats hp 35 et attack 55, et 16 autres clés. En bas, une ligne de DataFrame : pikachu, electric, 4, 60, 35, 55, 40, 90.</desc>
+
+    <text x="40" y="30" class="encre" font-size="15" font-weight="700">1. la commande : une URL</text>
+    <rect x="40" y="42" width="360" height="34" class="fond-3 trait" stroke-width="1.5" />
+    <text x="52" y="64" class="encre mono" font-size="12">pokeapi.co/api/v2/pokemon/pikachu</text>
+    <text x="40" y="96" class="encre-2" font-size="12"><tspan class="mono">requests.get(url)</tspan> passe la commande,</text>
+    <text x="40" y="112" class="encre-2" font-size="12"><tspan class="mono">.json()</tspan> ouvre le plat</text>
+    <g class="trait" stroke-width="2" fill="none"><path d="M404 59 H426" /><path d="M421 54 L429 59 L421 64" /></g>
+
+    <text x="440" y="30" class="encre" font-size="15" font-weight="700">2. le plat : du JSON, des dictionnaires dans des listes</text>
+    <rect x="440" y="42" width="490" height={json.length * 17 + 14} class="fond-2 trait" stroke-width="1.5" />
+    {json.map((l, i) => (
+      <text x={452 + l.n * 14} y={62 + i * 17} class={(l.discret ? "encre-2" : "encre") + " mono"} font-size="11.5" font-weight={l.fort ? "700" : "400"}>{l.t}</text>
+    ))}
+    <text x="440" y={json.length * 17 + 76} class="encre-2" font-size="12">le type est rangé trois niveaux plus bas :</text>
+    <text x="440" y={json.length * 17 + 94} class="encre mono" font-size="12" font-weight="700">data["types"][0]["type"]["name"]  →  "{p.type}"</text>
+
+    <text x="40" y="294" class="encre" font-size="15" font-weight="700">3. une ligne de DataFrame</text>
+    <text x="40" y="314" class="encre-2" font-size="12">un appel par Pokémon, une ligne chacun</text>
+    <rect x="430" y="282" width="500" height="22" class="plein" />
+    {cols.map((c, i) => <text x={xs[i] + 6} y="298" class="sur-plein mono" font-size="11.5" font-weight="700">{c}</text>)}
+    <rect x="430" y="304" width="500" height="26" class="fond-3" />
+    {vals.map((v, i) => <text x={xs[i] + 6} y="322" class="encre mono" font-size="11.5">{v}</text>)}
+  </svg>
+  <figcaption>Une API répond en JSON ; on y va chercher ce qu'il faut pour remplir une ligne de tableau.</figcaption>
+</figure>

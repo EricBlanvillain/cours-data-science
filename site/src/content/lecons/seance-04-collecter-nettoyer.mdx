@@ -1,0 +1,100 @@
+---
+numero: 4
+titre: Collecter et nettoyer
+niveau: ⭐⭐
+duree: 1 h 30
+resume: "Une journée de data scientist : réparer un tableau Pokémon abîmé exprès en tenant le journal de chaque correction, puis aller chercher des données soi-même avec une API."
+livrable: Un dataset nettoyé et un notebook qui documente chaque correction faite.
+objectifs:
+  - Tu sauras reconnaître les cinq dégâts d'un vrai tableau, doublons, fautes de frappe, nombres en texte, cases vides, dates mélangées.
+  - Tu sauras réparer chacun en une ou deux lignes de pandas, et décider s'il faut supprimer, remplir ou garder une case vide.
+  - Tu sauras appeler une API, lire sa réponse JSON et en faire un tableau.
+aRetenir:
+  - Un vrai tableau est sale ; le préparer prend près de la moitié du temps du métier.
+  - Le bilan de santé d'abord, info, isna, duplicated, unique, avant de toucher à quoi que ce soit.
+  - Chaque dégât a son outil, drop_duplicates, strip et capitalize, astype, fillna ou dropna, to_datetime.
+  - Une case vide se supprime, se remplit ou se garde, et le choix se justifie dans le journal.
+  - Une API, c'est une URL, une réponse JSON, puis un tableau ; toujours avec un plan B si le réseau tombe.
+---
+import CinqEtapes from "../../components/schemas/CinqEtapes.astro";
+import CinqDegats from "../../components/schemas/CinqDegats.astro";
+import JournalCorrections from "../../components/schemas/JournalCorrections.astro";
+import ApiJson from "../../components/schemas/ApiJson.astro";
+import SupprimerRemplirGarder from "../../components/islands/SupprimerRemplirGarder";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Une journée de data scientist
+
+On imagine des graphiques et des modèles. La réalité commence plus tôt, avec des données sales.
+
+<CinqEtapes />
+
+<details>
+<summary>D'où vient le chiffre de 45 %</summary>
+
+En 2020, l'éditeur Anaconda a interrogé près de 2 400 personnes qui font de la data dans plus de cent pays. En moyenne, elles passent 19 % de leur temps à charger les données et plus d'un quart à les nettoyer, avant de pouvoir s'en servir ; les graphiques prennent environ 21 %, chaque étape du modèle 11 à 12 %.
+
+[Le rapport Anaconda 2020 ↗](https://www.anaconda.com/resources/whitepaper/state-of-data-science-2020) · [un résumé de l'enquête ↗](https://hpcwire.com/bigdatawire/2020/07/06/data-prep-still-dominates-data-scientists-time-survey-finds/)
+
+</details>
+
+## Cinq dégâts
+
+Le notebook prend les 800 Pokémon propres de la séance 2 et les abîme exprès, comme la vraie vie le ferait. Tout le monde obtient le même tableau abîmé.
+
+<CinqDegats />
+
+| Dégât | Comment le voir | Comment le réparer | Sur le Pokémon abîmé |
+|---|---|---|---|
+| Doublons | `df.duplicated().sum()` | `df.drop_duplicates()` | 10 lignes en trop |
+| Fautes de frappe | `df["Type 1"].unique()` | `.str.strip().str.capitalize()`, puis un dictionnaire des fautes | 56 valeurs, puis 30, puis 18 |
+| Nombres en texte | `df["HP"].dtype` affiche `object` | `.str.strip().astype(float)` | « 75 » devient 75 |
+| Cases vides | `df.isna().sum()` | `fillna`, `dropna`, ou rien | 40 Type 1, 40 HP |
+| Dates mélangées | trois formats à l'œil | `pd.to_datetime(…, format=…, errors="coerce")` | 0 date illisible à la fin |
+
+## Supprimer, remplir ou garder
+
+Une case vide n'est pas toujours un bug : il faut d'abord comprendre pourquoi elle manque.
+
+<SupprimerRemplirGarder client:load />
+
+## Le journal des corrections
+
+Si on te demande dans six mois pourquoi il n'y a plus que 800 lignes, tu dois pouvoir répondre. Le notebook tient une simple liste, remplie au fil des réparations.
+
+```python
+journal = []
+def noter(message):
+    journal.append(message)
+```
+
+<JournalCorrections />
+
+## Une API : aller chercher ses données
+
+Une API est une porte par laquelle un programme demande des données à un site : au restaurant, tu ne vas pas en cuisine, tu passes commande.
+
+<ApiJson />
+
+<details>
+<summary>Et si le réseau tombe ?</summary>
+
+Un appel réseau peut échouer : pas de connexion, site en panne, Pokémon mal orthographié. La fonction `demander` du notebook enveloppe l'appel dans un `try/except` et renvoie une réponse de secours écrite à l'avance, pour que la suite du notebook tourne quand même. La deuxième API du notebook, Open-Meteo, donne la météo d'une latitude et d'une longitude, gratuitement et sans clé.
+
+Dans la PokéAPI, `height` est en décimètres et `weight` en hectogrammes : Pikachu mesure 0,4 m et pèse 6 kg. Lire la documentation d'une API, c'est aussi apprendre ses unités.
+
+</details>
+
+### À toi : nettoie Tips
+
+Tips, ce sont 244 additions d'un restaurant américain. Abîmées par la même fonction, elles deviennent 254 lignes, avec 14 façons d'écrire les 4 jours de la semaine.
+
+- **Répare dans l'ordre** : doublons, catégories, nombres, cases vides, dates, une ligne de journal par correction.
+- **Justifie tes cases vides** dans le journal : une addition sans montant, un jour effacé, que fais-tu de chacun ?
+- **Prouve ton travail** en comparant au tableau propre, puis sauvegarde `tips_propre.csv` : c'est ton livrable.
+
+<BoutonsSeance dossier="seance-04-collecter-nettoyer" lecon="04_collecter_nettoyer.ipynb" exercices="04_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `04_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il reprend la réparation du Pokémon étape par étape, une API avec son plan B, et finit par Tips de A à Z.
