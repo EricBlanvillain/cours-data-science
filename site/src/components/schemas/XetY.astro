@@ -1,0 +1,53 @@
+---
+/**
+ * L'apprentissage supervisé en une image : trois vrais manchots (X, leurs quatre mesures ; y, leur espèce), fit trouve une
+ * règle, predict l'applique à un manchot qui n'a pas de réponse (src/data/modele.ts).
+ */
+import { lignesXY, invente, manchots } from "../../data/modele";
+const noms = ["bec", "épaisseur", "nageoire", "poids"];
+const unites = ["mm", "mm", "mm", "g"];
+const cx = [52, 132, 222, 312];
+const fr = (v: number) => String(v).replace(".", ",");
+const espece = (e: string) => (e === "Adelie" ? "Adélie" : e);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="xy-titre xy-desc">
+    <title id="xy-titre">X, les mesures ; y, l'espèce ; fit apprend, predict devine</title>
+    <desc id="xy-desc">Un tableau de trois manchots : quatre colonnes de mesures forment X, la colonne espèce forme y (Adélie, Chinstrap, Gentoo). Une flèche fit mène à une règle. En bas, un manchot inventé avec ses mesures mais sans espèce ; predict donne Gentoo.</desc>
+    <text x="40" y="28" class="encre" font-size="15" font-weight="700">1. des exemples avec la réponse</text>
+    <text x="40" y="46" class="encre-2" font-size="12">trois des {manchots.propres} manchots mesurés</text>
+    <rect x="40" y="58" width="340" height="22" class="plein" />
+    <rect x="392" y="58" width="112" height="22" class="plein" />
+    {noms.map((n, i) => <text x={cx[i]} y="73" class="sur-plein mono" font-size="11.5" font-weight="700">{n}</text>)}
+    <text x="404" y="73" class="sur-plein mono" font-size="11.5" font-weight="700">espèce</text>
+    {lignesXY.map((l, k) => (
+      <g>
+        <rect x="40" y={80 + k * 28} width="340" height="28" class={k % 2 ? "fond-3" : "fond-2"} />
+        <rect x="392" y={80 + k * 28} width="112" height="28" class={k % 2 ? "fond-3" : "fond-2"} />
+        {l.x.map((v, i) => <text x={cx[i]} y={99 + k * 28} class="encre mono" font-size="12">{fr(v)}</text>)}
+        <text x="404" y={99 + k * 28} class="encre mono" font-size="12" font-weight="700">{espece(l.y)}</text>
+      </g>
+    ))}
+    <text x="210" y="186" text-anchor="middle" class="encre" font-size="18" font-weight="700">X</text>
+    <text x="210" y="204" text-anchor="middle" class="encre-2" font-size="12">ce que la machine voit</text>
+    <text x="448" y="186" text-anchor="middle" class="encre" font-size="18" font-weight="700">y</text>
+    <text x="448" y="204" text-anchor="middle" class="encre-2" font-size="12">ce qu'elle doit deviner</text>
+
+    <g class="trait" stroke-width="2" fill="none"><path d="M520 122 H590" /><path d="M585 117 L593 122 L585 127" /></g>
+    <text x="556" y="112" text-anchor="middle" class="encre mono" font-size="12.5" font-weight="700">fit</text>
+    <rect x="604" y="84" width="316" height="76" class="plein" />
+    <text x="620" y="110" class="sur-plein" font-size="13" font-weight="700">2. une règle</text>
+    <text x="620" y="132" class="sur-plein" font-size="12">trouvée par la machine dans les exemples,</text>
+    <text x="620" y="149" class="sur-plein" font-size="12">pas écrite par toi</text>
+
+    <text x="40" y="244" class="encre" font-size="15" font-weight="700">3. un manchot sans réponse</text>
+    <rect x="40" y="256" width="340" height="28" class="fond-2 trait" stroke-width="1.5" />
+    {invente.x.map((v, i) => <text x={cx[i]} y="275" class="encre mono" font-size="12">{fr(v)}</text>)}
+    <rect x="392" y="256" width="112" height="28" class="fond-2 trait" stroke-width="1.5" stroke-dasharray="4 3" />
+    <text x="404" y="275" class="encre-2 mono" font-size="12">?</text>
+    <g class="trait" stroke-width="2" fill="none"><path d="M762 164 V254 H516" /><path d="M521 249 L513 254 L521 259" /></g>
+    <text x="772" y="214" class="encre mono" font-size="12.5" font-weight="700">predict</text>
+    <text x="772" y="232" class="encre" font-size="12.5">→ {invente.prediction}</text>
+  </svg>
+  <figcaption>Des exemples avec la réponse, une règle trouvée par la machine, une réponse devinée pour du nouveau.</figcaption>
+</figure>

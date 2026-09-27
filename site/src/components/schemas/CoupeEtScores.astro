@@ -1,0 +1,39 @@
+---
+/**
+ * Train / test et la barre à battre : les 333 manchots coupés en 249 pour apprendre et 84 cachés, puis les scores des trois
+ * modèles du notebook sur les 84 cachés (src/data/modele.ts).
+ */
+import { coupe, scores, manchots } from "../../data/modele";
+const X0 = 40, L = 880;
+const xt = X0 + L * coupe.train / manchots.propres;
+const barres = [
+  { nom: "modèle bête : toujours « Adélie »", v: scores.bete, cls: "fond-3 plein-trait" },
+  { nom: "k plus proches voisins, k = 5", v: scores.voisins, cls: "fond-3 plein-trait" },
+  { nom: "arbre de décision, profondeur 3", v: scores.arbre, cls: "plein" },
+];
+const fr = (v: number) => String(v).replace(".", ",");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="cs-titre cs-desc">
+    <title id="cs-titre">249 manchots pour apprendre, 84 cachés pour vérifier, et trois scores</title>
+    <desc id="cs-desc">Une barre coupée en deux : 249 manchots pour apprendre, 84 cachés. Dessous, l'exactitude sur les 84 cachés : le modèle bête 47,6 %, les k plus proches voisins 85,7 %, l'arbre de décision 97,6 %.</desc>
+    <text x={X0} y="28" class="encre" font-size="15" font-weight="700">1. on coupe avant d'apprendre</text>
+    <rect x={X0} y="42" width={xt - X0 - 4} height="40" class="plein" />
+    <rect x={xt} y="42" width={X0 + L - xt} height="40" class="fond-3 plein-trait" stroke-width="1.5" stroke-dasharray="5 3" />
+    <text x={X0 + 14} y="67" class="sur-plein" font-size="13.5" font-weight="700">{coupe.train} manchots pour apprendre (train, 75 %)</text>
+    <text x={xt + 14} y="67" class="encre" font-size="13.5" font-weight="700">{coupe.test} cachés (test, 25 %)</text>
+    <text x={X0} y="104" class="encre-2" font-size="12">le modèle voit X et y des 249 ; des 84 cachés, il ne voit que X, et on compare ses réponses au vrai y</text>
+
+    <text x={X0} y="146" class="encre" font-size="15" font-weight="700">2. l'exactitude sur les 84 cachés</text>
+    {barres.map((b, i) => (
+      <g>
+        <text x={X0} y={176 + i * 40} class="encre" font-size="12.5">{b.nom}</text>
+        <rect x={X0 + 250} y={162 + i * 40} width={(L - 330) * b.v / 100} height="22" class={b.cls} stroke-width="1.5" />
+        <text x={X0 + 258 + (L - 330) * b.v / 100} y={178 + i * 40} class="encre mono" font-size="13" font-weight="700">{fr(b.v)} %</text>
+      </g>
+    ))}
+    <line x1={X0 + 250 + (L - 330) * scores.bete / 100} x2={X0 + 250 + (L - 330) * scores.bete / 100} y1="156" y2="270" class="plein-trait" stroke-width="1.5" stroke-dasharray="3 3" />
+    <text x={X0 + 250 + (L - 330) * scores.bete / 100 + 6} y="286" class="encre-2" font-size="11.5">la barre à battre</text>
+  </svg>
+  <figcaption>On cache des données pour vérifier que le modèle a compris, et on compare toujours au modèle bête.</figcaption>
+</figure>

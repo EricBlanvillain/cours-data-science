@@ -1,0 +1,43 @@
+---
+/**
+ * L'arbre de profondeur 3 appris par le notebook, lu comme un « Qui est-ce ? » : trois questions, les effectifs du train à
+ * chaque nœud (src/data/modele.ts). Les feuilles sœurs qui donnent la même espèce sont regroupées.
+ */
+import { arbre as a } from "../../data/modele";
+const noeud = (x: number, y: number, w: number) => ({ x, y, w });
+const R = noeud(330, 30, 300), G = noeud(100, 130, 260), D = noeud(600, 130, 280);
+const GG = noeud(20, 240, 196), GD = noeud(230, 240, 236), DG = noeud(484, 240, 180), DD = noeud(680, 240, 260);
+const lien = (p: { x: number; y: number; w: number }, e: { x: number; y: number; w: number }, mot: string, gauche: boolean) => ({ x1: p.x + p.w / 2, y1: p.y + 56, x2: e.x + e.w / 2, y2: e.y, mot, gauche });
+const liens = [lien(R, G, "oui", true), lien(R, D, "non", false), lien(G, GG, "oui", true), lien(G, GD, "non", false), lien(D, DG, "oui", true), lien(D, DD, "non", false)];
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 330" role="img" aria-labelledby="am-titre am-desc">
+    <title id="am-titre">L'arbre de décision des manchots, trois questions</title>
+    <desc id="am-desc">Première question, sur les 249 manchots d'entraînement : la nageoire fait-elle 206,5 mm ou moins ? Si oui, 153 manchots : le bec fait-il 43,35 mm ou moins ? oui, Adélie (103, dont 100 Adélie) ; non, Chinstrap (50, dont 45 Chinstrap). Si non, 96 manchots : l'épaisseur du bec fait-elle 17,55 mm ou moins ? oui, Gentoo (89, tous Gentoo) ; non, 7 manchots départagés par la longueur du bec, 2 Adélie et 5 Chinstrap.</desc>
+    {liens.map((l) => (
+      <g>
+        <path d={`M${l.x1} ${l.y1} L${l.x2} ${l.y2}`} class="trait" stroke-width="1.5" fill="none" />
+        <text x={(l.x1 + l.x2) / 2 + (l.gauche ? -10 : 10)} y={(l.y1 + l.y2) / 2} text-anchor={l.gauche ? "end" : "start"} class="encre-2" font-size="12">{l.mot}</text>
+      </g>
+    ))}
+    {[{ n: R, q: a.racine.question, s: `${a.racine.n} manchots · ${a.racine.detail}` }, { n: G, q: a.oui.question, s: `${a.oui.n} manchots` }, { n: D, q: a.non.question, s: `${a.non.n} manchots` }].map((b) => (
+      <g>
+        <rect x={b.n.x} y={b.n.y} width={b.n.w} height="56" class="fond-2 plein-trait" stroke-width="1.5" />
+        <text x={b.n.x + 12} y={b.n.y + 24} class="encre" font-size="14" font-weight="700">{b.q}</text>
+        <text x={b.n.x + 12} y={b.n.y + 44} class="encre-2" font-size="11.5">{b.s}</text>
+      </g>
+    ))}
+    {[{ n: GG, f: a.ouiOui }, { n: GD, f: a.ouiNon }, { n: DG, f: a.nonOui }].map((b) => (
+      <g>
+        <rect x={b.n.x} y={b.n.y} width={b.n.w} height="56" class="plein" />
+        <text x={b.n.x + 12} y={b.n.y + 24} class="sur-plein" font-size="15" font-weight="700">{b.f.espece}</text>
+        <text x={b.n.x + 12} y={b.n.y + 44} class="sur-plein" font-size="11.5">{b.f.n} : {b.f.detail}</text>
+      </g>
+    ))}
+    <rect x={DD.x} y={DD.y} width={DD.w} height="56" class="fond-2 plein-trait" stroke-width="1.5" />
+    <text x={DD.x + 12} y={DD.y + 24} class="encre" font-size="14" font-weight="700">{a.nonNon.question}</text>
+    <text x={DD.x + 12} y={DD.y + 44} class="encre-2" font-size="11.5">{a.nonNon.n} manchots · {a.nonNon.detail}</text>
+    <text x="20" y="322" class="encre-2" font-size="12">Chaque case dit combien de manchots d'entraînement y arrivent. Une feuille pleine donne l'espèce majoritaire.</text>
+  </svg>
+  <figcaption>Un arbre pose des questions en cascade, et on peut le lire à voix haute.</figcaption>
+</figure>

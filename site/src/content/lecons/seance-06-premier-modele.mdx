@@ -1,0 +1,78 @@
+---
+numero: 6
+titre: Premier modèle
+niveau: ⭐⭐
+duree: 1 h 30
+resume: "L'apprentissage supervisé sur 333 manchots : X et y, cacher une partie des données, lire un arbre de décision, reconnaître un modèle qui a appris par cœur, puis la même recette sur les Pokémon légendaires."
+livrable: Un premier modèle entraîné et évalué, avec une phrase pour expliquer ce qu'il a compris.
+objectifs:
+  - Tu sauras dire ce que sont X et y, et ce que font fit et predict.
+  - Tu sauras couper train et test, mesurer l'exactitude et la comparer au modèle bête.
+  - Tu sauras lire un arbre de décision et reconnaître un modèle qui a appris par cœur.
+aRetenir:
+  - Apprentissage supervisé, des exemples avec la réponse, la machine trouve la règle et l'applique à du nouveau.
+  - X, ce que la machine voit ; y, ce qu'elle doit deviner ; fit apprend, predict devine.
+  - On cache un quart des données pour vérifier, et on compare toujours au modèle bête.
+  - L'exactitude est la part de bonnes réponses ; pour un nombre, on mesure l'erreur moyenne.
+  - Parfait sur les exemples, moins bon sur les cachés, c'est le sur-apprentissage.
+---
+import XetY from "../../components/schemas/XetY.astro";
+import CoupeEtScores from "../../components/schemas/CoupeEtScores.astro";
+import ArbreManchots from "../../components/schemas/ArbreManchots.astro";
+import SurApprentissage from "../../components/schemas/SurApprentissage.astro";
+import CeModeleACompris from "../../components/islands/CeModeleACompris";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Apprendre avec la réponse
+
+Trois espèces de manchots vivent en Antarctique, et des scientifiques en ont mesuré 344. À partir des mesures seules, une machine peut-elle deviner l'espèce ?
+
+<XetY />
+
+```python
+arbre.fit(X_train, y_train)          # apprendre
+predictions = arbre.predict(X_test)  # deviner
+```
+
+## Cacher une partie des données
+
+Si on te donne les réponses de l'examen la veille, ta note ne prouve rien. Un modèle se juge sur des données qu'il n'a jamais vues.
+
+<CoupeEtScores />
+
+<details>
+<summary>Exactitude, pas précision</summary>
+
+L'exactitude, *accuracy* dans scikit-learn, est la part de bonnes réponses. En français courant on dirait « précision », mais en machine learning la précision est une autre mesure : parmi ce que le modèle a déclaré positif, la part qui l'est vraiment. Tu la retrouveras dans l'aide-mémoire scikit-learn du cours.
+
+Pour deviner un nombre, bonne ou mauvaise réponse n'a plus de sens : on mesure de combien on se trompe en moyenne. La régression du poids des manchots se trompe de 296 g, le modèle bête qui répond toujours le poids moyen de 658 g.
+
+</details>
+
+## Lire un arbre
+
+Un arbre de décision pose des questions en cascade, comme au jeu « Qui est-ce ? ». Sur les 84 manchots cachés, il n'en rate que deux, des Chinstrap pris pour des Adélie.
+
+<ArbreManchots />
+
+## Appris par cœur
+
+Laisse l'arbre poser autant de questions qu'il veut : il finit par connaître chaque manchot d'entraînement, sans faire mieux sur les autres.
+
+<SurApprentissage />
+
+<CeModeleACompris client:load />
+
+### À toi : les Pokémon légendaires
+
+La même recette sur les 800 Pokémon, en 15 minutes : prédire `Legendary` à partir des six stats. Piège : il n'y a que 65 légendaires, et répondre « jamais légendaire » à tout le monde fait déjà 91,9 %.
+
+- **La barre à battre** : le modèle bête sur tes données de test, puis un arbre de profondeur 3 et son tableau croisé.
+- **Compte les légendaires retrouvés**, pas seulement l'exactitude : c'est là que les modèles se départagent.
+- **Ta phrase**, lue dans l'arbre : « mon modèle a compris que… ».
+
+<BoutonsSeance dossier="seance-06-premier-modele" lecon="06_premier_modele.ipynb" exercices="06_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `06_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il s'ouvre par un quiz de quatre questions, à se poser à voix haute au début de la séance suivante.

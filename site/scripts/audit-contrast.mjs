@@ -166,6 +166,16 @@ const ETATS = [
   { page: "lecons/seance-05-analyser-raconter.html", id: "s5-piege-faux", pilote: `
       const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Biais").click(); await w(300);
       if (!g.textContent.includes("pas ce piège-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-06-premier-modele.html", id: "s6-initiale", pilote: "" },
+  { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-ouvert", pilote: `
+      const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300);
+      if (!g.textContent.includes("modèle ouvert")) throw new Error("le cuivre « modèle ouvert » manque");` },
+  { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-juste", pilote: `
+      const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "appris par cœur").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-faux", pilote: `
+      const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "Il a compris").click(); await w(300);
+      if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

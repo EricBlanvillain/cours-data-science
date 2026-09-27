@@ -1,0 +1,45 @@
+---
+/**
+ * Le sur-apprentissage sur les vrais scores du notebook (src/data/modele.ts) : l'arbre de profondeur 1 à 20, les voisins
+ * de k = 1 à 30, exactitude sur les exemples (train) et sur les cachés (test). Deux cartes de la primitive.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { courbeArbre, courbeVoisins } from "../../data/modele";
+const W = 420, H = 240, L = 40, R = 14, T = 28, B = 42;
+const ymin = 70, ymax = 100;
+const sy = (v: number) => T + (1 - (v - ymin) / (ymax - ymin)) * (H - T - B);
+const chemin = (vals: number[]) => vals.map((v, i) => `${i ? "L" : "M"}${(L + (i / (vals.length - 1)) * (W - L - R)).toFixed(1)} ${sy(Math.max(v, ymin)).toFixed(1)}`).join(" ");
+const sx = (i: number, n: number) => L + (i / (n - 1)) * (W - L - R);
+const fr = (v: number) => String(v).replace(".", ",");
+---
+<GrilleCartes bandes={3} liste={false} class="large" min="18rem">
+  <article class="carte">
+    <p class="etiquette">Arbre · de 1 à 20 questions de profondeur</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="sa1-t">
+      <title id="sa1-t">Exactitude de l'arbre selon sa profondeur, sur les exemples et sur les cachés</title>
+      {[70, 80, 90, 100].map((v) => <g><line x1={L} x2={W - R} y1={sy(v)} y2={sy(v)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 6} y={sy(v) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text></g>)}
+      <path d={chemin(courbeArbre.train)} class="plein-trait" stroke-width="2" fill="none" />
+      <path d={chemin(courbeArbre.test)} class="plein-trait" stroke-width="2" stroke-dasharray="5 4" fill="none" />
+      <text x={sx(12, 20)} y={sy(100) - 6} class="encre" font-size="11.5" font-weight="600">exemples : 100 % dès 7</text>
+      <text x={sx(9, 20)} y={sy(97.6) + 16} class="encre" font-size="11.5">cachés : 97,6 % dès 2, puis plus rien</text>
+      {[1, 5, 10, 15, 20].map((p) => <text x={sx(p - 1, 20)} y={H - B + 14} text-anchor="middle" class="encre-2 mono" font-size="11">{p}</text>)}
+      <text x={L} y={H - 8} class="encre-2" font-size="11">horizontal : profondeur · vertical : exactitude (%) · trait plein : exemples</text>
+    </svg>
+    <p class="discret">Au-delà de 2 questions, l'arbre apprend les exemples par cœur sans rien gagner sur les cachés.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Voisins · de k = 1 à 30</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="sa2-t">
+      <title id="sa2-t">Exactitude des k plus proches voisins selon k, sur les exemples et sur les cachés</title>
+      {[70, 80, 90, 100].map((v) => <g><line x1={L} x2={W - R} y1={sy(v)} y2={sy(v)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 6} y={sy(v) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text></g>)}
+      <path d={chemin(courbeVoisins.train)} class="plein-trait" stroke-width="2" fill="none" />
+      <path d={chemin(courbeVoisins.test)} class="plein-trait" stroke-width="2" stroke-dasharray="5 4" fill="none" />
+      <line x1={sx(0, 30)} x2={sx(0, 30)} y1={sy(courbeVoisins.train[0])} y2={sy(courbeVoisins.test[0])} class="plein-trait" stroke-width="1" />
+      <text x={sx(5, 30)} y={sy(98)} class="encre" font-size="11.5" font-weight="600">k = 1 : 100 % contre {fr(courbeVoisins.test[0])} %</text>
+      <text x={sx(5, 30)} y={sy(98) + 16} class="encre-2" font-size="11">chaque manchot est son propre voisin</text>
+      {[1, 10, 20, 30].map((k) => <text x={sx(k - 1, 30)} y={H - B + 14} text-anchor="middle" class="encre-2 mono" font-size="11">{k}</text>)}
+      <text x={L} y={H - 8} class="encre-2" font-size="11">horizontal : k · vertical : exactitude (%) · trait plein : exemples</text>
+    </svg>
+    <p class="discret">L'écart entre les deux courbes, c'est ce que le modèle a retenu sans le comprendre.</p>
+  </article>
+</GrilleCartes>

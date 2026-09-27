@@ -163,4 +163,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "Le constat dit ce que tu as trouvé, avec un chiffre ; la preuve montre le graphique qui l'établit ; la recommandation dit au client quoi faire demain. Une action à mener, c'est toujours la recommandation.",
     },
   ],
+  6: [
+    {
+      question: "Dans le tableau des manchots, quelle colonne est y ?",
+      options: ["La longueur du bec", "Le poids", "L'espèce", "Toutes les mesures ensemble"],
+      bonne: 2,
+      explication: "y, c'est ce que la machine doit deviner : l'espèce. Les quatre mesures forment X, ce qu'elle voit. Pour la régression du poids, les rôles changent : le poids devient y.",
+    },
+    {
+      question: "Un manchot a une nageoire de 215 mm et un bec épais de 15 mm. Que répond l'arbre ?",
+      options: ["Adélie", "Chinstrap", "Gentoo", "L'arbre ne peut pas répondre"],
+      bonne: 2,
+      explication: "215 mm, c'est plus que 206,5 : on part à droite. Puis 15 mm d'épaisseur, c'est moins que 17,55 : la feuille Gentoo, où tombent 89 manchots d'entraînement, tous Gentoo.",
+    },
+    {
+      question: "Le modèle répond juste sur 97,6 % des manchots cachés. Comment s'appelle ce pourcentage ?",
+      options: ["La précision", "L'exactitude", "L'erreur moyenne", "Le rappel"],
+      bonne: 1,
+      explication: "La part de bonnes réponses s'appelle l'exactitude, accuracy en anglais. La précision existe aussi en machine learning, mais elle mesure autre chose ; l'erreur moyenne, elle, sert aux nombres.",
+    },
+    {
+      question: "Les k plus proches voisins passent de 85,7 % à 98,8 % quand on met les mesures à la même échelle. Pourquoi ?",
+      options: ["Le modèle a plus de données", "Le poids, en milliers de grammes, écrasait les longueurs en millimètres dans le calcul des distances", "On a changé la coupe train / test", "k a changé"],
+      bonne: 1,
+      explication: "k-NN compare des distances. Sans mise à l'échelle, 100 g d'écart pèsent autant que 100 mm, alors que les becs ne diffèrent que de quelques millimètres : le poids décidait presque seul.",
+    },
+  ],
 };
