@@ -14,6 +14,7 @@
  *   df.groupby("Type 1")["Total"].mean().sort_values(ascending=False).round(1), et (df["Type 1"] == t).sum() → totalMoyenParType
  *   df[["Attack","Defense"]].values                                 → nuage (800 points) ; df["Attack"].corr(df["Defense"]) → 0.44
  *   numpy.histogram(df["Speed"], bins=20)                           → histogrammeVitesse
+ *   df["Speed"].quantile([0.25, 0.5, 0.75])                        → 45, 65, 90 (quartilesVitesse)
  *   df["HP"].describe()                                             → hp (médiane 65, max 255)
  *   df.groupby("Legendary")["Total"].mean()                         → 637.4 (légendaires) contre 417.2
  *   df.groupby("Generation")["Speed"].mean().round(1)               → vitesseParGeneration
@@ -33,6 +34,8 @@ export const vitesseMax = { nom: "DeoxysSpeed Forme", vitesse: 180 };
 export const nbFeu = 52;
 export const nbRapidesEtForts = 38;
 export const nbLegendaires = 65;
+/** un quart des Pokémon sous 45 de vitesse, la moitié sous 65, trois quarts sous 90 */
+export const quartilesVitesse = { q1: 45, mediane: 65, q3: 90 };
 export const plusRapides = [{ nom: "DeoxysSpeed Forme", vitesse: 180 }, { nom: "Ninjask", vitesse: 160 }, { nom: "DeoxysNormal Forme", vitesse: 150 }, { nom: "AerodactylMega Aerodactyl", vitesse: 150 }, { nom: "AlakazamMega Alakazam", vitesse: 150 }];
 export const typesFrequents = [
   { type: "Water", n: 112 },

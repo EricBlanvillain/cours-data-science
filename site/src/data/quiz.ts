@@ -73,10 +73,10 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "« Par type » appelle groupby : un tas par type, puis la moyenne de la vitesse dans chaque tas. Trier donne les Pokémon un par un, value_counts compte les types, le filtre garde les rapides sans les regrouper.",
     },
     {
-      question: "« Les Pokémon rapides sont-ils fragiles ? » Quel graphique ?",
-      options: ["Des barres", "Un nuage de points", "Un histogramme", "Un camembert"],
+      question: "Quelle ligne garde les Pokémon à la fois rapides (Speed > 100) et forts (Attack > 100) ?",
+      options: ["df[df[\"Speed\"] > 100 and df[\"Attack\"] > 100]", "df[(df[\"Speed\"] > 100) & (df[\"Attack\"] > 100)]", "df[df[\"Speed\"] > 100 & df[\"Attack\"] > 100]", "df.sort_values([\"Speed\", \"Attack\"])"],
       bonne: 1,
-      explication: "Deux nombres par Pokémon, vitesse et défense : un point chacun. Si le nuage descendait nettement, les rapides seraient fragiles. Des barres comparent des catégories, un histogramme regarde une seule valeur.",
+      explication: "pandas relie deux conditions avec &, chacune entre ses parenthèses. Sans elles, Python calcule d'abord 100 & df[\"Attack\"] et la ligne plante ; « and » ne sait pas comparer deux colonnes entières et plante aussi ; sort_values range, il ne filtre pas. La bonne ligne garde 38 Pokémon.",
     },
     {
       question: "Un graphique en barres, sans titre ni nom d'axe, montre trois barres de hauteurs différentes. Que peut-on en conclure ?",

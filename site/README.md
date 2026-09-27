@@ -14,6 +14,7 @@ npm run build        # construit dist/ puis le rend ouvrable hors ligne (scripts
 npm run preview      # sert dist/ comme le ferait un hébergeur
 npm run audit        # après un build : audit de contraste et règle du cuivre sur 33 états (clics compris), en clair et en sombre
 npm run lint:lecons          # les règles des leçons (aussi en tête de npm run build)
+npm run compte:prose         # après un build : mots visibles de chaque leçon sur la page construite, plafond 625 (aussi dans npm run build)
 npm run audit:mise-en-page   # après un build : bandes des grilles de cartes alignées, en-tête au pixel près sur quatre pages, prose sous 46 rem
 ```
 
@@ -42,7 +43,8 @@ src/pages/                      accueil et page de leçon générique (la séanc
 src/styles/global.css           thème clair / sombre, registres typographiques, classes partagées
 src/styles/palette.mjs          la palette, source unique pour l'audit
 scripts/relativize.mjs          post-build : chemins relatifs (pages, polices) + vérification des cibles et de l'absence de ressource externe
-scripts/lint-lecons.mjs         les règles des leçons : vocabulaire des blocs, 625 mots, replis, titres, flèches, annonces de figure, quiz
+scripts/lint-lecons.mjs         les règles des leçons : vocabulaire des blocs, replis, titres, flèches, annonces de figure, quiz
+scripts/compte-prose.mjs        post-build : mots visibles de l'article de prose de chaque leçon (titres, tableaux, code compris ; d'un repli, son seul résumé ; ni îlots ni SVG), plafond 625
 scripts/audit-contrast.mjs      mesure chaque texte contre son fond composité dans Chrome headless, sans dépendance
 scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose, écrans de la séance 0 dans 1440 × 900
 ```
@@ -68,8 +70,10 @@ dans `src/data/seances.ts` pour que la carte de la page d'accueil devienne cliqu
 ## Blocs d'une leçon
 
 Le vocabulaire est fermé : une leçon n'utilise que ces blocs, et `npm run lint:lecons` (lancé en tête de `npm run build`, donc par
-Vercel) refuse tout import qui n'en fait pas partie, une prose visible au-delà de 625 mots, un `<details>` sans `<summary>`, un
-titre hors `##`/`###`, une flèche qui ment, une phrase qui annonce une figure, un frontmatter incomplet ou un quiz absent.
+Vercel) refuse tout import qui n'en fait pas partie, un `<details>` sans `<summary>`, un titre hors `##`/`###`, une flèche qui
+ment, une phrase qui annonce une figure, un frontmatter incomplet ou un quiz absent. Le plafond de 625 mots se mesure sur la
+page construite, là où l'élève lit (`scripts/compte-prose.mjs`, après `astro build`) : titres, tableaux et code comptent, d'un
+repli seul le résumé compte, les îlots et les SVG ne comptent pas.
 
 | Bloc | Quand | Exemple |
 |---|---|---|
