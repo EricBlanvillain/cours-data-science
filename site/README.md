@@ -93,6 +93,12 @@ repli seul le résumé compte, les îlots et les SVG ne comptent pas.
 
 Le cadre autour (objectifs, mini-quiz, à retenir, navigation) vient du frontmatter et de la page de leçon, pas du MDX.
 
+### Quiz et jeu ne se répètent pas
+
+À partir de la séance 4 : le mini-quiz de fin de leçon teste des points que le jeu interactif de la leçon ne demande pas
+déjà. Aucune question et aucune phrase d'explication ne sont partagées entre les deux ; si le jeu fait trancher « quelle
+commande ? », le quiz interroge l'ordre, la syntaxe ou le piège, pas la même situation.
+
 ## Une figure remplace son explication
 
 Règle structurante des leçons : après un schéma ou un graphique, au plus une légende d'une ligne ; aucun récapitulatif en

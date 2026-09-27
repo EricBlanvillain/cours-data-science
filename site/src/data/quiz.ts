@@ -105,10 +105,10 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "Bug, Normal, Poison et cinq autres types n'ont pas de ligne dans types, donc pas de correspondance. Un JOIN simple ne garde que ce qui se recolle ; LEFT JOIN garderait les 800, avec des cases vides.",
     },
     {
-      question: "Tu as fait un commit, mais ton dépôt GitHub n'a pas changé. Quelle commande manque ?",
-      options: ["git add", "git pull", "git push", "git commit"],
-      bonne: 2,
-      explication: "Un commit reste sur la machine où il a été fait. push l'envoie sur GitHub. Depuis Colab, « Enregistrer une copie sur GitHub » fait add, commit et push d'un seul clic.",
+      question: "Dans quel ordre tapes-tu ces trois commandes pour envoyer ton notebook sur GitHub ?",
+      options: ["commit, add, push", "add, commit, push", "push, add, commit", "add, push, commit"],
+      bonne: 1,
+      explication: "add choisit les fichiers, commit crée le point de sauvegarde avec son message, push envoie les commits sur GitHub. Un push avant le commit n'a rien de nouveau à envoyer.",
     },
   ],
 };
