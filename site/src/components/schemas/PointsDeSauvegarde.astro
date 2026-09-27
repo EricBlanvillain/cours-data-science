@@ -1,0 +1,70 @@
+---
+/**
+ * Git en une image : sur ton ordinateur (ou Colab), tu modifies, tu choisis (add), tu crées un point de sauvegarde
+ * (commit) ; push envoie les points sur GitHub, pull les récupère. Les messages sont ceux du notebook (src/data/git.ts).
+ */
+import { COMMANDES, commits, mauvaisMessages } from "../../data/git";
+const yC = (i: number) => 150 + i * 34;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 330" role="img" aria-labelledby="ps-titre ps-desc">
+    <title id="ps-titre">Git : des points de sauvegarde sur ton ordinateur, copiés sur GitHub</title>
+    <desc id="ps-desc">À gauche, ton ordinateur : un notebook modifié, git add pour le choisir, git commit pour créer un point de sauvegarde ; trois points alignés avec leurs messages. À droite, GitHub, avec les mêmes trois points. Entre les deux, git push vers la droite et git pull vers la gauche. En bas, un bon message dit pourquoi.</desc>
+
+    {/* deux panneaux */}
+    <rect x="30" y="20" width="560" height="250" class="fond-2 trait" stroke-width="1.5" />
+    <rect x="690" y="20" width="250" height="250" class="fond-2 trait" stroke-width="1.5" />
+    <text x="46" y="46" class="encre" font-size="16" font-weight="700">ton ordinateur, ou Colab</text>
+    <text x="706" y="46" class="encre" font-size="16" font-weight="700">GitHub</text>
+    <text x="706" y="66" class="encre-2" font-size="12">le cloud qui garde et montre</text>
+
+    {/* le fichier modifié → add → commit */}
+    <rect x="46" y="78" width="196" height="40" class="fond-3 trait" stroke-width="1.5" />
+    <text x="54" y="95" class="encre mono" font-size="10.5">02_python_pour_la_data.ipynb</text>
+    <text x="54" y="110" class="encre-2" font-size="11">modifié</text>
+    <g class="trait" stroke-width="2" fill="none"><path d="M250 98 H286" /><path d="M286 93 L298 98 L286 103" /></g>
+    <text x="272" y="72" text-anchor="middle" class="encre mono" font-size="11.5" font-weight="700">{COMMANDES.add.nom}</text>
+    <rect x="306" y="78" width="112" height="40" class="fond-3 trait" stroke-width="1.5" stroke-dasharray="4 3" />
+    <text x="362" y="95" text-anchor="middle" class="encre" font-size="11">choisi pour la</text>
+    <text x="362" y="110" text-anchor="middle" class="encre" font-size="11">prochaine sauvegarde</text>
+    <g class="trait" stroke-width="2" fill="none"><path d="M426 98 H462" /><path d="M462 93 L474 98 L462 103" /></g>
+    <text x="446" y="72" text-anchor="middle" class="encre mono" font-size="11.5" font-weight="700">{COMMANDES.commit.nom}</text>
+    <text x="482" y="95" class="encre" font-size="11.5" font-weight="700">un point de</text>
+    <text x="482" y="110" class="encre" font-size="11.5" font-weight="700">sauvegarde de plus</text>
+
+    {/* l'historique local : trois points et leurs messages */}
+    <line x1="64" y1={yC(0)} x2="64" y2={yC(2)} class="trait" stroke-width="2" />
+    {commits.map((m, i) => (
+      <g>
+        <circle cx="64" cy={yC(i)} r="7" class={i === commits.length - 1 ? "plein" : "fond-2 plein-trait"} stroke-width="2" />
+        <text x="84" y={yC(i) + 4} class="encre mono" font-size="11.5">{m}</text>
+      </g>
+    ))}
+    <text x="84" y={yC(2) + 26} class="encre-2" font-size="11.5">l'historique : chaque point a un message, une date, et on peut y revenir</text>
+
+    {/* push / pull */}
+    <g class="trait" stroke-width="2" fill="none"><path d="M600 120 H668" /><path d="M668 115 L680 120 L668 125" /></g>
+    <text x="640" y="110" text-anchor="middle" class="encre mono" font-size="12" font-weight="700">{COMMANDES.push.nom}</text>
+    <text x="640" y="136" text-anchor="middle" class="encre-2" font-size="11">envoyer</text>
+    <g class="trait" stroke-width="2" fill="none"><path d="M680 190 H612" /><path d="M612 185 L600 190 L612 195" /></g>
+    <text x="640" y="180" text-anchor="middle" class="encre mono" font-size="12" font-weight="700">{COMMANDES.pull.nom}</text>
+    <text x="640" y="206" text-anchor="middle" class="encre-2" font-size="11">récupérer</text>
+
+    {/* l'historique sur GitHub */}
+    <line x1="724" y1={yC(0)} x2="724" y2={yC(2)} class="trait" stroke-width="2" />
+    {commits.map((m, i) => (
+      <g>
+        <circle cx="724" cy={yC(i)} r="7" class={i === commits.length - 1 ? "plein" : "fond-2 plein-trait"} stroke-width="2" />
+        <text x="744" y={yC(i) + 4} class="encre" font-size="11.5">{["1er commit", "2e commit", "3e commit"][i]}</text>
+      </g>
+    ))}
+    <text x="706" y={yC(2) + 26} class="encre-2" font-size="11.5">les mêmes points, visibles par tous :</text>
+    <text x="706" y={yC(2) + 42} class="encre-2" font-size="11.5">c'est ton portfolio</text>
+
+    {/* le message */}
+    <text x="30" y="300" class="encre" font-size="13" font-weight="700">Un bon message dit pourquoi :</text>
+    <text x="230" y="300" class="encre mono" font-size="12">« {commits[0]} »</text>
+    <text x="30" y="320" class="encre-2" font-size="12.5">pas <tspan class="mono">{mauvaisMessages.map((m) => `« ${m} »`).join(", ")}</tspan> : dans six mois, personne ne saura ce qu'ils contiennent.</text>
+  </svg>
+  <figcaption>Git garde des points de sauvegarde ; GitHub les met en ligne et les montre.</figcaption>
+</figure>

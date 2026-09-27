@@ -85,4 +85,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "Sans titre ni axes, on ne sait pas à quelle question le graphique répond, ni ce que mesure la hauteur. C'est la règle de la séance : pas de graphique sans titre ni axes.",
     },
   ],
+  3: [
+    {
+      question: "Tu veux les 3 Pokémon Feu les plus rapides. Quelle partie de la requête garde seulement les Pokémon Feu ?",
+      options: ["SELECT nom, vitesse", "WHERE type1 = 'Fire'", "ORDER BY vitesse DESC", "LIMIT 3"],
+      bonne: 1,
+      explication: "SELECT choisit les colonnes, WHERE les lignes, ORDER BY l'ordre, LIMIT le nombre. Sans WHERE, la requête renverrait les trois plus rapides de tous les types, DeoxysSpeed Forme en tête avec 180.",
+    },
+    {
+      question: "En pandas tu écrirais df.groupby(\"type1\")[\"total\"].mean(). En SQL ?",
+      options: ["SELECT type1, total FROM pokemon ORDER BY total", "SELECT AVG(total) FROM pokemon WHERE type1", "SELECT type1, AVG(total) FROM pokemon GROUP BY type1", "SELECT COUNT(*) FROM pokemon GROUP BY total"],
+      bonne: 2,
+      explication: "GROUP BY fait les tas, un par type ; AVG calcule la moyenne dans chaque tas. Les deux langues donnent le même classement, Dragon en tête avec 550,5.",
+    },
+    {
+      question: "Un JOIN entre pokemon (800 lignes) et types (10 types) renvoie 466 lignes. Où sont passés les 334 autres Pokémon ?",
+      options: ["SQL les a perdus par erreur", "Leur type n'est pas dans la table types : un JOIN simple les laisse tomber", "Ce sont les Pokémon légendaires", "Ils étaient en double"],
+      bonne: 1,
+      explication: "Bug, Normal, Poison et cinq autres types n'ont pas de ligne dans types, donc pas de correspondance. Un JOIN simple ne garde que ce qui se recolle ; LEFT JOIN garderait les 800, avec des cases vides.",
+    },
+    {
+      question: "Tu as fait un commit, mais ton dépôt GitHub n'a pas changé. Quelle commande manque ?",
+      options: ["git add", "git pull", "git push", "git commit"],
+      bonne: 2,
+      explication: "Un commit reste sur la machine où il a été fait. push l'envoie sur GitHub. Depuis Colab, « Enregistrer une copie sur GitHub » fait add, commit et push d'un seul clic.",
+    },
+  ],
 };

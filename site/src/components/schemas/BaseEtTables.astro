@@ -1,0 +1,87 @@
+---
+/**
+ * Où vivent les données d'une appli : l'écran qu'on voit, la base de données qu'on ne voit pas (des tables), et SQL,
+ * la langue pour lui poser une question. Les deux tables sont celles du notebook (src/data/sql.ts).
+ */
+import { tables, types, requeteExemple } from "../../data/sql";
+const t = types.slice(0, 3);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 310" role="img" aria-labelledby="bt-titre bt-desc">
+    <title id="bt-titre">L'appli, la base de données, et SQL entre les deux</title>
+    <desc id="bt-desc">À gauche un téléphone qui affiche une liste. Au milieu une base de données contenant deux tables : pokemon, 800 lignes et 13 colonnes, et types, 10 lignes et 3 colonnes. À droite une requête SQL et son résultat : 52 lignes.</desc>
+
+    <g class="encre" font-size="16" font-weight="700">
+      <text x="120" y="30" text-anchor="middle">1. l'appli, ce que tu vois</text>
+      <text x="470" y="30" text-anchor="middle">2. la base de données, ce que tu ne vois pas</text>
+      <text x="830" y="30" text-anchor="middle">3. SQL, la langue pour lui parler</text>
+    </g>
+
+    {/* 1. le téléphone */}
+    <rect x="70" y="56" width="100" height="190" rx="12" class="fond-2 trait" stroke-width="1.5" />
+    <rect x="80" y="72" width="80" height="158" class="fond" fill="var(--fond)" />
+    {["Pikachu", "Charmander", "Squirtle", "Bulbasaur"].map((n, i) => (
+      <g>
+        <rect x="86" y={82 + i * 36} width="68" height="26" class="fond-3" />
+        <text x="92" y={99 + i * 36} class="encre" font-size="10.5">{n}</text>
+      </g>
+    ))}
+    <text x="120" y="272" text-anchor="middle" class="encre-2" font-size="12.5">une liste, un score, un profil…</text>
+
+    {/* flèche */}
+    <g class="trait" stroke-width="2" fill="none"><path d="M200 150 H260" /><path d="M260 145 L272 150 L260 155" /></g>
+    <text x="236" y="138" text-anchor="middle" class="encre-2" font-size="11">lit dans</text>
+
+    {/* 2. la base : un cylindre avec deux tables */}
+    <path d="M300 70 a170 14 0 0 1 340 0 v180 a170 14 0 0 1 -340 0 z" class="fond-2 trait" stroke-width="1.5" />
+    <ellipse cx="470" cy="70" rx="170" ry="14" class="fond-3 trait" stroke-width="1.5" />
+    {/* table pokemon */}
+    <text x="314" y="106" class="encre mono" font-size="12" font-weight="700">pokemon</text>
+    <text x="376" y="106" class="encre-2 mono" font-size="10.5">{tables[0].lignes} × {tables[0].colonnes}</text>
+    <rect x="314" y="112" width="178" height="16" class="plein" />
+    <text x="319" y="124" class="sur-plein mono" font-size="10">nom</text>
+    <text x="390" y="124" class="sur-plein mono" font-size="10">type1</text>
+    <text x="456" y="124" class="sur-plein mono" font-size="10">vit.</text>
+    {[["Charmander", "Fire", 65], ["Squirtle", "Water", 43], ["Pikachu", "Electric", 90]].map((r, i) => (
+      <g>
+        <rect x="314" y={128 + i * 18} width="178" height="18" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="319" y={141 + i * 18} class="encre mono" font-size="10">{r[0]}</text>
+        <text x="390" y={141 + i * 18} class="encre mono" font-size="10">{r[1]}</text>
+        <text x="456" y={141 + i * 18} class="encre mono" font-size="10">{r[2]}</text>
+      </g>
+    ))}
+    <text x="314" y="198" class="encre-2 mono" font-size="10">… {tables[0].lignes - 3} autres lignes</text>
+    {/* table types */}
+    <text x="502" y="106" class="encre mono" font-size="12" font-weight="700">types</text>
+    <text x="548" y="106" class="encre-2 mono" font-size="10.5">{tables[1].lignes} × {tables[1].colonnes}</text>
+    <rect x="502" y="112" width="138" height="16" class="plein" />
+    <text x="507" y="124" class="sur-plein mono" font-size="10">type</text>
+    <text x="548" y="124" class="sur-plein mono" font-size="10">fort</text>
+    <text x="590" y="124" class="sur-plein mono" font-size="10">faible</text>
+    {t.map((r, i) => (
+      <g>
+        <rect x="502" y={128 + i * 18} width="138" height="18" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="507" y={141 + i * 18} class="encre mono" font-size="10">{r.type}</text>
+        <text x="548" y={141 + i * 18} class="encre mono" font-size="10">{r.fort_contre}</text>
+        <text x="590" y={141 + i * 18} class="encre mono" font-size="10">{r.faible_contre}</text>
+      </g>
+    ))}
+    <text x="502" y="198" class="encre-2 mono" font-size="10">… {tables[1].lignes - 3} autres lignes</text>
+    <text x="470" y="236" text-anchor="middle" class="encre-2" font-size="12.5">une table = un onglet de tableur : des lignes, des colonnes</text>
+    <text x="470" y="290" text-anchor="middle" class="encre-2" font-size="12.5">ici SQLite, une base complète qui tient dans un fichier ; ailleurs des serveurs entiers</text>
+
+    {/* flèche */}
+    <g class="trait" stroke-width="2" fill="none"><path d="M660 150 H720" /><path d="M720 145 L732 150 L720 155" /></g>
+    <text x="696" y="138" text-anchor="middle" class="encre-2" font-size="11">on demande</text>
+
+    {/* 3. la requête et sa réponse */}
+    <rect x="748" y="92" width="196" height="64" class="fond-3 trait" stroke-width="1.5" />
+    <text x="760" y="116" class="encre mono" font-size="12">SELECT nom FROM pokemon</text>
+    <text x="760" y="138" class="encre mono" font-size="12">WHERE type1 = 'Fire'</text>
+    <g class="trait" stroke-width="2" fill="none"><path d="M846 166 V190" /><path d="M841 190 L846 202 L851 190" /></g>
+    <rect x="748" y="210" width="196" height="40" class="plein" />
+    <text x="846" y="236" text-anchor="middle" class="sur-plein" font-size="14" font-weight="700">{requeteExemple.surCombien} lignes, les Pokémon Feu</text>
+    <text x="846" y="272" text-anchor="middle" class="encre-2" font-size="12.5">une question, un tableau en réponse</text>
+  </svg>
+  <figcaption>Une appli garde ses données dans des tables ; SQL est la langue pour leur poser des questions.</figcaption>
+</figure>

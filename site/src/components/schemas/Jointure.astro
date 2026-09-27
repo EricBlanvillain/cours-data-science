@@ -1,0 +1,82 @@
+---
+/**
+ * Un JOIN recolle deux tables par leur colonne commune : quatre Pokémon, la table types, le résultat. Caterpie (Bug) n'a
+ * pas de ligne dans types : il disparaît du résultat, comme 334 Pokémon sur 800 dans le notebook (src/data/sql.ts).
+ */
+import { exempleJointure, types, nbJointure, nbSansCorrespondance } from "../../data/sql";
+const tt = types.filter((t) => ["Fire", "Water", "Electric"].includes(t.type));
+const yP = (i: number) => 92 + i * 34;                       // lignes de pokemon
+const yT = (i: number) => 92 + i * 34;                       // lignes de types
+const resultat = exempleJointure.flatMap((p) => { const t = tt.find((x) => x.type === p.type1); return t ? [{ ...p, ...t }] : []; });
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 320" role="img" aria-labelledby="jo-titre jo-desc">
+    <title id="jo-titre">JOIN : la table pokemon et la table types recollées par le type</title>
+    <desc id="jo-desc">À gauche quatre Pokémon avec leur type : Charmander Fire, Squirtle Water, Caterpie Bug, Pikachu Electric. Au milieu la table types avec Fire, Water, Electric. Des traits relient chaque type à sa ligne ; Bug n'en trouve aucune. À droite le résultat : trois lignes, Caterpie a disparu. En bas : 466 Pokémon sur 800 trouvent leur type, 334 restent dehors.</desc>
+
+    <g class="encre" font-size="16" font-weight="700">
+      <text x="40" y="30">pokemon</text>
+      <text x="360" y="30">types</text>
+      <text x="640" y="30">le résultat du JOIN</text>
+    </g>
+    <text x="118" y="30" class="encre-2 mono" font-size="12">AS p</text>
+    <text x="410" y="30" class="encre-2 mono" font-size="12">AS t</text>
+
+    {/* table pokemon : nom, type1 */}
+    <rect x="40" y="46" width="230" height="22" class="plein" />
+    <text x="48" y="62" class="sur-plein mono" font-size="12" font-weight="700">nom</text>
+    <text x="168" y="62" class="sur-plein mono" font-size="12" font-weight="700">type1</text>
+    {exempleJointure.map((p, i) => (
+      <g>
+        <rect x="40" y={yP(i) - 20} width="230" height="30" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="48" y={yP(i)} class="encre mono" font-size="12.5">{p.nom}</text>
+        <text x="168" y={yP(i)} class={"mono " + (p.type1 === "Bug" ? "encre-2" : "encre")} font-size="12.5" font-weight="700">{p.type1}</text>
+      </g>
+    ))}
+
+    {/* table types : type, fort_contre, faible_contre */}
+    <rect x="360" y="46" width="230" height="22" class="plein" />
+    <text x="368" y="62" class="sur-plein mono" font-size="12" font-weight="700">type</text>
+    <text x="440" y="62" class="sur-plein mono" font-size="12" font-weight="700">fort</text>
+    <text x="514" y="62" class="sur-plein mono" font-size="12" font-weight="700">faible</text>
+    {tt.map((t, i) => (
+      <g>
+        <rect x="360" y={yT(i) - 20} width="230" height="30" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="368" y={yT(i)} class="encre mono" font-size="12.5" font-weight="700">{t.type}</text>
+        <text x="440" y={yT(i)} class="encre mono" font-size="12.5">{t.fort_contre}</text>
+        <text x="514" y={yT(i)} class="encre mono" font-size="12.5">{t.faible_contre}</text>
+      </g>
+    ))}
+    <text x="360" y={yT(3)} class="encre-2 mono" font-size="11">… 7 autres types, pas Bug</text>
+
+    {/* les traits de la colonne commune */}
+    {exempleJointure.map((p, i) => { const k = tt.findIndex((t) => t.type === p.type1); return k >= 0
+      ? <path d={`M272 ${yP(i) - 5} C 316 ${yP(i) - 5}, 316 ${yT(k) - 5}, 358 ${yT(k) - 5}`} class="trait" stroke-width="1.5" fill="none" />
+      : <g><path d={`M272 ${yP(i) - 5} H 304`} class="trait-fin" stroke-width="1.5" stroke-dasharray="3 4" fill="none" /><text x="282" y={yP(i) + 10} class="encre-2" font-size="10.5">✗ aucune</text></g>; })}
+    <text x="315" y="236" text-anchor="middle" class="encre mono" font-size="12" font-weight="700">ON p.type1 = t.type</text>
+    <text x="315" y="252" text-anchor="middle" class="encre-2" font-size="11.5">la colonne commune</text>
+
+    <g class="trait" stroke-width="2" fill="none"><path d="M596 130 H622" /><path d="M622 125 L634 130 L622 135" /></g>
+
+    {/* résultat */}
+    <rect x="640" y="46" width="300" height="22" class="plein" />
+    <text x="648" y="62" class="sur-plein mono" font-size="12" font-weight="700">nom</text>
+    <text x="748" y="62" class="sur-plein mono" font-size="12" font-weight="700">type1</text>
+    <text x="818" y="62" class="sur-plein mono" font-size="12" font-weight="700">fort</text>
+    <text x="882" y="62" class="sur-plein mono" font-size="12" font-weight="700">faible</text>
+    {resultat.map((r, i) => (
+      <g>
+        <rect x="640" y={yP(i) - 20} width="300" height="30" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="648" y={yP(i)} class="encre mono" font-size="12.5">{r.nom}</text>
+        <text x="748" y={yP(i)} class="encre mono" font-size="12.5">{r.type1}</text>
+        <text x="818" y={yP(i)} class="encre mono" font-size="12.5">{r.fort_contre}</text>
+        <text x="882" y={yP(i)} class="encre mono" font-size="12.5">{r.faible_contre}</text>
+      </g>
+    ))}
+    <text x="640" y={yP(3)} class="encre-2" font-size="12">Caterpie a disparu : son type n'est pas dans types.</text>
+
+    <line x1="40" y1="276" x2="940" y2="276" class="trait-fin" stroke-width="1" />
+    <text x="40" y="300" class="encre-2" font-size="12.5">Sur les 800 Pokémon du notebook, <tspan class="encre" font-weight="700">{nbJointure}</tspan> trouvent leur type dans la table types ; <tspan class="encre" font-weight="700">{nbSansCorrespondance}</tspan> restent dehors. <tspan class="mono">LEFT JOIN</tspan> les garde, avec des cases vides.</text>
+  </svg>
+  <figcaption>JOIN recolle deux tables par leur colonne commune ; ce qui n'a pas de correspondance disparaît.</figcaption>
+</figure>

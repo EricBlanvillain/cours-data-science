@@ -136,6 +136,16 @@ const ETATS = [
   { page: "lecons/seance-02-python-pour-la-data.html", id: "s2-quel-graphique-faux", pilote: `
       const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Histogramme").click(); await w(300);
       if (!g.textContent.includes("pas celui-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-03-sql-et-git.html", id: "s3-initiale", pilote: "" },
+  { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-ouvert", pilote: `
+      const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300);
+      if (!g.textContent.includes("quelle commande ?")) throw new Error("le cuivre « situation ouverte » manque");` },
+  { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-juste", pilote: `
+      const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-faux", pilote: `
+      const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git push").click(); await w(300);
+      if (!g.textContent.includes("pas celle-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

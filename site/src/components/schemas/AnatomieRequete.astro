@@ -1,0 +1,48 @@
+---
+/**
+ * Une requête SQL se lit comme une phrase : chaque ligne dit une chose (quoi, d'où, à quelle condition, dans quel ordre,
+ * combien), et le résultat est un tableau. La requête et ses trois lignes de résultat viennent de src/data/sql.ts.
+ */
+import { requeteExemple as r } from "../../data/sql";
+const X = 40, Y0 = 70, PAS = 34, XA = 330, XR = 640;
+const motCle = (s: string) => s.match(/^(SELECT|FROM|WHERE|ORDER BY|LIMIT)/)?.[0] ?? "";
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 280" role="img" aria-labelledby="ar-titre ar-desc">
+    <title id="ar-titre">Les cinq lignes d'une requête SQL et leur résultat</title>
+    <desc id="ar-desc">À gauche, la requête ligne par ligne : SELECT nom, vitesse ; FROM pokemon ; WHERE type1 = 'Fire' ; ORDER BY vitesse DESC ; LIMIT 3. Chaque ligne est annotée : quelles colonnes, quelle table, quelle condition, dans quel ordre, combien. À droite, le résultat : Talonflame 126, Infernape 108, Pyroar 106.</desc>
+
+    <text x={X} y="34" class="encre" font-size="16" font-weight="700">la question, en SQL</text>
+    <text x={XA} y="34" class="encre" font-size="16" font-weight="700">ce que dit chaque ligne</text>
+    <text x={XR} y="34" class="encre" font-size="16" font-weight="700">la réponse, un tableau</text>
+
+    <rect x={X - 14} y={Y0 - 24} width="272" height={PAS * r.lignes.length + 14} class="fond-3 trait" stroke-width="1.5" />
+    {r.lignes.map((l, i) => (
+      <g>
+        <text x={X} y={Y0 + i * PAS} class="encre mono" font-size="14"><tspan font-weight="700">{motCle(l.sql)}</tspan>{l.sql.slice(motCle(l.sql).length)}</text>
+        <line x1={X + 262} y1={Y0 - 5 + i * PAS} x2={XA - 12} y2={Y0 - 5 + i * PAS} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" />
+        <text x={XA} y={Y0 + i * PAS} class="encre-2" font-size="13.5">{l.quoi}</text>
+      </g>
+    ))}
+    <text x={X} y={Y0 + r.lignes.length * PAS + 12} class="encre-2" font-size="12">une seule phrase : « les 3 Pokémon Feu les plus rapides »</text>
+
+    <g class="trait" stroke-width="2" fill="none"><path d="M560 120 H600" /><path d="M600 115 L612 120 L600 125" /></g>
+
+    <rect x={XR} y={Y0 - 24} width="220" height="24" class="plein" />
+    <text x={XR + 10} y={Y0 - 7} class="sur-plein mono" font-size="12.5" font-weight="700">nom</text>
+    <text x={XR + 150} y={Y0 - 7} class="sur-plein mono" font-size="12.5" font-weight="700">vitesse</text>
+    {r.resultat.map((p, i) => (
+      <g>
+        <rect x={XR} y={Y0 + i * 28} width="220" height="28" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x={XR + 10} y={Y0 + 19 + i * 28} class="encre mono" font-size="12.5">{p.nom}</text>
+        <text x={XR + 150} y={Y0 + 19 + i * 28} class="encre mono" font-size="12.5">{p.vitesse}</text>
+      </g>
+    ))}
+    <line x1={XR} y1={Y0 + 84} x2={XR + 220} y2={Y0 + 84} class="trait-fin" stroke-width="1" />
+    <text x={XR} y={Y0 + 108} class="encre-2" font-size="12.5">3 lignes gardées sur les {r.surCombien} Pokémon Feu,</text>
+    <text x={XR} y={Y0 + 126} class="encre-2" font-size="12.5">2 colonnes gardées sur 13</text>
+    <text x={XR} y={Y0 + 160} class="encre-2" font-size="12.5">sans <tspan class="mono">WHERE</tspan>, le tableau ferait 800 lignes ;</text>
+    <text x={XR} y={Y0 + 178} class="encre-2" font-size="12.5">sans <tspan class="mono">LIMIT</tspan>, {r.surCombien}.</text>
+  </svg>
+  <figcaption>Une requête se lit comme une phrase : quoi, d'où, à quelle condition, dans quel ordre, combien.</figcaption>
+</figure>

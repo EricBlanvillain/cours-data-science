@@ -1,0 +1,94 @@
+---
+numero: 3
+titre: SQL et Git
+niveau: ⭐
+duree: 1 h 30
+resume: "Où une appli range ses données, SQL pour interroger une base (SELECT, WHERE, GROUP BY, un premier JOIN), puis Git et GitHub pour mettre son premier projet en ligne."
+livrable: Le premier projet en ligne sur GitHub, avec un README qui l'explique.
+objectifs:
+  - Tu sauras dire où une appli range ses données et lire une requête SQL comme une phrase.
+  - Tu sauras filtrer, trier, compter, regrouper et relier deux tables, en SQL comme en pandas.
+  - Tu sauras ce que font add, commit, push et pull, et pousser un notebook sur GitHub depuis Colab.
+aRetenir:
+  - Une appli garde ses données dans une base faite de tables ; SQL est la langue pour les interroger.
+  - Une requête se lit comme une phrase, SELECT quoi, FROM où, WHERE à quelle condition, ORDER BY dans quel ordre, LIMIT combien.
+  - SQL et pandas font la même chose, WHERE et filtre, ORDER BY et sort_values, GROUP BY et groupby, JOIN et merge.
+  - Un JOIN recolle deux tables par une colonne commune, et laisse tomber ce qui n'a pas de correspondance.
+  - Git garde des points de sauvegarde, GitHub les met en ligne ; add choisit, commit sauvegarde avec un message qui dit pourquoi, push envoie, pull récupère.
+---
+import BaseEtTables from "../../components/schemas/BaseEtTables.astro";
+import AnatomieRequete from "../../components/schemas/AnatomieRequete.astro";
+import Jointure from "../../components/schemas/Jointure.astro";
+import PointsDeSauvegarde from "../../components/schemas/PointsDeSauvegarde.astro";
+import QuelleCommande from "../../components/islands/QuelleCommande";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Où vivent les données d'une appli
+
+Derrière Instagram, Doctolib ou ton jeu, pas de fichier CSV : une base de données, faite de tables, et une langue pour l'interroger.
+
+<BaseEtTables />
+
+<details>
+<summary>SQL a cinquante ans, SQLite est dans ta poche</summary>
+
+SQL est né chez IBM en 1974, sous le nom SEQUEL, et tout le monde le parle encore : les sites, les banques, les trains. Il ne fait pas tourner l'ordinateur, il pose des questions à des tables ; c'est pour ça qu'il a survécu à tous les langages à la mode.
+
+SQLite est une base de données complète qui tient dans un seul fichier, sans serveur. Chaque téléphone en contient : les contacts, les messages, l'historique du navigateur y sont rangés. En Python, le module `sqlite3` est fourni d'office : le notebook crée sa base en mémoire, sans rien installer.
+
+</details>
+
+## Une requête se lit comme une phrase
+
+<AnatomieRequete />
+
+```python
+sql("SELECT nom, vitesse FROM pokemon WHERE type1 = 'Fire' ORDER BY vitesse DESC LIMIT 3")
+```
+
+Les verbes de la séance 2 ont chacun leur traduction. Le tableau sert de fiche à retrouver ensuite.
+
+| Le verbe | En SQL | En pandas | Exemple |
+|---|---|---|---|
+| Filtrer | `WHERE type1 = 'Fire'` | `df[df["type1"] == "Fire"]` | 52 Pokémon Feu |
+| Trier | `ORDER BY vitesse DESC LIMIT 5` | `df.sort_values("vitesse", ascending=False).head(5)` | DeoxysSpeed Forme, 180 |
+| Compter | `SELECT COUNT(*) … WHERE legendaire = 1` | `len(df[df["legendaire"] == 1])` | 65 légendaires |
+| Regrouper | `SELECT type1, AVG(total) … GROUP BY type1` | `df.groupby("type1")["total"].mean()` | Dragon, 550,5 |
+| Relier | `JOIN types AS t ON p.type1 = t.type` | `df.merge(types, left_on="type1", right_on="type")` | 466 lignes recollées |
+
+## Relier deux tables
+
+Une vraie base éparpille l'information : les Pokémon d'un côté, les forces et faiblesses de chaque type de l'autre.
+
+<Jointure />
+
+<details>
+<summary>Les oubliés du JOIN</summary>
+
+Huit types du dataset n'ont pas de ligne dans la table `types` : Bug, Dark, Dragon, Fairy, Ghost, Normal, Poison, Steel. Leurs 334 Pokémon disparaissent d'un `JOIN` simple, sans message d'erreur. C'est le piège classique : un résultat plus petit que prévu, et personne ne s'en aperçoit.
+
+`LEFT JOIN` garde toutes les lignes de la table de gauche ; celles qui n'ont pas de correspondance ont des cases vides (`NULL`). Pour compter les oubliés : `WHERE t.type IS NULL`.
+
+</details>
+
+## Git : des points de sauvegarde
+
+Tu connais les sauvegardes d'un jeu vidéo : on y revient quand on rate. Git fait ça pour ton code ; GitHub garde les sauvegardes en ligne et les montre.
+
+<PointsDeSauvegarde />
+
+<QuelleCommande client:load />
+
+### À toi : ton projet en ligne
+
+Depuis Colab, le menu Fichier, puis « Enregistrer une copie sur GitHub », fait add, commit et push d'un clic.
+
+- **Pousse ton notebook de la séance 2** dans ton dépôt `mon-portfolio-ia`, chemin `seance-02/02_python_pour_la_data.ipynb`, avec un message qui dit ce qu'il contient.
+- **Écris le README** : la cellule de la section 6 le génère depuis ta fiche, tu le colles sur GitHub. Modifie-le une deuxième fois : ton historique a deux versions.
+- **Même question, deux langues** (section 7) : trois défis à résoudre en SQL puis en pandas, `compare` dit si les deux réponses concordent. Le premier est résolu, les deux autres sont à toi.
+
+<BoutonsSeance dossier="seance-03-sql-et-git" lecon="03_sql_et_git.ipynb" exercices="03_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `03_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées, dont deux sur Git et deux où SQL et pandas doivent tomber d'accord. Il s'ouvre par un quiz de trois questions, celles qu'on se pose à voix haute au début de la séance suivante.

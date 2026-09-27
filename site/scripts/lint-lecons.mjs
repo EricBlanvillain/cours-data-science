@@ -25,7 +25,7 @@ const MAX_MOTS = 625;
 /* Le vocabulaire des blocs : ce qu'une leçon a le droit d'importer. */
 const VOCABULAIRE = [
   /^\.\.\/\.\.\/components\/schemas\/[A-Za-z0-9]+\.astro$/,                      // schémas et courbes SVG
-  /^\.\.\/\.\.\/components\/islands\/(Frise|ClassifOuRegression|AccueilSeance0|QuelGraphique)$/,  // îlots interactifs
+  /^\.\.\/\.\.\/components\/islands\/(Frise|ClassifOuRegression|AccueilSeance0|QuelGraphique|QuelleCommande)$/,  // îlots interactifs
   /^\.\.\/\.\.\/components\/(Causes|CartesNumerotees|BoutonsSeance)\.astro$/,     // blocs composés
   /^\.\.\/\.\.\/data\/[a-z0-9-]+$/,                                             // données typées
 ];
