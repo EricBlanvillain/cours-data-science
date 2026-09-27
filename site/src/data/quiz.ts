@@ -137,4 +137,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "types est une liste (un Pokémon peut en avoir deux), d'où le [0] ; chaque élément est un dictionnaire qui contient type, lui-même un dictionnaire qui contient name. On descend niveau par niveau jusqu'à « electric ».",
     },
   ],
+  5: [
+    {
+      question: "La corrélation entre la défense et la vitesse des Pokémon vaut 0,02. Qu'est-ce que ça veut dire ?",
+      options: ["Les Pokémon rapides sont fragiles", "La vitesse ne dit presque rien de la défense", "La défense fait baisser la vitesse", "Il y a une erreur dans les données"],
+      bonne: 1,
+      explication: "Une corrélation proche de 0 veut dire qu'aucune direction ne se dégage : on trouve de tout, des lents solides, des rapides solides, des lents fragiles. Pour lire « les rapides sont fragiles », il faudrait une corrélation nettement négative.",
+    },
+    {
+      question: "Blissey a 255 points de vie, bien au-delà de la limite de 125 de la boîte à moustaches. Que fais-tu de cette ligne ?",
+      options: ["Je la supprime, c'est une erreur", "Je la remplace par la médiane", "Je la regarde de près : c'est peut-être la chose à raconter", "Je la cache dans le graphique"],
+      bonne: 2,
+      explication: "La règle des 1,5 écarts signale un suspect, pas un coupable. Blissey a vraiment 255 HP dans le jeu : une anomalie vraie est souvent le fait le plus intéressant du tableau.",
+    },
+    {
+      question: "Quel titre donner au nuage « pourboire selon l'addition » dans ton tableau de bord ?",
+      options: ["Pourboire vs addition", "Graphique 1", "Le pourboire suit l'addition", "Données Tips, colonnes total_bill et tip"],
+      bonne: 2,
+      explication: "Un titre de tableau de bord donne la réponse, pas le nom des colonnes : le client lit la conclusion avant même de regarder les points. Les autres titres l'obligent à tout décoder lui-même.",
+    },
+    {
+      question: "Dans ton pitch, « mettre les meilleurs serveurs le dimanche soir », c'est quel temps ?",
+      options: ["Le constat", "La preuve", "La recommandation", "La question"],
+      bonne: 2,
+      explication: "Le constat dit ce que tu as trouvé, avec un chiffre ; la preuve montre le graphique qui l'établit ; la recommandation dit au client quoi faire demain. Une action à mener, c'est toujours la recommandation.",
+    },
+  ],
 };

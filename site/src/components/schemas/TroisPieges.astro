@@ -1,0 +1,73 @@
+---
+/**
+ * Les trois pièges du notebook 05 (section 5), chacun sur ses propres chiffres (src/data/analyse.ts) : la variable cachée
+ * derrière glaces et noyades (données simulées), l'axe tronqué des abonnés, le sondage devant le magasin de jeux vidéo
+ * (données simulées). Trois cartes de la primitive.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { glacesNoyades as gn, abonnes as ab, sondage as so } from "../../data/analyse";
+const W = 340, H = 240;
+const virgule = (n: number) => String(n).replace(".", ",");
+/* axe tronqué : deux petits graphiques de six barres */
+const barres = (x0: number, min: number, max: number) => ab.valeurs.map((v, i) => {
+  const h = 120 * (v - min) / (max - min); return { x: x0 + i * 22, y: 168 - h, h };
+});
+---
+<GrilleCartes bandes={3} liste={false} class="large" min="15rem">
+  <article class="carte">
+    <p class="etiquette">Causalité · la variable cachée</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="tp1-t">
+      <title id="tp1-t">La chaleur fait monter les glaces et les noyades ; entre les deux, aucun lien direct</title>
+      <text x="12" y="16" class="encre" font-size="13" font-weight="700">Les glaces causent-elles les noyades ?</text>
+      <rect x="120" y="36" width="100" height="36" class="plein" />
+      <text x="170" y="59" text-anchor="middle" class="sur-plein" font-size="13" font-weight="700">la chaleur</text>
+      <rect x="20" y="140" width="110" height="36" class="fond-2 plein-trait" stroke-width="1.5" />
+      <text x="75" y="163" text-anchor="middle" class="encre" font-size="13">glaces vendues</text>
+      <rect x="210" y="140" width="110" height="36" class="fond-2 plein-trait" stroke-width="1.5" />
+      <text x="265" y="163" text-anchor="middle" class="encre" font-size="13">noyades</text>
+      <g class="plein-trait" stroke-width="2" fill="none"><path d="M150 74 L90 136" /><path d="M89 126 L88 138 L99 133" /><path d="M190 74 L250 136" /><path d="M241 133 L252 138 L251 126" /></g>
+      <path d="M134 158 H206" class="trait" stroke-width="1.5" stroke-dasharray="4 4" fill="none" />
+      <text x="170" y="150" text-anchor="middle" class="encre mono" font-size="11">r = {virgule(gn.correlation)}</text>
+      <text x="170" y="196" text-anchor="middle" class="encre-2" font-size="11">ça bouge ensemble, sans aucun lien direct</text>
+      <text x="12" y={H - 8} class="encre-2" font-size="11">{gn.journees} journées simulées par le notebook</text>
+    </svg>
+    <p class="discret">Une corrélation dit « ça bouge ensemble », jamais « l'un cause l'autre ».</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Graphique trompeur · l'axe tronqué</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="tp2-t">
+      <title id="tp2-t">Les mêmes abonnés, axe de 1000 à 1080 puis axe de 0 à 1200</title>
+      <text x="12" y="16" class="encre" font-size="13" font-weight="700">Les mêmes six mois d'abonnés</text>
+      <text x="22" y="40" class="encre" font-size="11" font-weight="700">axe de 1000 à 1080</text>
+      <text x="186" y="40" class="encre" font-size="11" font-weight="700">axe de 0 à 1200</text>
+      {barres(22, 1000, 1080).map((r) => <rect x={r.x} y={r.y} width="16" height={r.h} class="plein" />)}
+      {barres(186, 0, 1200).map((r) => <rect x={r.x} y={r.y} width="16" height={r.h} class="fond-3 plein-trait" stroke-width="1" />)}
+      <line x1="18" x2="152" y1="168" y2="168" class="plein-trait" stroke-width="1" />
+      <line x1="182" x2="316" y1="168" y2="168" class="plein-trait" stroke-width="1" />
+      <text x="22" y="186" class="encre-2" font-size="11">« la chaîne explose ! »</text>
+      <text x="186" y="186" class="encre-2" font-size="11">« + {virgule(ab.hausse.toFixed(0))} % en six mois »</text>
+      <text x="12" y={H - 8} class="encre-2" font-size="11">de {ab.valeurs[0]} à {ab.valeurs[5]} abonnés, de janvier à juin</text>
+    </svg>
+    <p class="discret">Pour des barres, l'axe vertical part de zéro ; sinon le dessin invente l'écart.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Biais · l'échantillon mal choisi</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="tp3-t">
+      <title id="tp3-t">Part de joueurs : vraie, sondage au hasard, sondage devant un magasin de jeux vidéo</title>
+      <text x="12" y="16" class="encre" font-size="13" font-weight="700">Combien de gens jouent aux jeux vidéo ?</text>
+      {[
+        { mot: "la vraie part", v: so.vraiePart, cls: "fond-3 plein-trait" },
+        { mot: "100 personnes au hasard", v: so.auHasard, cls: "fond-3 plein-trait" },
+        { mot: "100 devant le magasin", v: so.devantMagasin, cls: "plein" },
+      ].map((l, i) => (
+        <g>
+          <text x="12" y={52 + i * 52} class="encre" font-size="12">{l.mot}</text>
+          <rect x="12" y={60 + i * 52} width={2.8 * l.v} height="20" class={l.cls} stroke-width="1" />
+          <text x={20 + 2.8 * l.v} y={75 + i * 52} class="encre mono" font-size="12" font-weight="700">{virgule(l.v)} %</text>
+        </g>
+      ))}
+      <text x="12" y={H - 8} class="encre-2" font-size="11">{so.personnes} personnes simulées par le notebook</text>
+    </svg>
+    <p class="discret">Un chiffre précis, calculé sur les mauvaises personnes, reste faux.</p>
+  </article>
+</GrilleCartes>

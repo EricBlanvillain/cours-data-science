@@ -1,0 +1,80 @@
+---
+/**
+ * Les trois indices de l'analyse exploratoire (notebook 05, sections 2 à 4), sur les vraies données (src/data/analyse.ts) :
+ * une tendance (nuage de Tips et sa droite), une anomalie (boîte à moustaches des HP), une corrélation (la matrice des six
+ * stats, la paire la plus liée en plein, la moins liée en pointillés). Trois cartes de la primitive, comme TroisGraphiques.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { pointsTips, tendanceTips as t, boiteHP as b, hpHorsLimite, hpSous, hpRecord, stats, correlations, pairePlusCorrelee, paireMoinsCorrelee } from "../../data/analyse";
+
+const W = 340, H = 240, L = 40, R = 12, T = 28, B = 42;
+const sx = (v: number, max: number) => L + (v / max) * (W - L - R);
+const sy = (v: number, max: number) => T + (1 - v / max) * (H - T - B);
+const virgule = (n: number) => String(n).replace(".", ",");
+/* boîte à moustaches horizontale, HP de 0 à 260 */
+const bx = (v: number) => 20 + (v / 260) * (W - 40);
+const BY = 118;
+/* matrice : triangle inférieur */
+const courts = ["HP", "Att", "Déf", "AtS", "DéS", "Vit"];
+const ML = 58, MT = 46, C = 44, CH = 26;
+const idx = (n: string) => stats.indexOf(n);
+const estMax = (i: number, j: number) => (i === idx(pairePlusCorrelee.a) && j === idx(pairePlusCorrelee.b)) || (i === idx(pairePlusCorrelee.b) && j === idx(pairePlusCorrelee.a));
+const estMin = (i: number, j: number) => (i === idx(paireMoinsCorrelee.a) && j === idx(paireMoinsCorrelee.b)) || (i === idx(paireMoinsCorrelee.b) && j === idx(paireMoinsCorrelee.a));
+---
+<GrilleCartes bandes={3} liste={false} class="large" min="15rem">
+  <article class="carte">
+    <p class="etiquette">Tendance · une direction générale</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="ti1-t">
+      <title id="ti1-t">Pourboire selon l'addition, 244 additions, avec la droite de tendance</title>
+      <text x={L} y="16" class="encre" font-size="13" font-weight="700">Plus l'addition monte, plus le pourboire suit</text>
+      {[0, 5, 10].map((v) => <g><line x1={L} x2={W - R} y1={sy(v, 10)} y2={sy(v, 10)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 5} y={sy(v, 10) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text></g>)}
+      {[0, 25, 50].map((v) => <text x={sx(v, 52)} y={H - B + 14} text-anchor="middle" class="encre-2 mono" font-size="11">{v}</text>)}
+      {pointsTips.map(([a, p]) => <circle cx={sx(a, 52)} cy={sy(p, 10)} r="2" class="plein" opacity="0.4" />)}
+      <line x1={sx(3, 52)} y1={sy(t.ordonnee + t.pente * 3, 10)} x2={sx(51, 52)} y2={sy(t.ordonnee + t.pente * 51, 10)} class="plein-trait" stroke-width="2" />
+      <text x={L} y={H - 8} class="encre-2" font-size="11">horizontal : addition ($) · vertical : pourboire ($)</text>
+    </svg>
+    <p class="discret">Un peu plus de 10 centimes de pourboire par dollar d'addition ; corrélation {virgule(t.correlation)}.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Anomalie · une valeur qui sort du lot</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="ti2-t">
+      <title id="ti2-t">Boîte à moustaches des points de vie des 800 Pokémon</title>
+      <text x="20" y="16" class="encre" font-size="13" font-weight="700">Points de vie des 800 Pokémon</text>
+      <line x1={bx(b.moustacheBasse)} x2={bx(b.q1)} y1={BY} y2={BY} class="plein-trait" stroke-width="1.5" />
+      <line x1={bx(b.q3)} x2={bx(b.moustacheHaute)} y1={BY} y2={BY} class="plein-trait" stroke-width="1.5" />
+      <line x1={bx(b.moustacheBasse)} x2={bx(b.moustacheBasse)} y1={BY - 10} y2={BY + 10} class="plein-trait" stroke-width="1.5" />
+      <line x1={bx(b.moustacheHaute)} x2={bx(b.moustacheHaute)} y1={BY - 10} y2={BY + 10} class="plein-trait" stroke-width="1.5" />
+      <rect x={bx(b.q1)} y={BY - 22} width={bx(b.q3) - bx(b.q1)} height="44" class="fond-3 plein-trait" stroke-width="1.5" />
+      <line x1={bx(b.mediane)} x2={bx(b.mediane)} y1={BY - 22} y2={BY + 22} class="plein-trait" stroke-width="2.5" />
+      {hpHorsLimite.map((v, i) => <circle cx={bx(v)} cy={BY + ((i % 3) - 1) * 7} r="3" class="plein" opacity="0.7" />)}
+      <circle cx={bx(hpSous.hp)} cy={BY} r="3" class="plein" opacity="0.7" />
+      <text x={bx(b.q1)} y={BY - 30} text-anchor="middle" class="encre-2 mono" font-size="10.5">{b.q1}</text>
+      <text x={bx(b.mediane)} y={BY - 30} text-anchor="middle" class="encre mono" font-size="10.5" font-weight="700">{b.mediane}</text>
+      <text x={bx(b.q3)} y={BY - 30} text-anchor="middle" class="encre-2 mono" font-size="10.5">{b.q3}</text>
+      <text x={bx(b.limiteHaute)} y={BY + 38} text-anchor="middle" class="encre-2 mono" font-size="10.5">limite {b.limiteHaute}</text>
+      <text x={bx(hpRecord.hp)} y={BY - 16} text-anchor="end" class="encre" font-size="11" font-weight="600">{hpRecord.nom} {hpRecord.hp}</text>
+      <text x="20" y={BY + 64} class="encre-2" font-size="11">la boîte : la moitié centrale, de {b.q1} à {b.q3}</text>
+      <text x="20" y={BY + 80} class="encre-2" font-size="11">au-delà de {b.limiteHaute} (= {b.q3} + 1,5 × {b.q3 - b.q1}) : {b.auDessus} Pokémon</text>
+      <text x="20" y={H - 8} class="encre-2" font-size="11">horizontal : points de vie (HP), de 0 à 260</text>
+    </svg>
+    <p class="discret">{b.auDessus} Pokémon au-delà de la limite, jusqu'à {hpRecord.nom} ; pas des erreurs, des histoires à raconter.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Corrélation · deux colonnes qui bougent ensemble</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="ti3-t">
+      <title id="ti3-t">Corrélations entre les six stats des Pokémon</title>
+      <text x="12" y="16" class="encre" font-size="13" font-weight="700">Corrélations entre les six stats</text>
+      {courts.map((c, j) => <text x={ML + j * C + C / 2} y={MT - 8} text-anchor="middle" class="encre-2 mono" font-size="10.5">{c}</text>)}
+      {courts.map((c, i) => <text x={ML - 8} y={MT + i * CH + 17} text-anchor="end" class="encre-2 mono" font-size="10.5">{c}</text>)}
+      {correlations.map((ligne, i) => ligne.map((r, j) => j > i ? null : (
+        <g>
+          <rect x={ML + j * C + 1} y={MT + i * CH + 1} width={C - 2} height={CH - 2} class={estMax(i, j) ? "plein" : i === j ? "fond-3" : "fond-2"} stroke-width={estMin(i, j) ? 1.5 : 0} stroke-dasharray={estMin(i, j) ? "3 2" : undefined} stroke={estMin(i, j) ? "var(--encre)" : undefined} />
+          <text x={ML + j * C + C / 2} y={MT + i * CH + 17} text-anchor="middle" class={(estMax(i, j) ? "sur-plein" : i === j ? "encre-2" : "encre") + " mono"} font-size="11" font-weight={estMax(i, j) ? "700" : "400"}>{i === j ? "1" : virgule(r.toFixed(2))}</text>
+        </g>
+      )))}
+      <text x="12" y={H - 22} class="encre-2" font-size="11">de −1 (sens opposés) à +1 (toujours ensemble) ; 0 : aucun lien</text>
+      <text x="12" y={H - 8} class="encre-2" font-size="11">Att attaque, Déf défense, AtS / DéS spéciales, Vit vitesse</text>
+    </svg>
+    <p class="discret">La plus forte : attaque et défense spéciales, {virgule(pairePlusCorrelee.r.toFixed(2))}. La plus faible : défense et vitesse, {virgule(paireMoinsCorrelee.r.toFixed(2))}.</p>
+  </article>
+</GrilleCartes>

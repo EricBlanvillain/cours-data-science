@@ -1,0 +1,88 @@
+---
+numero: 5
+titre: Analyser et raconter
+niveau: ⭐⭐
+duree: 1 h 30
+resume: "L'analyse exploratoire comme une enquête : repérer une tendance, une anomalie, une corrélation, déjouer trois pièges, puis construire un mini-dashboard et le présenter à un client en deux minutes."
+livrable: Un mini-dashboard présenté à voix haute en 2 minutes, comme devant un client.
+objectifs:
+  - Tu sauras repérer une tendance, une anomalie et une corrélation, avec le graphique qui montre chacune.
+  - Tu sauras reconnaître trois pièges, une corrélation lue comme une cause, un graphique trompeur, un échantillon biaisé.
+  - Tu sauras assembler un tableau de bord Plotly et le présenter en trois temps, constat, preuve, recommandation.
+aRetenir:
+  - Une analyse commence par des questions précises, auxquelles les colonnes du tableau peuvent répondre.
+  - Tendance, nuage de points et droite ; anomalie, boîte à moustaches ; corrélation, corr et heatmap.
+  - Une corrélation dit que deux choses bougent ensemble, jamais que l'une cause l'autre.
+  - Un axe tronqué invente un écart, un échantillon biaisé donne un chiffre précis et faux.
+  - Un tableau de bord répond aux questions d'un client ; le pitch dit le constat, la preuve, la recommandation.
+---
+import TroisIndices from "../../components/schemas/TroisIndices.astro";
+import TroisPieges from "../../components/schemas/TroisPieges.astro";
+import TableauDeBord from "../../components/schemas/TableauDeBord.astro";
+import QuelPiege from "../../components/islands/QuelPiege";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Une enquête, trois indices
+
+Un tableau de 800 lignes ne dit rien à personne. L'analyse exploratoire, c'est faire connaissance avec les données avant de conclure : on regarde tout, on note ce qui est bizarre.
+
+<TroisIndices />
+
+<details>
+<summary>La règle des 1,5 écarts</summary>
+
+On mesure l'écart entre le premier quart des valeurs et le troisième : pour les HP, de 50 à 80, soit 30. Tout ce qui dépasse le troisième quart de plus d'une fois et demie cet écart est suspect : au-delà de 80 + 45 = 125. Même chose par le bas : Shedinja, avec 1 HP, sort aussi de la boîte.
+
+Une anomalie n'est pas forcément une erreur. Blissey a vraiment 255 HP : c'est souvent la chose la plus intéressante à raconter.
+
+</details>
+
+## Trois pièges
+
+Une corrélation, un graphique et un échantillon peuvent tous raconter une histoire fausse avec des chiffres justes.
+
+<TroisPieges />
+
+<QuelPiege client:load />
+
+## Un tableau de bord
+
+Plotly rend chaque graphique interactif : on survole un point, on zoome, on masque une catégorie en cliquant sur la légende. Assemblés, trois graphiques font un tableau de bord.
+
+<TableauDeBord />
+
+```python
+fig = px.scatter(tips, x="total_bill", y="tip", color="day", size="size")
+fig.show()
+```
+
+<details>
+<summary>Et Streamlit ?</summary>
+
+Streamlit transforme un script Python en page web avec des menus et des boutons, sans écrire de HTML. Il ne tourne pas directement dans Colab, car il lui faut un serveur web : sur ton ordinateur, on l'installe avec `pip install streamlit`, on écrit `app.py`, puis on lance `streamlit run app.py`. À chaque clic, Streamlit relance le script et met la page à jour. Le notebook en montre un exemple à lire.
+
+</details>
+
+## Raconter en deux minutes
+
+Ton client n'a pas le temps : trois graphiques, deux minutes, trois temps.
+
+| Temps | Ce que tu dis | Sur Tips |
+|---|---|---|
+| Constat, 20 s | Ce que tu as trouvé, en une phrase avec un chiffre | Le dimanche soir, le pourboire moyen atteint 3,26 $, près de 9 % au-dessus de la moyenne. |
+| Preuve, 60 s | Le graphique qui le montre, et comment le lire | Les barres du pourboire moyen par jour et par moment. |
+| Recommandation, 40 s | Ce que le client peut faire demain | Mettre les meilleurs serveurs le dimanche soir. |
+
+### À toi : ton dashboard et ton pitch
+
+Choisis ton client : le patron du restaurant avec Tips, le créateur d'un jeu avec les Pokémon, ou quelqu'un d'autre avec ton dataset de la séance 2. Tu as 20 minutes.
+
+- **Trois questions précises** qui l'intéressent, et pour chacune un graphique Plotly dont le titre donne la réponse.
+- **Un tableau de bord** qui les assemble, puis la vérification des trois pièges : axe à zéro, cause ou corrélation, échantillon.
+- **Ton pitch** en trois temps, prêt à être dit à voix haute.
+
+<BoutonsSeance dossier="seance-05-analyser-raconter" lecon="05_analyser_raconter.ipynb" exercices="05_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `05_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il ajoute un troisième jeu de données, le catalogue Netflix, et finit par un pitch pour son responsable.

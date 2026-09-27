@@ -41,8 +41,10 @@ const PAGES = [
   { page: "lecons/seance-03-sql-et-git.html", id: "seance-3-quelle-commande-juste", pilote: `const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);` },
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "seance-4", pilote: "" },
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "seance-4-vides-juste", pilote: `const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300); btn(g, "Garder").click(); await w(300);` },
+  { page: "lecons/seance-05-analyser-raconter.html", id: "seance-5", pilote: "" },
+  { page: "lecons/seance-05-analyser-raconter.html", id: "seance-5-piege-juste", pilote: `const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Causalité").click(); await w(300);` },
 ];
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.
