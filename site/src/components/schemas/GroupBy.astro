@@ -1,0 +1,67 @@
+---
+/**
+ * groupby en une image : « quel type est le plus puissant ? ». Six Pokémon mélangés, rangés en tas par type, une moyenne
+ * par tas, puis le classement. Les moyennes sont celles des 800 Pokémon du CSV (src/data/pokemon.ts), pas des six exemples.
+ */
+import { exempleGroupby, moyennesExemple, totalMoyenParType } from "../../data/pokemon";
+const types = ["Dragon", "Fire", "Bug"];
+const rang = (t: string) => totalMoyenParType.findIndex((x) => x.type === t) + 1;
+const couleur = (t: string) => (t === "Dragon" ? "plein" : t === "Fire" ? "fond-3 plein-trait" : "fond-2 trait");
+const texte = (t: string) => (t === "Dragon" ? "sur-plein" : "encre");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 920 330" role="img" aria-labelledby="gb-titre gb-desc">
+    <title id="gb-titre">groupby : des tas par type, une moyenne par tas, un classement</title>
+    <desc id="gb-desc">Six Pokémon mélangés sont regroupés en trois tas selon leur type, Dragon, Feu, Insecte ; on calcule la moyenne du Total de chaque tas, puis on classe : Dragon premier avec 550,5, Feu 458,1, Insecte dernier avec 378,9.</desc>
+
+    <g class="encre" font-size="16" font-weight="700">
+      <text x="120" y="30" text-anchor="middle">1. les lignes, mélangées</text>
+      <text x="460" y="30" text-anchor="middle">2. un tas par type</text>
+      <text x="790" y="30" text-anchor="middle">3. une moyenne par tas</text>
+    </g>
+    <g class="encre-2 mono" font-size="12">
+      <text x="120" y="50" text-anchor="middle">df</text>
+      <text x="460" y="50" text-anchor="middle">.groupby("Type 1")</text>
+      <text x="790" y="50" text-anchor="middle">["Total"].mean()</text>
+    </g>
+
+    {/* 1. six lignes mélangées */}
+    {exempleGroupby.map((p, i) => (
+      <g>
+        <rect x="20" y={66 + i * 36} width="200" height="28" class={couleur(p.type)} stroke-width="1.5" />
+        <text x="30" y={85 + i * 36} class={texte(p.type)} font-size="13">{p.nom}</text>
+        <text x="128" y={85 + i * 36} class={texte(p.type) + " mono"} font-size="12">{p.type}</text>
+        <text x="214" y={85 + i * 36} text-anchor="end" class={texte(p.type) + " mono"} font-size="12">{p.total}</text>
+      </g>
+    ))}
+
+    {/* flèches */}
+    <g class="trait" stroke-width="2" fill="none"><path d="M240 170 H300" /><path d="M300 165 L312 170 L300 175" /><path d="M610 170 H670" /><path d="M670 165 L682 170 L670 175" /></g>
+
+    {/* 2. trois tas */}
+    {types.map((t, k) => (
+      <g>
+        <text x="330" y={80 + k * 82} class="encre mono" font-size="12.5" font-weight="700">{t}</text>
+        {exempleGroupby.filter((p) => p.type === t).map((p, i) => (
+          <g>
+            <rect x="330" y={88 + k * 82 + i * 30} width="260" height="24" class={couleur(t)} stroke-width="1.5" />
+            <text x="338" y={105 + k * 82 + i * 30} class={texte(t)} font-size="12.5">{p.nom}</text>
+            <text x="582" y={105 + k * 82 + i * 30} text-anchor="end" class={texte(t) + " mono"} font-size="12">{p.total}</text>
+          </g>
+        ))}
+      </g>
+    ))}
+
+    {/* 3. moyenne et rang, sur tous les Pokémon du type */}
+    {types.map((t, k) => (
+      <g>
+        <rect x="700" y={88 + k * 82} width="200" height="54" class={couleur(t)} stroke-width="1.5" />
+        <text x="712" y={110 + k * 82} class={texte(t)} font-size="13" font-weight="700">{t}</text>
+        <text x="888" y={110 + k * 82} text-anchor="end" class={texte(t) + " mono"} font-size="15" font-weight="700">{String(moyennesExemple[t as keyof typeof moyennesExemple]).replace(".", ",")}</text>
+        <text x="712" y={131 + k * 82} class={texte(t)} font-size="11.5">{rang(t)}{rang(t) === 1 ? "er" : "e"} sur 18 types · {totalMoyenParType.find((x) => x.type === t)?.n} Pokémon</text>
+      </g>
+    ))}
+    <text x="460" y="318" text-anchor="middle" class="encre-2" font-size="12.5">Une ligne de code, une réponse : le type le plus puissant est Dragon.</text>
+  </svg>
+  <figcaption>Regrouper, c'est faire des tas puis calculer une chose par tas.</figcaption>
+</figure>

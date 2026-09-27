@@ -1,0 +1,59 @@
+---
+/**
+ * Trois petits graphiques SVG, écrits à la main, sur les vraies données (src/data/pokemon.ts) : barres (comparer des
+ * catégories), nuage de points (un lien entre deux nombres ?), histogramme (comment une valeur se répartit). Chacun a un
+ * titre et des axes, parce qu'un graphique sans titre ni axes ne répond à aucune question. Trois cartes de la primitive.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { totalMoyenParType, nuage, histogrammeVitesse, correlationAttaqueDefense } from "../../data/pokemon";
+
+const W = 340, H = 240, L = 44, R = 12, T = 30, B = 40;
+const sx = (v: number, min: number, max: number) => L + ((v - min) / (max - min)) * (W - L - R);
+const sy = (v: number, min: number, max: number) => T + (1 - (v - min) / (max - min)) * (H - T - B);
+
+/* barres : les 18 types, du plus fort au plus faible ; on annote le premier et le dernier */
+const barres = totalMoyenParType; const bMax = 600; const bw = (W - L - R) / barres.length;
+/* nuage : 800 points, axes 0-200 */
+const nMax = 200;
+/* histogramme : 20 classes de vitesse */
+const h = histogrammeVitesse; const hMax = 120; const hw = (W - L - R) / h.effectifs.length;
+---
+<GrilleCartes bandes={3} liste={false} class="large" min="15rem">
+  <article class="carte">
+    <p class="etiquette">Barres · comparer des catégories</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="g1-t">
+      <title id="g1-t">Total moyen par type, 18 types du plus fort au plus faible</title>
+      <text x={L} y="16" class="encre" font-size="13" font-weight="700">Puissance moyenne par type</text>
+      {[0, 200, 400, 600].map((v) => <g><line x1={L} x2={W - R} y1={sy(v, 0, bMax)} y2={sy(v, 0, bMax)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 5} y={sy(v, 0, bMax) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text></g>)}
+      {barres.map((b, i) => <rect x={L + i * bw + 1} y={sy(b.moyenne, 0, bMax)} width={bw - 2} height={sy(0, 0, bMax) - sy(b.moyenne, 0, bMax)} class={i === 0 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />)}
+      <text x={L + bw / 2} y={sy(barres[0].moyenne, 0, bMax) - 6} text-anchor="start" class="encre" font-size="11" font-weight="600">{barres[0].type} {String(barres[0].moyenne).replace(".", ",")}</text>
+      <text x={L + (barres.length - 0.5) * bw} y={sy(barres[barres.length - 1].moyenne, 0, bMax) - 6} text-anchor="end" class="encre" font-size="11">{barres[barres.length - 1].type} {String(barres[barres.length - 1].moyenne).replace(".", ",")}</text>
+      <text x={L} y={H - 22} class="encre-2" font-size="11">18 types, du plus fort au plus faible</text>
+      <text x={L} y={H - 8} class="encre-2" font-size="11">axe vertical : Total moyen (somme des six stats)</text>
+    </svg>
+    <p class="discret">Quel type est le plus puissant ? Dragon, loin devant ; Insecte ferme la marche.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Nuage de points · un lien entre deux nombres ?</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="g2-t">
+      <title id="g2-t">Attaque contre défense, un point par Pokémon</title>
+      <text x={L} y="16" class="encre" font-size="13" font-weight="700">Attaque et défense, 800 Pokémon</text>
+      {[0, 50, 100, 150, 200].map((v) => <g><line x1={L} x2={W - R} y1={sy(v, 0, nMax)} y2={sy(v, 0, nMax)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 5} y={sy(v, 0, nMax) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text><text x={sx(v, 0, nMax)} y={H - B + 14} text-anchor="middle" class="encre-2 mono" font-size="11">{v}</text></g>)}
+      {nuage.map(([a, d]) => <circle cx={sx(Math.min(a, nMax), 0, nMax)} cy={sy(Math.min(d, nMax), 0, nMax)} r="1.8" class="plein" opacity="0.45" />)}
+      <text x={L} y={H - 8} class="encre-2" font-size="11">horizontal : attaque · vertical : défense</text>
+    </svg>
+    <p class="discret">Les Pokémon forts en attaque sont-ils solides en défense ? Un peu : le nuage monte, sans s'aligner (corrélation {String(correlationAttaqueDefense).replace(".", ",")}).</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Histogramme · comment une valeur se répartit</p>
+    <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="g3-t">
+      <title id="g3-t">Répartition de la vitesse en 20 classes</title>
+      <text x={L} y="16" class="encre" font-size="13" font-weight="700">Répartition de la vitesse</text>
+      {[0, 40, 80, 120].map((v) => <g><line x1={L} x2={W - R} y1={sy(v, 0, hMax)} y2={sy(v, 0, hMax)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 5} y={sy(v, 0, hMax) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text></g>)}
+      {h.effectifs.map((n, i) => <rect x={L + i * hw + 0.5} y={sy(n, 0, hMax)} width={hw - 1} height={sy(0, 0, hMax) - sy(n, 0, hMax)} class="fond-3 plein-trait" stroke-width="1" />)}
+      {[0, 5, 10, 15, 20].map((i) => <text x={L + i * hw} y={H - B + 14} text-anchor="middle" class="encre-2 mono" font-size="11">{Math.round(h.bornes[i])}</text>)}
+      <text x={L} y={H - 8} class="encre-2" font-size="11">horizontal : vitesse · vertical : nombre de Pokémon</text>
+    </svg>
+    <p class="discret">Comment la vitesse se répartit-elle ? Une bosse entre 40 et 110, et quelques fusées au-delà de 150.</p>
+  </article>
+</GrilleCartes>

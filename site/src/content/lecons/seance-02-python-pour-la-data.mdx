@@ -1,0 +1,89 @@
+---
+numero: 2
+titre: Python pour la data
+niveau: ⭐
+duree: 1 h 30
+resume: "Rappels Python, puis un tableau de 800 Pokémon dans pandas : filtrer, trier, compter, regrouper, et trois graphiques qui répondent chacun à une question."
+livrable: Un notebook avec 3 questions posées sur un dataset et 3 graphiques qui y répondent, poussé sur GitHub à la séance 3.
+objectifs:
+  - Tu sauras lire un DataFrame avec head, shape et describe, et dire ce qu'est une ligne, une colonne, un index.
+  - Tu sauras filtrer, trier, compter et regrouper un tableau en une ligne de pandas chacune.
+  - Tu sauras choisir entre barres, nuage de points et histogramme selon la question posée.
+aRetenir:
+  - Un CSV est du texte avec des virgules ; pandas en fait un DataFrame, un tableau qu'on interroge.
+  - Trois réflexes devant un tableau inconnu, head(), shape, describe().
+  - Cinq verbes, filtrer, combiner, trier, compter, regrouper, une ligne chacun.
+  - groupby fait des tas par catégorie, puis calcule une chose par tas.
+  - Un graphique répond à une question, et il a toujours un titre et des axes.
+---
+import CsvVsDataFrame from "../../components/schemas/CsvVsDataFrame.astro";
+import GroupBy from "../../components/schemas/GroupBy.astro";
+import TroisGraphiques from "../../components/schemas/TroisGraphiques.astro";
+import QuelGraphique from "../../components/islands/QuelGraphique";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Un CSV, c'est du texte
+
+Le notebook charge 800 Pokémon depuis un fichier CSV. Ouvre-le dans un éditeur de texte avant pandas : ce n'est que du texte, avec des virgules.
+
+<CsvVsDataFrame />
+
+Devant n'importe quel tableau, trois réflexes, dans cet ordre :
+
+```python
+df.head()        # les 5 premières lignes
+df.shape         # (800, 13) : 800 lignes, 13 colonnes
+df.describe()    # min, max, moyenne de chaque colonne de nombres : vitesse max 180
+```
+
+<details>
+<summary>Les rappels Python en une carte</summary>
+
+Tout ce dont on a besoin en data tient en quatre briques.
+
+```python
+vitesses = [45, 65, 43, 90, 110]                          # liste : plusieurs valeurs dans l'ordre
+pikachu = {"nom": "Pikachu", "type": "Electric", "vitesse": 90}   # dictionnaire : clé → valeur, une fiche
+for v in vitesses: print(v)                               # boucle : on passe sur chaque valeur
+def moyenne(liste): return sum(liste) / len(liste)       # fonction : une recette réutilisable
+```
+
+Une liste de dictionnaires, c'est déjà presque un tableau : pandas fait le reste.
+
+</details>
+
+## Cinq verbes
+
+Un verbe, une cellule exécutée, une question posée au groupe. Le tableau sert de fiche à retrouver ensuite.
+
+| Verbe | La question qu'il pose | La ligne pandas | Exemple Pokémon |
+|---|---|---|---|
+| Filtrer | Lesquels respectent une condition ? | `df[df["Type 1"] == "Fire"]` | 52 Pokémon de type Feu |
+| Combiner | Deux conditions à la fois ? | `df[(df["Speed"] > 100) & (df["Attack"] > 100)]` | 38 rapides et forts |
+| Trier | Qui est premier ? | `df.sort_values("Speed", ascending=False)` | DeoxysSpeed Forme, 180 de vitesse |
+| Compter | Combien de chaque ? | `df["Type 1"].value_counts()` | Water, 112 Pokémon |
+| Regrouper | Une moyenne par catégorie ? | `df.groupby("Type 1")["Total"].mean()` | Dragon, 550,5 en moyenne |
+
+## Regrouper
+
+La question du jour : quel type est le plus puissant ?
+
+<GroupBy />
+
+## Un graphique répond à une question
+
+Pas de graphique sans titre ni axes : sans eux, personne ne sait à quelle question il répond.
+
+<TroisGraphiques />
+
+<QuelGraphique client:load />
+
+### À toi : 3 questions, 3 graphiques
+
+Ton premier projet de portfolio, en 25 minutes. Choisis trois questions qui t'intéressent vraiment sur les Pokémon ; pour chacune, une cellule de calcul, un graphique qui y répond, et la réponse en une phrase sous le graphique. Si tu bloques sur la syntaxe, demande le squelette de la ligne, pas la réponse.
+
+<BoutonsSeance dossier="seance-02-python-pour-la-data" lecon="02_python_pour_la_data.ipynb" exercices="02_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `02_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il s'ouvre par un quiz de trois questions, celles qu'on se pose à voix haute au début de la séance suivante.

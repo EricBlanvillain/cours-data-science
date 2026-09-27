@@ -11,6 +11,8 @@ export default defineConfig({
   output: "static",
   build: { format: "file" },
   trailingSlash: "never",
+  // Pas de coloration syntaxique : un bloc de code se lit en mono, encre sur fond-3, dans les deux thèmes (l'audit le mesure).
+  markdown: { syntaxHighlight: false },
   integrations: [react(), mdx()],
   vite: { plugins: [tailwindcss()] },
 });

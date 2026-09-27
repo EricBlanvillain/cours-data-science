@@ -59,4 +59,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "L'architecture et les données sont fixées avant. Apprendre, c'est régler les poids : à chaque exemple raté, on les décale un peu, des millions de fois, jusqu'à ce que la sortie colle aux exemples.",
     },
   ],
+  2: [
+    {
+      question: "Le notebook affiche (800, 13) quand tu tapes df.shape. Ça veut dire quoi ?",
+      options: ["800 colonnes et 13 lignes", "800 lignes et 13 colonnes", "800 Pokémon dont 13 légendaires", "Une erreur : il manque une colonne"],
+      bonne: 1,
+      explication: "shape donne toujours (lignes, colonnes) dans cet ordre. 800 Pokémon, 13 mesures par Pokémon. Les légendaires, eux, sont 65 : ça se compte avec un filtre, pas avec shape.",
+    },
+    {
+      question: "Tu veux savoir quel type de Pokémon a la meilleure vitesse moyenne. Quelle ligne ?",
+      options: ["df.sort_values(\"Speed\")", "df[\"Type 1\"].value_counts()", "df.groupby(\"Type 1\")[\"Speed\"].mean()", "df[df[\"Speed\"] > 100]"],
+      bonne: 2,
+      explication: "« Par type » appelle groupby : un tas par type, puis la moyenne de la vitesse dans chaque tas. Trier donne les Pokémon un par un, value_counts compte les types, le filtre garde les rapides sans les regrouper.",
+    },
+    {
+      question: "« Les Pokémon rapides sont-ils fragiles ? » Quel graphique ?",
+      options: ["Des barres", "Un nuage de points", "Un histogramme", "Un camembert"],
+      bonne: 1,
+      explication: "Deux nombres par Pokémon, vitesse et défense : un point chacun. Si le nuage descendait nettement, les rapides seraient fragiles. Des barres comparent des catégories, un histogramme regarde une seule valeur.",
+    },
+    {
+      question: "Un graphique en barres, sans titre ni nom d'axe, montre trois barres de hauteurs différentes. Que peut-on en conclure ?",
+      options: ["Que la première catégorie est la meilleure", "Que les données sont fausses", "Rien : on ne sait ni ce qui est compté, ni dans quelle unité", "Qu'il faut plus de barres"],
+      bonne: 2,
+      explication: "Sans titre ni axes, on ne sait pas à quelle question le graphique répond, ni ce que mesure la hauteur. C'est la règle de la séance : pas de graphique sans titre ni axes.",
+    },
+  ],
 };

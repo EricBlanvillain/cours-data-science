@@ -1,0 +1,48 @@
+---
+/**
+ * Un CSV, c'est du texte : à gauche les premières lignes brutes du fichier Pokémon (virgules comprises), à droite les mêmes
+ * lignes lues par pandas, avec les quatre mots à connaître : en-tête, ligne, colonne, index. Données : src/data/pokemon.ts.
+ */
+import { head3 } from "../../data/pokemon";
+const cols = ["#", "Name", "Type 1", "Type 2", "Total", "HP", "Attack"];
+const brut = [cols.join(","), ...head3.map((r) => cols.map((c) => String((r as Record<string, unknown>)[c])).join(","))];
+const L = 40, X2 = 470, LARG = [30, 96, 66, 66, 56, 44, 60];
+const xCol = (i: number) => X2 + LARG.slice(0, i).reduce((a, b) => a + b, 0);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="cd-titre cd-desc">
+    <title id="cd-titre">Le même fichier, en texte brut et en DataFrame</title>
+    <desc id="cd-desc">À gauche, quatre lignes de texte séparées par des virgules : l'en-tête puis trois Pokémon. À droite, les mêmes données dans un tableau pandas : une ligne par Pokémon, une colonne par mesure, un index de 0 à 2 à gauche.</desc>
+
+    <text x={L} y="34" class="encre" font-size="18" font-weight="700">pokemon.csv, ouvert dans un éditeur de texte</text>
+    <text x={L} y="56" class="encre-2" font-size="13">du texte, des virgules, une ligne par Pokémon</text>
+    <rect x={L - 12} y="72" width="410" height="128" class="fond-3 trait" stroke-width="1.5" />
+    {brut.map((ligne, i) => <text x={L} y={100 + i * 28} class="encre mono" font-size="13.5">{ligne}{i === 0 ? ",…" : ",…"}</text>)}
+    <text x={L} y="232" class="encre-2" font-size="13">→ <tspan class="mono">pd.read_csv(url)</tspan> lit ce texte et fabrique le tableau</text>
+
+    <text x={X2} y="34" class="encre" font-size="18" font-weight="700">df, le DataFrame</text>
+    <text x={X2} y="56" class="encre-2" font-size="13">les mêmes valeurs, rangées et numérotées</text>
+    {/* en-tête */}
+    <rect x={X2 - 28} y="74" width="446" height="26" class="plein" />
+    <text x={X2 - 20} y="92" class="sur-plein mono" font-size="12.5">idx</text>
+    {cols.map((c, i) => <text x={xCol(i) + 4} y="92" class="sur-plein mono" font-size="12.5" font-weight="700">{c}</text>)}
+    {head3.map((r, k) => (
+      <g>
+        <rect x={X2 - 28} y={100 + k * 28} width="446" height="28" class={k % 2 ? "fond-3" : "fond-2"} />
+        <text x={X2 - 20} y={119 + k * 28} class="encre-2 mono" font-size="12.5">{k}</text>
+        {cols.map((c, i) => <text x={xCol(i) + 4} y={119 + k * 28} class="encre mono" font-size="12.5">{String((r as Record<string, unknown>)[c])}</text>)}
+      </g>
+    ))}
+    <line x1={X2 - 28} y1="184" x2={X2 + 418} y2="184" class="trait-fin" stroke-width="1" />
+    {/* les quatre mots */}
+    <g class="encre" font-size="12.5" font-weight="700">
+      <text x={X2 + 60} y="70" text-anchor="middle">en-tête</text>
+      <text x={X2 - 20} y="70" text-anchor="middle">index</text>
+      <text x={xCol(4) + 28} y="202">colonne ↑</text>
+      <text x={X2 + 426} y="147">← ligne</text>
+    </g>
+    <text x={X2} y="232" class="encre-2" font-size="13">800 lignes × 13 colonnes : <tspan class="mono">df.shape</tspan> donne (800, 13)</text>
+    <text x={X2} y="254" class="encre-2" font-size="13">une colonne seule, <tspan class="mono">df["Speed"]</tspan>, est une Series</text>
+  </svg>
+  <figcaption>Le CSV est du texte avec des virgules ; pandas en fait un tableau qu'on interroge.</figcaption>
+</figure>

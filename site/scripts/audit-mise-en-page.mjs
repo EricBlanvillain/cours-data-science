@@ -25,6 +25,7 @@ const DIST = path.join(ROOT, "dist");
 const CHROME = process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const PORT = 4398;
 const LARGEURS = [1280, 1470, 1920];
+const LARGEUR_TELEPHONE = 390;   // simulée par html{width:390px} : le headless ne descend pas sous 500 px
 
 /* Les pages, et pour les leçons les états atteints par clic qui changent une grille. */
 const PAGES = [
@@ -34,8 +35,10 @@ const PAGES = [
   { page: "lecons/seance-00-faire-connaissance.html", id: "seance-0-ecran-4-quiz", pilote: `const r = ile("AccueilSeance0"); for (let i = 0; i < 3; i++) { btn(r, "Suivant").click(); await w(250); }` },
   { page: "lecons/seance-01-introduction-ia.html", id: "seance-1", pilote: "" },
   { page: "lecons/seance-01-introduction-ia.html", id: "seance-1-quiz-repondu", pilote: `const q = ile("ClassifOuRegression"); btn(q, "Combien de vues").click(); await w(300);` },
+  { page: "lecons/seance-02-python-pour-la-data.html", id: "seance-2", pilote: "" },
+  { page: "lecons/seance-02-python-pour-la-data.html", id: "seance-2-quel-graphique-juste", pilote: `const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Barres").click(); await w(300);` },
 ];
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.
@@ -71,7 +74,21 @@ const MESURE = (pilote) => `
   await w(1600);
   try { await (async function () { ${pilote} })(); } catch (e) { erreur = String(e); }
   await w(200);
-  var out = { erreur: erreur, grilles: [], enTete: null, pied: null, proseDebords: [] };
+  var out = { erreur: erreur, grilles: [], enTete: null, pied: null, proseDebords: [], debordsHorizontaux: [] };
+  // 0. au téléphone (largeur simulée) : rien ne dépasse à droite, sauf à l'intérieur d'un conteneur qui défile exprès
+  var largeurPage = document.documentElement.getBoundingClientRect().width;
+  if (largeurPage < window.innerWidth - 1) {
+    // un ancêtre qui défile (overflow-x) ou qui est épinglé à la fenêtre (position: fixed, la barre des écrans) met hors jeu
+    var defile = function (el) { for (var n = el; n && n !== document.body; n = n.parentElement) { var cs2 = getComputedStyle(n); var ov = cs2.overflowX; if (ov === 'auto' || ov === 'scroll' || ov === 'hidden' || cs2.position === 'fixed') return true; } return false; };
+    document.querySelectorAll('body *').forEach(function (el) {
+      if (el.namespaceURI === 'http://www.w3.org/2000/svg' && el.tagName !== 'svg') return;
+      var cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
+      var r = el.getBoundingClientRect(); if (r.width === 0 || r.right <= largeurPage + 1) return;
+      if (defile(el)) return;
+      out.debordsHorizontaux.push({ quoi: el.tagName + (el.className && typeof el.className === 'string' ? '.' + el.className.split(' ')[0] : ''), droite: Math.round(r.right), page: Math.round(largeurPage) });
+    });
+    out.debordsHorizontaux = out.debordsHorizontaux.slice(0, 8);
+  }
 
   // 1. les grilles
   document.querySelectorAll('.grille-cartes').forEach(function (g, gi) {
@@ -125,19 +142,27 @@ const server = http.createServer((req, res) => {
   const p = path.join(DIST, decodeURIComponent(chemin));
   if (!fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { "Content-Type": MIME[path.extname(p)] || "application/octet-stream" });
-  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); res.end(fs.readFileSync(p, "utf8").replace("</body>", MESURE(etat ? etat.pilote : ""))); }
+  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); const sim = new URLSearchParams(query).get("simule"); res.end(fs.readFileSync(p, "utf8").replace("</body>", (sim ? `<style>html{width:${Number(sim)}px}</style>` : "") + MESURE(etat ? etat.pilote : ""))); }
   else fs.createReadStream(p).pipe(res);
 });
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
 
-async function mesurer(etat, largeur) {
+async function mesurer(etat, largeur, simulee) {
   let stdout = "";
-  try { ({ stdout } = await execFileP(CHROME, ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${largeur},900`, "--virtual-time-budget=8000", "--dump-dom", `http://127.0.0.1:${PORT}/${etat.page}?etat=${etat.id}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 60000 })); } catch (e) { stdout = e.stdout || ""; }
+  try { ({ stdout } = await execFileP(CHROME, ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${largeur},900`, "--virtual-time-budget=8000", "--dump-dom", `http://127.0.0.1:${PORT}/${etat.page}?etat=${etat.id}${simulee ? "&simule=" + simulee : ""}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 60000 })); } catch (e) { stdout = e.stdout || ""; }
   const m = stdout.match(/<pre id="__mep">(.*?)<\/pre>/s);
   return m ? JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'")) : null;
 }
 
 let fautes = 0; const lignes = [];
+// Le téléphone d'abord : chaque page à 390 px simulés, aucun débordement horizontal hors des conteneurs qui défilent.
+for (const etat of PAGES) {
+  const res = await mesurer(etat, 500, LARGEUR_TELEPHONE);
+  const ou = `${etat.id} @${LARGEUR_TELEPHONE} (simulé)`;
+  if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
+  if (res.debordsHorizontaux.length) { fautes += res.debordsHorizontaux.length; lignes.push(`${ou} · déborde à droite :\n   !! ${res.debordsHorizontaux.map((d) => d.quoi + " jusqu'à " + d.droite + "px pour " + d.page).join("\n   !! ")}`); }
+  else lignes.push(`${ou.padEnd(40)} rien ne déborde à droite`);
+}
 for (const largeur of LARGEURS) {
   const enTetes = {};
   for (const etat of PAGES) {
@@ -177,5 +202,5 @@ for (const [L, H] of FENETRES) {
 }
 server.close();
 console.log(lignes.join("\n"));
-console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * LARGEURS.length} mesures sur ${LARGEURS.join(", ")} px : grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond, écrans de la séance 0 dans 1440 × 900${fautes ? ` · ${fautes} faute(s)` : ""}`);
+console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * (LARGEURS.length + 1)} mesures sur ${LARGEUR_TELEPHONE} (simulé), ${LARGEURS.join(", ")} px : rien ne déborde au téléphone, grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond, écrans de la séance 0 dans 1440 × 900${fautes ? ` · ${fautes} faute(s)` : ""}`);
 process.exit(fautes === 0 ? 0 : 1);

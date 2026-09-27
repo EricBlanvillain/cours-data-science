@@ -126,6 +126,8 @@ strong { font-weight: 600; }
 /* Le mono mesure : code, labels, chiffres, boutons. */
 code, kbd, pre { font-family: var(--font-mono); }
 code { font-size: 0.9em; background: var(--fond-3); padding: 0.08em 0.35em; }
+pre { background: var(--fond-3); color: var(--encre); padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.55; margin: 0; }
+pre code { background: transparent; padding: 0; font-size: inherit; }
 kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-width: 2px; padding: 0 0.4em; }
 
 /* Le conteneur unique : 1360 px sur TOUTES les pages, en-tête, hero, corps et pied, pour que l'en-tête ne bouge pas d'un
@@ -188,6 +190,7 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 .prose td { padding: 0.65rem 0.6rem 0.65rem 0; border-bottom: 1px solid var(--trait); vertical-align: top; }
 .prose td:first-child { font-family: var(--font-serif); font-weight: 600; min-width: 8rem; padding-right: 1rem; }
 .prose.doc > h1 { display: none; }   /* le fichier porte son propre titre ; le hero de la page l'a déjà dit */
+@media (max-width: 720px) { .prose > table { display: block; overflow-x: auto; scrollbar-width: thin; } }   /* au téléphone, une fiche défile */
 
 /* ------------------------------------------------------------------
    Composants partagés

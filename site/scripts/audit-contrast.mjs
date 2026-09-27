@@ -125,6 +125,18 @@ const ETATS = [
       window.theme.appliquer("sombre"); await w(150);` },
   { page: "glossaire.html", id: "glossaire", pilote: "" },
 
+  // La séance 2 : les trois graphiques et le jeu « quel graphique ? » avant réponse, juste, faux.
+  { page: "lecons/seance-02-python-pour-la-data.html", id: "s2-initiale", pilote: "" },
+  { page: "lecons/seance-02-python-pour-la-data.html", id: "s2-quel-graphique-ouvert", pilote: `
+      const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300);
+      if (!g.textContent.includes("question ouverte")) throw new Error("le cuivre « question ouverte » manque");` },
+  { page: "lecons/seance-02-python-pour-la-data.html", id: "s2-quel-graphique-juste", pilote: `
+      const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Barres").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-02-python-pour-la-data.html", id: "s2-quel-graphique-faux", pilote: `
+      const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Histogramme").click(); await w(300);
+      if (!g.textContent.includes("pas celui-là")) throw new Error("réponse fausse non reconnue");` },
+
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `
       const z = ile("Quiz"); z.scrollIntoView(); await w(200);
