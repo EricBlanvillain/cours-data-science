@@ -215,4 +215,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "28 ans est bien l'âge médian du bateau, mais pas celui de chacun. Le titre donne un âge plausible : 3,5 ans pour un Master, 35 pour une Mrs.",
     },
   ],
+  8: [
+    {
+      question: "L'arbre fait 82,3 % ± 2,2, la régression logistique 80,4 % ± 0,7. Lequel est le plus stable d'un paquet à l'autre ?",
+      options: ["L'arbre, parce que sa moyenne est plus haute", "La régression logistique, parce que son écart-type est plus petit", "Les deux se valent", "On ne peut pas savoir"],
+      bonne: 1,
+      explication: "L'écart-type mesure combien le score varie d'un paquet à l'autre. Celui de la logistique bouge de moins d'un point, celui de l'arbre de plus de deux : sa moyenne est plus haute, mais moins sûre.",
+    },
+    {
+      question: "Sans la variable Titre, la forêt passe seulement de 82,7 % à 82,0 %. Pourquoi si peu ?",
+      options: ["Titre ne servait à rien", "Sex et Age portent presque la même information que Titre", "La forêt a ignoré la consigne", "Le score est faux"],
+      bonne: 1,
+      explication: "Un titre dit le sexe et, pour Master ou Miss, l'âge. Quand on le retire, le modèle retrouve l'essentiel dans les colonnes Sex et Age : une variable importante n'est pas forcément irremplaçable.",
+    },
+    {
+      question: "Lequel de ces réglages est un hyperparamètre ?",
+      options: ["Le seuil « nageoire ≤ 206,5 mm » trouvé par un arbre", "max_depth, la profondeur maximale de l'arbre", "Le score de validation croisée", "La colonne Survived"],
+      bonne: 1,
+      explication: "Un hyperparamètre se choisit avant l'entraînement, comme la profondeur maximale. Les seuils des questions, eux, le modèle les apprend tout seul pendant fit.",
+    },
+    {
+      question: "Une grille de 4 profondeurs × 3 tailles de feuille, avec une validation croisée à 5 paquets : combien d'entraînements ?",
+      options: ["12", "15", "20", "60"],
+      bonne: 3,
+      explication: "12 combinaisons, et chacune est entraînée 5 fois, une par paquet : 60 entraînements. C'est pour ça qu'une grille trop grande devient vite lente.",
+    },
+  ],
 };

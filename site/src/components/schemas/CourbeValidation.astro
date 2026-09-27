@@ -1,0 +1,32 @@
+---
+/**
+ * Le sur-apprentissage sur le Titanic : un arbre de profondeur 1 à 15, exactitude sur les données vues (train) et en
+ * validation croisée (src/data/competition.ts), avec les trois zones du notebook.
+ */
+import { courbe } from "../../data/competition";
+const W = 900, H = 290, L = 60, R = 20, T = 30, B = 50, MIN = 75, MAX = 100;
+const sx = (i: number) => L + (i / 14) * (W - L - R);
+const sy = (v: number) => T + (1 - (v - MIN) / (MAX - MIN)) * (H - T - B);
+const chemin = (vals: number[]) => vals.map((v, i) => `${i ? "L" : "M"}${sx(i).toFixed(1)} ${sy(v).toFixed(1)}`).join(" ");
+const fr = (v: number) => String(v).replace(".", ",");
+const m = courbe.meilleure - 1;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox={`0 0 ${W + 60} ${H}`} role="img" aria-labelledby="cv-titre cv-desc">
+    <title id="cv-titre">Plus l'arbre est profond, plus il apprend par cœur</title>
+    <desc id="cv-desc">Exactitude d'un arbre de profondeur 1 à 15. Sur les données vues, elle monte de 78,4 à 97,7 %. En validation, elle monte jusqu'à 82,3 % à la profondeur 4, puis redescend à 77,3 %.</desc>
+    {[75, 80, 85, 90, 95, 100].map((v) => <g><line x1={L} x2={W - R} y1={sy(v)} y2={sy(v)} class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={L - 8} y={sy(v) + 4} text-anchor="end" class="encre-2 mono" font-size="11">{v}</text></g>)}
+    <rect x={sx(m) - 22} y={T} width="44" height={H - T - B} class="fond-3" />
+    <path d={chemin(courbe.train)} class="plein-trait" stroke-width="2.5" fill="none" />
+    <path d={chemin(courbe.validation)} class="plein-trait" stroke-width="2.5" stroke-dasharray="6 4" fill="none" />
+    <text x={sx(14) + 6} y={sy(courbe.train[14]) + 4} class="encre" font-size="12" font-weight="700">vues {fr(courbe.train[14])}</text>
+    <text x={sx(14) + 6} y={sy(courbe.validation[14]) + 4} class="encre" font-size="12">cachées {fr(courbe.validation[14])}</text>
+    <text x={sx(m)} y={sy(courbe.validation[m]) + 22} text-anchor="middle" class="encre" font-size="12" font-weight="700">{fr(courbe.validation[m])} %</text>
+    <text x={sx(0.5)} y={T + 16} text-anchor="middle" class="encre-2" font-size="12">trop simple</text>
+    <text x={sx(m)} y={T + 16} text-anchor="middle" class="encre" font-size="12" font-weight="700">bonne zone</text>
+    <text x={sx(11)} y={T + 16} text-anchor="middle" class="encre-2" font-size="12">par cœur : l'écart se creuse</text>
+    {[1, 4, 8, 12, 15].map((p) => <text x={sx(p - 1)} y={H - B + 16} text-anchor="middle" class="encre-2 mono" font-size="11">{p}</text>)}
+    <text x={L} y={H - 10} class="encre-2" font-size="12">horizontal : profondeur de l'arbre · vertical : exactitude (%) · trait plein : données vues · pointillés : validation</text>
+  </svg>
+  <figcaption>Au-delà de la bonne profondeur, l'arbre gagne sur ce qu'il a vu et perd sur ce qu'il n'a pas vu.</figcaption>
+</figure>

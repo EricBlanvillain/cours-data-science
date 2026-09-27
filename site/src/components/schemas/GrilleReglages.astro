@@ -1,0 +1,35 @@
+---
+/**
+ * GridSearchCV du notebook 08 : les 12 combinaisons de max_depth et min_samples_leaf de la forêt, leur exactitude en
+ * validation croisée, la meilleure en plein (src/data/competition.ts).
+ */
+import { grille as g } from "../../data/competition";
+const X0 = 250, Y0 = 70, C = 110, H = 38;
+const fr = (v: number) => v.toFixed(1).replace(".", ",");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="gr-titre gr-desc">
+    <title id="gr-titre">12 réglages essayés, un gardé</title>
+    <desc id="gr-desc">Une grille : profondeur maximale 3, 5, 7 ou 9, feuille minimale 1, 3 ou 5 passagers. Les scores vont de 82,0 à 82,9 %. Le meilleur : profondeur 5 et feuilles d'au moins 3 passagers, 82,9 %.</desc>
+    <text x={X0 + 1.5 * C} y="28" text-anchor="middle" class="encre" font-size="13" font-weight="700">min_samples_leaf : passagers minimum par feuille</text>
+    {g.feuilles.map((f, j) => <text x={X0 + j * C + C / 2} y={Y0 - 12} text-anchor="middle" class="encre-2 mono" font-size="12">{f}</text>)}
+    <text x={X0 - 110} y={Y0 + 2 * H + 4} text-anchor="middle" class="encre" font-size="13" font-weight="700">max_depth</text>
+    {g.profondeurs.map((p, i) => <text x={X0 - 14} y={Y0 + i * H + 24} text-anchor="end" class="encre-2 mono" font-size="12">{p}</text>)}
+    {g.scores.map((ligne, i) => ligne.map((s, j) => {
+      const best = g.profondeurs[i] === g.meilleur.profondeur && g.feuilles[j] === g.meilleur.feuille;
+      return (
+        <g>
+          <rect x={X0 + j * C + 2} y={Y0 + i * H + 2} width={C - 4} height={H - 4} class={best ? "plein" : (i + j) % 2 ? "fond-3" : "fond-2"} />
+          <text x={X0 + j * C + C / 2} y={Y0 + i * H + 24} text-anchor="middle" class={(best ? "sur-plein" : "encre") + " mono"} font-size="13" font-weight={best ? "700" : "400"}>{fr(s)} %</text>
+        </g>
+      );
+    }))}
+    <text x={X0 + 3 * C + 40} y={Y0 + 20} class="encre" font-size="13" font-weight="700">4 × 3 = 12 combinaisons</text>
+    <text x={X0 + 3 * C + 40} y={Y0 + 40} class="encre-2" font-size="12">× 5 paquets = 60 entraînements</text>
+    <text x={X0 + 3 * C + 40} y={Y0 + 76} class="encre" font-size="13" font-weight="700">meilleur réglage : {fr(g.meilleur.score)} %</text>
+    <text x={X0 + 3 * C + 40} y={Y0 + 96} class="encre-2" font-size="12">profondeur {g.meilleur.profondeur}, feuilles d'au moins {g.meilleur.feuille}</text>
+    <text x={X0 + 3 * C + 40} y={Y0 + 132} class="encre-2" font-size="12">tous entre 82,0 et 82,9 % : régler aide,</text>
+    <text x={X0 + 3 * C + 40} y={Y0 + 148} class="encre-2" font-size="12">mais moins qu'une bonne variable</text>
+  </svg>
+  <figcaption>Un hyperparamètre se choisit avant l'entraînement ; GridSearchCV essaie toutes les combinaisons d'une grille.</figcaption>
+</figure>

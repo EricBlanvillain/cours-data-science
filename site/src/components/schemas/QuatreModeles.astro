@@ -1,0 +1,32 @@
+---
+/**
+ * Les quatre modèles du notebook 08 mesurés par la même validation croisée : moyenne et écart-type des cinq paquets, face à
+ * la règle « toutes les femmes survivent » (src/data/competition.ts).
+ */
+import { modeles, regleFemmes } from "../../data/competition";
+const X0 = 250, L = 620, MIN = 70, MAX = 90;
+const sx = (v: number) => X0 + ((v - MIN) / (MAX - MIN)) * L;
+const fr = (v: number) => String(v).replace(".", ",");
+const best = Math.max(...modeles.map((m) => m.moyenne));
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 270" role="img" aria-labelledby="qm-titre qm-desc">
+    <title id="qm-titre">Quatre modèles, même validation croisée</title>
+    <desc id="qm-desc">Exactitude moyenne sur cinq paquets, avec l'écart-type : régression logistique 80,4 plus ou moins 0,7 ; arbre de décision 82,3 plus ou moins 2,2 ; forêt aléatoire 82,7 plus ou moins 1,9 ; gradient boosting 83,2 plus ou moins 1,6. La règle « toutes les femmes survivent » fait 78,7 % sur train.</desc>
+    {[70, 75, 80, 85, 90].map((v) => <g><line x1={sx(v)} x2={sx(v)} y1="24" y2="206" class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={sx(v)} y="226" text-anchor="middle" class="encre-2 mono" font-size="11">{v} %</text></g>)}
+    {modeles.map((m, i) => (
+      <g>
+        <text x="30" y={52 + i * 44} class="encre" font-size="13.5" font-weight={m.moyenne === best ? "700" : "400"}>{m.nom}</text>
+        <rect x={sx(MIN)} y={36 + i * 44} width={sx(m.moyenne) - sx(MIN)} height="22" class={m.moyenne === best ? "plein" : "fond-3 plein-trait"} stroke-width="1.5" />
+        <line x1={sx(m.moyenne - m.ecart)} x2={sx(m.moyenne + m.ecart)} y1={47 + i * 44} y2={47 + i * 44} class="plein-trait" stroke-width="2" />
+        <line x1={sx(m.moyenne - m.ecart)} x2={sx(m.moyenne - m.ecart)} y1={41 + i * 44} y2={53 + i * 44} class="plein-trait" stroke-width="2" />
+        <line x1={sx(m.moyenne + m.ecart)} x2={sx(m.moyenne + m.ecart)} y1={41 + i * 44} y2={53 + i * 44} class="plein-trait" stroke-width="2" />
+        <text x={sx(m.moyenne + m.ecart) + 8} y={52 + i * 44} class="encre mono" font-size="12.5">{fr(m.moyenne)} ± {fr(m.ecart)}</text>
+      </g>
+    ))}
+    <line x1={sx(regleFemmes.train)} x2={sx(regleFemmes.train)} y1="24" y2="206" class="plein-trait" stroke-width="1.5" stroke-dasharray="5 3" />
+    <text x={sx(regleFemmes.train) - 6} y="20" text-anchor="end" class="encre" font-size="11.5">« toutes les femmes survivent » : {fr(regleFemmes.train)} %</text>
+    <text x="30" y="256" class="encre-2" font-size="12">Le trait noir sur chaque barre : l'écart-type des cinq paquets. Un écart de 1 point entre deux modèles peut n'être que du hasard.</text>
+  </svg>
+  <figcaption>Quatre modèles dans un mouchoir de poche, et tous au-dessus de la règle bête.</figcaption>
+</figure>

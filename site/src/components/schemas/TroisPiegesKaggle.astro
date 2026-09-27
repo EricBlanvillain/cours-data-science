@@ -1,0 +1,29 @@
+---
+/**
+ * Les trois pièges du notebook 08, chacun avec son chiffre (src/data/competition.ts) : la fuite, le score sur ses propres
+ * données, la règle bête. Trois cartes de la primitive.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { pieges, regleFemmes } from "../../data/competition";
+const fr = (v: number) => String(v).replace(".", ",");
+---
+<GrilleCartes bandes={4} liste={false} class="large" min="15rem">
+  <article class="carte">
+    <p class="etiquette">Piège 1 · la fuite de données</p>
+    <p class="chiffre" style="font-size: 2.4rem; line-height: 1;">{fr(pieges.fuite.toFixed(1))} %</p>
+    <p>Une colonne Canot qui recopie la survie : le modèle triche sans le savoir.</p>
+    <p class="discret">Sur test.csv, la colonne n'existe pas : le modèle est inutilisable.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Piège 2 · se noter sur ses données</p>
+    <p class="chiffre" style="font-size: 2.4rem; line-height: 1;">{fr(pieges.vues)} %</p>
+    <p>Une forêt sans limite, notée sur les passagers qu'elle a vus.</p>
+    <p class="discret">En validation croisée, la même forêt fait {fr(pieges.validation)} %.</p>
+  </article>
+  <article class="carte">
+    <p class="etiquette">Piège 3 · oublier la règle bête</p>
+    <p class="chiffre" style="font-size: 2.4rem; line-height: 1;">{String(regleFemmes.kaggle).replace(".", ",")}</p>
+    <p>« Toutes les femmes survivent » : {regleFemmes.bonnes} bonnes réponses sur {regleFemmes.sur} sur Kaggle.</p>
+    <p class="discret">Un modèle qui ne bat pas ce score ne sert à rien.</p>
+  </article>
+</GrilleCartes>

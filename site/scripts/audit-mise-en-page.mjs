@@ -47,8 +47,10 @@ const PAGES = [
   { page: "lecons/seance-06-premier-modele.html", id: "seance-6-modele-juste", pilote: `const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "appris par cœur").click(); await w(300);` },
   { page: "lecons/seance-07-kaggle-titanic-1.html", id: "seance-7", pilote: "" },
   { page: "lecons/seance-07-kaggle-titanic-1.html", id: "seance-7-duel-juste", pilote: `const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "1 · une femme").click(); await w(300);` },
+  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "seance-8", pilote: "" },
+  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "seance-8-fuite-juste", pilote: `const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "1 · Fuite").click(); await w(300);` },
 ];
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.
@@ -157,7 +159,13 @@ const server = http.createServer((req, res) => {
 });
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
 
+// Un Chrome headless qui ne rend pas la page à temps (machine chargée) ne compte pas comme une faute : on retente deux fois.
 async function mesurer(etat, largeur, simulee) {
+  for (let essai = 0; essai < 3; essai++) { const res = await mesurerUneFois(etat, largeur, simulee); if (res) return res; }
+  return null;
+}
+
+async function mesurerUneFois(etat, largeur, simulee) {
   let stdout = "";
   try { ({ stdout } = await execFileP(CHROME, ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${largeur},900`, "--virtual-time-budget=8000", "--dump-dom", `http://127.0.0.1:${PORT}/${etat.page}?etat=${etat.id}${simulee ? "&simule=" + simulee : ""}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 60000 })); } catch (e) { stdout = e.stdout || ""; }
   const m = stdout.match(/<pre id="__mep">(.*?)<\/pre>/s);

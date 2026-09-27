@@ -186,6 +186,16 @@ const ETATS = [
   { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-faux", pilote: `
       const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "2 · un homme").click(); await w(300);
       if (!g.textContent.includes("c'est l'autre")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-initiale", pilote: "" },
+  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-ouvert", pilote: `
+      const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300);
+      if (!g.textContent.includes("colonne ouverte")) throw new Error("le cuivre « colonne ouverte » manque");` },
+  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-juste", pilote: `
+      const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "1 · Fuite").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-faux", pilote: `
+      const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "Pas de fuite").click(); await w(300);
+      if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `
@@ -341,7 +351,13 @@ const server = http.createServer((req, res) => {
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
 
 // Chrome est lancé en asynchrone : un appel bloquant empêcherait ce même processus de servir les pages à Chrome.
+// Un Chrome headless qui ne rend pas la page à temps (machine chargée) ne compte pas comme une faute : on retente deux fois.
 async function mesurer(etat, sombre) {
+  for (let essai = 0; essai < 3; essai++) { const res = await mesurerUneFois(etat, sombre); if (res) return res; }
+  return null;
+}
+
+async function mesurerUneFois(etat, sombre) {
   const args = ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${etat.largeur || 1280},900`, "--virtual-time-budget=8000", "--dump-dom"];
   if (sombre) args.push("--force-dark-mode");
   let stdout = "";

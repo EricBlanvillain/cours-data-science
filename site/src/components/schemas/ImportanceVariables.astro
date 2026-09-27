@@ -1,0 +1,27 @@
+---
+/**
+ * L'importance des variables pour la forêt et pour le gradient boosting du notebook 08 (src/data/competition.ts).
+ */
+import { importances } from "../../data/competition";
+const X0 = 150, L = 360, PAS = 28;
+const pc = (v: number) => Math.round(v * 100);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 290" role="img" aria-labelledby="iv-titre iv-desc">
+    <title id="iv-titre">Quelles variables font la décision</title>
+    <desc id="iv-desc">Importance de chaque variable, en pourcentage. Forêt : Titre 28, Sex 27, Fare 13, Pclass 13, Famille 8, Age 8, Embarked 2, Seul 1. Boosting : Titre 49, Fare 18, Pclass 12, Age 9, Famille 7, Sex 4, Embarked 1, Seul 0.</desc>
+    <text x={X0} y="24" class="encre" font-size="13" font-weight="700">forêt aléatoire</text>
+    <text x={X0 + L + 60} y="24" class="encre" font-size="13" font-weight="700">gradient boosting</text>
+    {importances.map((v, i) => (
+      <g>
+        <text x={X0 - 12} y={52 + i * PAS} text-anchor="end" class="encre mono" font-size="12.5">{v.variable}</text>
+        <rect x={X0} y={38 + i * PAS} width={L * v.foret} height="18" class={i < 2 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={X0 + L * v.foret + 6} y={52 + i * PAS} class="encre mono" font-size="11.5">{pc(v.foret)} %</text>
+        <rect x={X0 + L + 60} y={38 + i * PAS} width={L * v.boosting} height="18" class={i === 0 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={X0 + L + 60 + L * v.boosting + 6} y={52 + i * PAS} class="encre mono" font-size="11.5">{pc(v.boosting)} %</text>
+      </g>
+    ))}
+    <text x="30" y="280" class="encre-2" font-size="12">La forêt partage entre Titre et Sex, qui racontent la même histoire ; le boosting mise presque la moitié sur Titre.</text>
+  </svg>
+  <figcaption>Un score sans explication ne convainc personne : l'importance des variables dit sur quoi le modèle décide.</figcaption>
+</figure>

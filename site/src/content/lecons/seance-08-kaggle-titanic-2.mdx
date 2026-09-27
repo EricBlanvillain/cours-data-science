@@ -1,0 +1,100 @@
+---
+numero: 8
+titre: Kaggle Titanic 2/2
+niveau: ⭐⭐⭐
+duree: 1 h 30
+resume: "Passer en mode compétition : comparer quatre modèles, comprendre pourquoi l'un gagne, voir le sur-apprentissage, régler deux boutons avec GridSearchCV, déjouer les pièges, puis soumettre et présenter sa démarche en cinq minutes."
+livrable: Une soumission Kaggle finale avec son score, le notebook complet poussé sur GitHub, et une présentation de 5 minutes.
+objectifs:
+  - Tu sauras comparer des modèles avec la même validation croisée, en lisant l'écart-type autant que la moyenne.
+  - Tu sauras expliquer une décision par l'importance des variables, et régler un modèle avec GridSearchCV.
+  - Tu sauras reconnaître une fuite de données et un score trop beau pour être vrai.
+aRetenir:
+  - Même validation croisée pour tous les modèles, et un écart d'un point peut n'être que du hasard.
+  - L'importance des variables dit sur quoi le modèle décide ; c'est l'argument à montrer.
+  - Train qui monte, validation qui descend, c'est le sur-apprentissage.
+  - Un hyperparamètre se règle avant l'entraînement ; GridSearchCV essaie toute une grille.
+  - Un score trop beau est une alarme, fuite ou mesure sur ses propres données, et on bat toujours la règle bête d'abord.
+---
+import QuatreModeles from "../../components/schemas/QuatreModeles.astro";
+import ImportanceVariables from "../../components/schemas/ImportanceVariables.astro";
+import CourbeValidation from "../../components/schemas/CourbeValidation.astro";
+import GrilleReglages from "../../components/schemas/GrilleReglages.astro";
+import TroisPiegesKaggle from "../../components/schemas/TroisPiegesKaggle.astro";
+import FuiteOuPas from "../../components/islands/FuiteOuPas";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Quatre modèles, un tableau
+
+On reprend `preparer()` de la séance 7 et on mesure quatre familles de modèles avec la même validation croisée.
+
+<QuatreModeles />
+
+<details>
+<summary>Le gradient boosting</summary>
+
+Le gradient boosting construit de petits arbres l'un après l'autre, chacun corrigeant les erreurs du précédent : comme réviser en refaisant surtout les exercices ratés. La forêt, elle, fait voter des arbres construits chacun de son côté. Réglé par GridSearchCV, le boosting monte à 84,1 %.
+
+</details>
+
+## Pourquoi l'un gagne
+
+<ImportanceVariables />
+
+Retire `Titre` : la forêt passe de 82,7 à 82,0 % seulement, car `Sex` et `Age` portent presque la même information.
+
+## Apprendre par cœur
+
+Comme l'élève qui connaît les annales par cœur et sèche devant un sujet nouveau.
+
+<CourbeValidation />
+
+## Régler les boutons
+
+<GrilleReglages />
+
+```python
+grille = {"max_depth": [3, 5, 7, 9], "min_samples_leaf": [1, 3, 5]}
+foret = RandomForestClassifier(n_estimators=100, random_state=42)
+recherche = GridSearchCV(foret, grille, cv=5).fit(X, y)
+```
+
+## Trois pièges
+
+Des scores magnifiques, et faux.
+
+<TroisPiegesKaggle />
+
+<FuiteOuPas client:load />
+
+<details>
+<summary>Des 1,00000 au classement</summary>
+
+Le classement de la compétition, calculé sur les 418 passagers de test, affiche des équipes à 1,00000. Personne ne prédit parfaitement un naufrage : la liste réelle des survivants est publique, et ces scores la recopient sans doute. Ce n'est pas du machine learning, et ça n'apprend rien.
+
+</details>
+
+### À toi : la soumission finale
+
+En binôme, 20 minutes, dans l'ordre :
+
+- **Le modèle final** : la forêt réglée par GridSearchCV ou le boosting, remesuré après une variable ajoutée ou retirée.
+- **`submission_finale.csv`**, soumis sur Kaggle, et tes deux scores notés : première soumission, finale.
+- **Le tableau du groupe** : chaque binôme annonce ses scores et son modèle.
+
+<BoutonsSeance dossier="seance-08-kaggle-titanic-2" lecon="08_kaggle_titanic_2.ipynb" exercices="08_exercices.ipynb" />
+
+## Présenter en cinq minutes
+
+Pas de diapositives obligatoires : le notebook et un ou deux graphiques suffisent.
+
+| Partie | Durée | Contenu |
+|---|---|---|
+| Nos hypothèses | 1 min | Les deux qui vous ont marqués, avec un chiffre chacune |
+| Ce qu'on a essayé | 2 min | Variables, modèles, le réglage qui a le plus compté, une chose qui n'a pas marché |
+| Notre score | 1 min | Première soumission, finale, et la place face à la règle bête |
+| Ce qu'on referait | 1 min | Avec deux heures de plus : quelle variable, quel modèle, quel piège éviter |
+
+## Entre deux séances
+
+Le carnet `08_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il s'ouvre par une question, à se poser à voix haute au début de la séance suivante.
