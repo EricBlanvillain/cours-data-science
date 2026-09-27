@@ -1,0 +1,41 @@
+---
+/**
+ * Une compétition Kaggle en une image : train.csv (avec la réponse) pour apprendre, test.csv (sans) pour prédire, un
+ * fichier de deux colonnes à soumettre, un score calculé par Kaggle (src/data/titanic.ts).
+ */
+import { fichiers, survieGlobale } from "../../data/titanic";
+const fr = (v: number) => String(v).replace(".", ",");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 250" role="img" aria-labelledby="kf-titre kf-desc">
+    <title id="kf-titre">train.csv, test.csv, submission.csv et le score</title>
+    <desc id="kf-desc">train.csv : 891 passagers avec la colonne Survived, pour apprendre. test.csv : 418 passagers sans cette colonne, pour prédire. submission.csv : 418 lignes, deux colonnes, PassengerId et Survived, que l'on dépose sur Kaggle, qui renvoie un score : la part de passagers bien prédits.</desc>
+    {[
+      { x: 30, t: "train.csv", n: `${fichiers.train} passagers`, l1: `${fichiers.colonnes} colonnes, dont Survived`, l2: `${fr(survieGlobale)} % ont survécu`, plein: true },
+      { x: 270, t: "test.csv", n: `${fichiers.test} passagers`, l1: "les mêmes colonnes,", l2: "sans Survived", plein: false },
+      { x: 510, t: "submission.csv", n: `${fichiers.test} lignes`, l1: "PassengerId, Survived", l2: "tes prédictions", plein: false },
+    ].map((f) => (
+      <g>
+        <rect x={f.x} y="40" width="200" height="120" class={f.plein ? "plein" : "fond-2 plein-trait"} stroke-width="1.5" stroke-dasharray={f.t === "submission.csv" ? "5 3" : undefined} />
+        <text x={f.x + 14} y="68" class={(f.plein ? "sur-plein" : "encre") + " mono"} font-size="14" font-weight="700">{f.t}</text>
+        <text x={f.x + 14} y="98" class={f.plein ? "sur-plein" : "encre"} font-size="15" font-weight="700">{f.n}</text>
+        <text x={f.x + 14} y="122" class={f.plein ? "sur-plein" : "encre-2"} font-size="12">{f.l1}</text>
+        <text x={f.x + 14} y="140" class={f.plein ? "sur-plein" : "encre-2"} font-size="12">{f.l2}</text>
+      </g>
+    ))}
+    <g class="trait" stroke-width="2" fill="none">
+      <path d="M232 100 H266" /><path d="M261 95 L269 100 L261 105" />
+      <path d="M472 100 H506" /><path d="M501 95 L509 100 L501 105" />
+      <path d="M712 100 H746" /><path d="M741 95 L749 100 L741 105" />
+    </g>
+    <text x="130" y="186" text-anchor="middle" class="encre-2" font-size="12">le modèle apprend</text>
+    <text x="370" y="186" text-anchor="middle" class="encre-2" font-size="12">preparer(test), puis predict</text>
+    <text x="610" y="186" text-anchor="middle" class="encre-2" font-size="12">déposé sur la compétition</text>
+    <rect x="752" y="60" width="180" height="80" class="fond-3 plein-trait" stroke-width="1.5" />
+    <text x="766" y="88" class="encre" font-size="14" font-weight="700">le score Kaggle</text>
+    <text x="766" y="110" class="encre-2" font-size="12">la part de passagers</text>
+    <text x="766" y="126" class="encre-2" font-size="12">bien prédits : l'exactitude</text>
+    <text x="30" y="228" class="encre-2" font-size="12">La réponse des {fichiers.test} passagers de test, Kaggle la garde : c'est ce qui rend le classement honnête.</text>
+  </svg>
+  <figcaption>Apprendre sur train, prédire test, soumettre deux colonnes, recevoir un score.</figcaption>
+</figure>

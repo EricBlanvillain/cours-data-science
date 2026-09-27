@@ -176,6 +176,16 @@ const ETATS = [
   { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-faux", pilote: `
       const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "Il a compris").click(); await w(300);
       if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-initiale", pilote: "" },
+  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-ouvert", pilote: `
+      const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300);
+      if (!g.textContent.includes("duel ouvert")) throw new Error("le cuivre « duel ouvert » manque");` },
+  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-juste", pilote: `
+      const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "1 · une femme").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-faux", pilote: `
+      const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "2 · un homme").click(); await w(300);
+      if (!g.textContent.includes("c'est l'autre")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

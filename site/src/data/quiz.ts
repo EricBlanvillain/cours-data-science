@@ -189,4 +189,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "k-NN compare des distances. Sans mise à l'échelle, 100 g d'écart pèsent autant que 100 mm, alors que les becs ne diffèrent que de quelques millimètres : le poids décidait presque seul.",
     },
   ],
+  7: [
+    {
+      question: "Pourquoi ranger tout le nettoyage dans une seule fonction preparer() ?",
+      options: ["Pour que le code soit plus court", "Pour appliquer exactement la même recette à train et à test", "Parce que Kaggle l'exige", "Pour aller plus vite"],
+      bonne: 1,
+      explication: "Le modèle apprend sur des colonnes préparées d'une certaine façon ; test doit arriver exactement pareil. L'erreur classique : nettoyer train à la main et oublier une étape sur test.",
+    },
+    {
+      question: "Que garde la regex ,\\s*([^\\.]+)\\. dans le nom « Heikkinen, Miss. Laina » ?",
+      options: ["Heikkinen", "Miss", "Laina", "Miss. Laina"],
+      bonne: 1,
+      explication: "Elle cherche une virgule, d'éventuels espaces, puis garde tout ce qui n'est pas un point, jusqu'au point : « Miss ». Les parenthèses marquent ce qu'on garde.",
+    },
+    {
+      question: "Les cinq contrôles de la forêt donnent de 79,8 % à 85,5 %. Quel score annonces-tu ?",
+      options: ["85,5 %, le meilleur", "79,8 %, le pire", "82,7 %, la moyenne des cinq", "Celui du premier contrôle"],
+      bonne: 2,
+      explication: "Chaque contrôle dépend du paquet tiré ; la moyenne des cinq est plus fiable qu'un seul. Annoncer le meilleur, ce serait choisir le sujet d'examen qui t'arrange.",
+    },
+    {
+      question: "Pourquoi remplir les âges manquants avec l'âge médian du titre plutôt qu'avec 28 ans pour tout le monde ?",
+      options: ["Parce que 28 ans est faux", "Parce qu'un petit garçon au titre « Master » recevrait 28 ans, et 177 passagers formeraient un pic artificiel", "Parce que la médiane est interdite", "Pour avoir moins de lignes"],
+      bonne: 1,
+      explication: "28 ans est bien l'âge médian du bateau, mais pas celui de chacun. Le titre donne un âge plausible : 3,5 ans pour un Master, 35 pour une Mrs.",
+    },
+  ],
 };

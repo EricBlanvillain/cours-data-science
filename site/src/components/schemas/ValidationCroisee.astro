@@ -1,0 +1,35 @@
+---
+/**
+ * La validation croisée du notebook 07 : cinq paquets, cinq contrôles, une moyenne ; puis les deux modèles face au modèle
+ * bête (src/data/titanic.ts). Les cinq scores sont ceux de la forêt (200 arbres, profondeur 5).
+ */
+import { validation as v, fichiers } from "../../data/titanic";
+const fr = (n: number) => String(n).replace(".", ",");
+const X0 = 40, PW = 150;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 320" role="img" aria-labelledby="vc-titre vc-desc">
+    <title id="vc-titre">Validation croisée : cinq contrôles, une moyenne</title>
+    <desc id="vc-desc">Les 891 passagers sont coupés en cinq paquets. Cinq fois, la forêt apprend sur quatre paquets et passe un contrôle sur le cinquième : 85,5, 82,0, 82,6, 79,8 et 83,7 %. Moyenne 82,7 %. Face au modèle bête (61,6 %), la régression logistique fait 80,4 % et la forêt 82,7 %.</desc>
+    <text x={X0} y="28" class="encre" font-size="15" font-weight="700">1. cinq contrôles blancs sur les {fichiers.train} passagers</text>
+    {v.foretPaquets.map((s, tour) => (
+      <g>
+        {[0, 1, 2, 3, 4].map((p) => <rect x={X0 + p * (PW + 6)} y={44 + tour * 28} width={PW} height="22" class={p === tour ? "plein" : "fond-3"} />)}
+        <text x={X0 + tour * (PW + 6) + 10} y={60 + tour * 28} class="sur-plein" font-size="11.5" font-weight="700">contrôle</text>
+        <text x={X0 + 5 * (PW + 6) + 10} y={60 + tour * 28} class="encre mono" font-size="13">{fr(s.toFixed(1))} %</text>
+      </g>
+    ))}
+    <text x={X0 + 5 * (PW + 6) + 10} y="202" class="encre" font-size="13" font-weight="700">moyenne {fr(v.foret)} %</text>
+    <text x={X0} y="202" class="encre-2" font-size="12">clair : les quatre paquets où la forêt apprend · plein : le paquet du contrôle</text>
+
+    <text x={X0} y="244" class="encre" font-size="15" font-weight="700">2. la moyenne des cinq contrôles</text>
+    {[{ l: "modèle bête : personne ne survit", s: v.bete, c: "fond-3 plein-trait" }, { l: "régression logistique", s: v.logistique, c: "fond-3 plein-trait" }, { l: "forêt, 200 arbres, profondeur 5", s: v.foret, c: "plein" }].map((b, i) => (
+      <g>
+        <text x={X0 + 300 * i} y="272" class="encre" font-size="12">{b.l}</text>
+        <rect x={X0 + 300 * i} y="280" width={2.4 * b.s} height="20" class={b.c} stroke-width="1.5" />
+        <text x={X0 + 300 * i + 2.4 * b.s + 6} y="295" class="encre mono" font-size="12.5" font-weight="700">{fr(b.s)} %</text>
+      </g>
+    ))}
+  </svg>
+  <figcaption>Cinq contrôles avec des sujets différents valent mieux qu'un seul.</figcaption>
+</figure>

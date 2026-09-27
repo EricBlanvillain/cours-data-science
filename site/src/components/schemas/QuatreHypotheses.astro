@@ -1,0 +1,34 @@
+---
+/**
+ * Les quatre hypothèses du notebook 07, chacune vérifiée par un taux de survie calculé sur train.csv (src/data/titanic.ts).
+ * Quatre cartes de la primitive ; la barre la plus haute de chaque carte est pleine.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { hypotheses, survieGlobale } from "../../data/titanic";
+const W = 300, H = 170, B = 30, T = 18;
+const sy = (v: number) => T + (1 - v / 100) * (H - T - B);
+const ymoy = sy(survieGlobale);
+---
+<GrilleCartes bandes={3} liste={false} class="large" min="10.5rem">
+  {hypotheses.map((h, k) => {
+    const bw = (W - 20) / h.barres.length; const max = Math.max(...h.barres.map((b) => b.v));
+    return (
+      <article class="carte">
+        <p class="etiquette">Hypothèse {k + 1} · {h.verdict}</p>
+        <svg class="schema courbe" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${h.titre} : ${h.ligne}`}>
+          <text x="10" y="12" class="encre" font-size="12.5" font-weight="700">{h.titre}</text>
+          <line x1="10" x2={W - 10} y1={ymoy} y2={ymoy} class="plein-trait" stroke-width="1" stroke-dasharray="3 3" />
+          {h.barres.map((b, i) => (
+            <g>
+              <rect x={10 + i * bw + 4} y={sy(b.v)} width={bw - 8} height={sy(0) - sy(b.v)} class={b.v === max ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+              <text x={10 + i * bw + bw / 2} y={sy(b.v) - 4} text-anchor="middle" class="encre mono" font-size="11">{b.v}</text>
+              <text x={10 + i * bw + bw / 2} y={H - 14} text-anchor="middle" class="encre-2" font-size="10.5">{b.l}</text>
+            </g>
+          ))}
+          <line x1="10" x2={W - 10} y1={sy(0)} y2={sy(0)} class="plein-trait" stroke-width="1" />
+        </svg>
+        <p class="discret">{h.ligne}.</p>
+      </article>
+    );
+  })}
+</GrilleCartes>

@@ -1,0 +1,41 @@
+---
+/**
+ * Extraire le titre d'un nom avec une regex, puis les cinq groupes de titres : combien, quelle survie, quel âge médian
+ * (src/data/titanic.ts). L'âge médian par titre remplit les 177 âges manquants mieux qu'un 28 ans pour tous.
+ */
+import { titres, vides } from "../../data/titanic";
+const fr = (v: number) => String(v).replace(".", ",");
+const X = 470;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="tr-titre tr-desc">
+    <title id="tr-titre">Le titre extrait du nom, et ce qu'il dit de chaque passager</title>
+    <desc id="tr-desc">Le nom « Braund, Mr. Owen Harris » : la regex garde ce qui est entre la virgule et le point, « Mr ». Les 17 titres sont regroupés en cinq : Mr, 517 passagers, 16 % de survie, 30 ans ; Miss, 185, 70 %, 21 ans ; Mrs, 126, 79 %, 35 ans ; Master, 40, 57 %, 3,5 ans ; Autre, 23, 35 %, 48,5 ans.</desc>
+    <text x="30" y="30" class="encre" font-size="15" font-weight="700">1. le titre, entre la virgule et le point</text>
+    <rect x="30" y="46" width="400" height="44" class="fond-3 trait" stroke-width="1.5" />
+    <text x="46" y="75" class="encre mono" font-size="17"><tspan>Braund</tspan><tspan font-weight="700">, </tspan><tspan font-weight="700" text-decoration="underline">Mr</tspan><tspan font-weight="700">.</tspan><tspan> Owen Harris</tspan></text>
+    <text x="30" y="118" class="encre mono" font-size="14" font-weight="700">,\s*([^\.]+)\.</text>
+    <text x="30" y="142" class="encre-2" font-size="12">une virgule, des espaces éventuels,</text>
+    <text x="30" y="158" class="encre-2" font-size="12">puis tout ce qui n'est pas un point : on le garde</text>
+    <rect x="30" y="178" width="100" height="36" class="plein" />
+    <text x="80" y="202" text-anchor="middle" class="sur-plein mono" font-size="15" font-weight="700">Mr</text>
+    <text x="30" y="244" class="encre-2" font-size="12">{titres.bruts} titres différents, dont beaucoup vus une fois</text>
+    <text x="30" y="260" class="encre-2" font-size="12">(Capt, Jonkheer…) : on les regroupe en cinq</text>
+
+    <text x={X} y="30" class="encre" font-size="15" font-weight="700">2. ce que dit le titre</text>
+    <rect x={X} y="44" width="460" height="24" class="plein" />
+    {["titre", "passagers", "survie", "âge médian"].map((c, i) => <text x={X + 12 + [0, 110, 230, 330][i]} y="61" class="sur-plein mono" font-size="12" font-weight="700">{c}</text>)}
+    {titres.groupes.map((g, k) => (
+      <g>
+        <rect x={X} y={68 + k * 34} width="460" height="34" class={k % 2 ? "fond-3" : "fond-2"} />
+        <text x={X + 12} y={90 + k * 34} class="encre mono" font-size="13" font-weight="700">{g.titre}</text>
+        <text x={X + 122} y={90 + k * 34} class="encre mono" font-size="13">{g.n}</text>
+        <text x={X + 242} y={90 + k * 34} class="encre mono" font-size="13">{g.survie} %</text>
+        <text x={X + 342} y={90 + k * 34} class="encre mono" font-size="13">{fr(g.age)} ans</text>
+      </g>
+    ))}
+    <text x={X} y="262" class="encre-2" font-size="12">Pour les {vides.age} âges manquants : l'âge médian du titre (3,5 ans pour un Master)</text>
+    <text x={X} y="278" class="encre-2" font-size="12">plutôt que {titres.ageMedianGlobal} ans pour tout le monde, qui ferait un pic artificiel.</text>
+  </svg>
+  <figcaption>Le titre dit d'un coup le sexe, l'âge et le rang : l'une des variables les plus fortes du Titanic.</figcaption>
+</figure>

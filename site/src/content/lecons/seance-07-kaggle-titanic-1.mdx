@@ -1,0 +1,84 @@
+---
+numero: 7
+titre: Kaggle Titanic 1/2
+niveau: ⭐⭐
+duree: 1 h 30
+resume: "Le grand projet du parcours, en binôme : explorer les 891 passagers du Titanic, vérifier quatre hypothèses, créer des variables dont le titre extrait du nom, mesurer deux modèles par validation croisée et faire sa première soumission."
+livrable: Une première soumission Kaggle et son score, noté dans le notebook.
+objectifs:
+  - Tu sauras vérifier une hypothèse avec un taux de survie et un graphique, avant de modéliser.
+  - Tu sauras créer une variable, dont un titre extrait d'un texte avec une regex, et ranger la préparation dans une fonction.
+  - Tu sauras mesurer un modèle par validation croisée et soumettre tes prédictions à une compétition.
+aRetenir:
+  - Sur Kaggle, train.csv sert à apprendre, test.csv à prédire, et le score est la part de passagers bien prédits.
+  - On vérifie ses hypothèses avant de modéliser, chacune avec un chiffre.
+  - Une nouvelle variable bien choisie, comme le titre, vaut souvent mieux qu'un modèle plus compliqué.
+  - Une seule fonction preparer() pour train et test, sinon les deux fichiers ne se ressemblent plus.
+  - La validation croisée fait passer cinq contrôles au modèle et garde la moyenne.
+---
+import KaggleFichiers from "../../components/schemas/KaggleFichiers.astro";
+import QuatreHypotheses from "../../components/schemas/QuatreHypotheses.astro";
+import TitreRegex from "../../components/schemas/TitreRegex.astro";
+import ValidationCroisee from "../../components/schemas/ValidationCroisee.astro";
+import QuiAPlusDeChances from "../../components/islands/QuiAPlusDeChances";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Une compétition, trois fichiers
+
+Le 15 avril 1912, le Titanic coule : 1 502 des 2 224 passagers et membres d'équipage meurent. Kaggle donne la fiche de 891 passagers et leur sort ; à toi de prédire celui de 418 autres.
+
+<KaggleFichiers />
+
+<details>
+<summary>Avant la séance : les fichiers</summary>
+
+Chacun crée un compte Kaggle gratuit, rejoint la compétition Titanic, accepte son règlement et télécharge `train.csv` et `test.csv` ; le notebook détaille chaque étape. Dans Colab, on les dépose dans le panneau des fichiers, et ils disparaissent quand la session se ferme. Sans eux, le notebook charge une copie publique de `train.csv` : tout fonctionne, sauf la soumission.
+
+[La page de la compétition ↗](https://www.kaggle.com/competitions/titanic)
+
+</details>
+
+## Quatre hypothèses
+
+Un data scientist ne devine pas, il vérifie. Le trait pointillé marque la survie moyenne, 38,4 %.
+
+<QuatreHypotheses />
+
+<QuiAPlusDeChances client:load />
+
+## Nettoyer et créer des variables
+
+177 âges manquent, soit un passager sur cinq. Plutôt que de remplir tous les trous avec le même âge, le nom du passager en dit plus qu'on ne croit.
+
+<TitreRegex />
+
+```python
+train["Titre"] = train["Name"].str.extract(r",\s*([^\.]+)\.")[0]
+```
+
+## Une recette, cinq contrôles
+
+Tout le nettoyage tient dans une fonction, `preparer()`, appliquée telle quelle à `train` puis à `test`. Pour mesurer, on ne coupe plus une seule fois : on fait passer cinq contrôles.
+
+<ValidationCroisee />
+
+<details>
+<summary>Deux nouveaux modèles</summary>
+
+La régression logistique est une cousine de la régression linéaire de la séance 6 : elle pèse chaque indice, puis bascule vers « survit » ou « ne survit pas ». La forêt aléatoire réunit 200 arbres de décision, chacun appris sur un échantillon un peu différent, qui votent. Sans limite de profondeur, la forêt tombe à 80,5 % : ses arbres apprennent par cœur, ce que la séance 8 reprend.
+
+</details>
+
+### À toi : ta première soumission
+
+En binôme, 10 minutes : l'un tape, l'autre réfléchit à voix haute.
+
+- **Une variable de plus** dans `preparer()`, par exemple le prix par personne, et la forêt remesurée.
+- **Génère `submission.csv`** avec la meilleure forêt, dépose-le sur la page de la compétition, et note le score dans le notebook.
+- Si le temps manque, la soumission ouvre la séance 8.
+
+<BoutonsSeance dossier="seance-07-kaggle-titanic-1" lecon="07_kaggle_titanic_1.ipynb" exercices="07_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `07_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il s'ouvre par un quiz de deux questions, à se poser à voix haute au début de la séance suivante.

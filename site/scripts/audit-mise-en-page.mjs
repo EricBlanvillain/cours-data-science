@@ -45,8 +45,10 @@ const PAGES = [
   { page: "lecons/seance-05-analyser-raconter.html", id: "seance-5-piege-juste", pilote: `const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Causalité").click(); await w(300);` },
   { page: "lecons/seance-06-premier-modele.html", id: "seance-6", pilote: "" },
   { page: "lecons/seance-06-premier-modele.html", id: "seance-6-modele-juste", pilote: `const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "appris par cœur").click(); await w(300);` },
+  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "seance-7", pilote: "" },
+  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "seance-7-duel-juste", pilote: `const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "1 · une femme").click(); await w(300);` },
 ];
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.
