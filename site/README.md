@@ -99,6 +99,25 @@ Le cadre autour (objectifs, mini-quiz, à retenir, navigation) vient du frontmat
 déjà. Aucune question et aucune phrase d'explication ne sont partagées entre les deux ; si le jeu fait trancher « quelle
 commande ? », le quiz interroge l'ordre, la syntaxe ou le piège, pas la même situation.
 
+### Relecture avant de rendre une leçon
+
+À partir de la séance 5, chaque leçon passe cette relecture avant d'être rendue, et le compte rendu liste ce qu'elle a
+changé, une ligne par correction, ou dit que rien n'a eu besoin de l'être.
+
+1. **Le jeu n'a qu'une réponse défendable.** Chaque question du jeu a sa réponse parmi les choix proposés, et les
+   définitions affichées à l'élève couvrent le mécanisme de cette réponse. Un élève qui choisit autre chose n'a pas de
+   vrai argument.
+2. **Rien ne contredit une leçon précédente.** Aucun chiffre ni aucune phrase ne contredit une séance antérieure (la
+   séance 2 dit qu'un seul Pokémon a 255 HP, la séance 4 ne peut pas parler de « quelques géants à 255 »). Chaque
+   chiffre réutilisé se cherche dans les leçons et les fichiers de `src/data/` déjà écrits.
+3. **Les libellés d'interface sont cités mot pour mot.** Menus et boutons de Colab, GitHub, Kaggle : tels que l'interface
+   française les affiche (« Enregistrer une copie dans GitHub », pas « sur GitHub »).
+4. **Une simplification se dit comme telle.** On écrit « revient à », jamais ce que l'outil exécute réellement quand ce
+   n'est pas le cas (Colab n'a pas de dépôt local : son clic revient à add, commit et push).
+5. **Les durées concordent.** Chaque durée annoncée dans le notebook correspond au déroulé du README de la séance ; sinon
+   on corrige le titre dans le notebook, et rien d'autre.
+6. **Quiz et jeu ne partagent rien.** Aucune question et aucune phrase d'explication en commun (voir ci-dessus).
+
 ## Une figure remplace son explication
 
 Règle structurante des leçons : après un schéma ou un graphique, au plus une légende d'une ligne ; aucun récapitulatif en
