@@ -75,16 +75,16 @@ export const ANACONDA = {
 /** le jeu « supprimer, remplir ou garder ? » */
 export type Choix = "supprimer" | "remplir" | "garder";
 export const CHOIX: Record<Choix, { nom: string; outil: string; quand: string }> = {
-  supprimer: { nom: "Supprimer", outil: "dropna", quand: "la case vide rend la ligne inutile" },
-  remplir: { nom: "Remplir", outil: "fillna", quand: "une valeur raisonnable existe, sans rien inventer" },
-  garder: { nom: "Garder", outil: "rien", quand: "le vide veut dire quelque chose" },
+  supprimer: { nom: "Supprimer", outil: "dropna", quand: "la case vide rend la ligne inutile (dropna)" },
+  remplir: { nom: "Remplir", outil: "fillna", quand: "on met quelque chose à la place de la valeur perdue : la médiane pour un nombre, l'étiquette « Inconnu » pour une catégorie, jamais une valeur devinée (fillna)" },
+  garder: { nom: "Garder", outil: "rien", quand: "la case vide porte elle-même une information, comme Type 2 pour un Pokémon à un seul type ; on la laisse telle quelle" },
 };
 export type SituationVide = { texte: string; reponse: Choix; pourquoi: string };
 export const situationsVides: SituationVide[] = [
   { texte: "386 Pokémon sur 800 n'ont rien dans la colonne Type 2.", reponse: "garder", pourquoi: "Ce n'est pas un trou : ces Pokémon n'ont qu'un seul type. Le vide porte une information, le remplir l'effacerait." },
-  { texte: "40 Pokémon ont perdu leurs points de vie (HP).", reponse: "remplir", pourquoi: "Le reste de la ligne est précieux. La médiane des HP, 65, est une valeur raisonnable qui ne dépend pas des quelques géants à 255." },
-  { texte: "40 Pokémon ont perdu leur Type 1.", reponse: "remplir", pourquoi: "On garde la ligne, mais on ne devine pas son type : la case reçoit « Inconnu ». Écrire « Water » au hasard serait mentir." },
+  { texte: "40 Pokémon ont perdu leurs points de vie (HP).", reponse: "remplir", pourquoi: "Le reste de la ligne est précieux. La médiane des HP, 65, est une valeur raisonnable qui ne dépend pas des rares géants, jusqu'à 255." },
+  { texte: "40 Pokémon ont perdu leur Type 1.", reponse: "remplir", pourquoi: "Ici le vide ne dit rien en soi : le type a été effacé. La ligne reste utile, mais on ne devine pas son type : la case reçoit l'étiquette « Inconnu ». Écrire « Water » au hasard serait mentir." },
   { texte: "Dans Tips, 12 additions n'ont plus de montant (total_bill).", reponse: "supprimer", pourquoi: "Une addition sans montant ne sert à rien pour étudier les pourboires. 12 lignes sur 244, on les retire et on l'écrit dans le journal." },
-  { texte: "Dans Tips, 12 additions ont perdu leur jour de la semaine.", reponse: "remplir", pourquoi: "Le montant et le pourboire restent utiles. Le jour devient « Inconnu », et chaque calcul par jour le montrera à part." },
-  { texte: "Une ligne n'a plus que son nom : toutes les autres cases sont vides.", reponse: "supprimer", pourquoi: "Il n'y a plus rien à analyser, et remplir douze cases reviendrait à fabriquer un Pokémon. Une ligne vide va à la corbeille, avec sa ligne de journal." },
+  { texte: "Dans Tips, 12 additions ont perdu leur jour de la semaine.", reponse: "remplir", pourquoi: "Le jour a été effacé, le vide ne dit rien en soi. Le montant et le pourboire restent utiles : le jour reçoit l'étiquette « Inconnu », et chaque calcul par jour le montrera à part." },
+  { texte: "Une ligne n'a plus que son nom : toutes les autres cases sont vides.", reponse: "supprimer", pourquoi: "Il n'y a plus rien à analyser, et remplir toutes ces cases reviendrait à fabriquer un Pokémon. Une ligne vide va à la corbeille, avec sa ligne de journal." },
 ];
