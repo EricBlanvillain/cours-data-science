@@ -114,9 +114,10 @@ changé, une ligne par correction, ou dit que rien n'a eu besoin de l'être.
    française les affiche (« Enregistrer une copie dans GitHub », pas « sur GitHub »).
 4. **Une simplification se dit comme telle.** On écrit « revient à », jamais ce que l'outil exécute réellement quand ce
    n'est pas le cas (Colab n'a pas de dépôt local : son clic revient à add, commit et push).
-5. **Le notebook ne contredit ni son déroulé ni ses données.** Chaque durée annoncée dans le notebook correspond au
+5. **Le notebook ne contredit ni son déroulé, ni ses données, ni le reste du cours.** Chaque durée annoncée dans le notebook correspond au
    déroulé du README de la séance. Un chiffre ou un fait énoncé dans le notebook, contredit par le calcul sur ses propres
-   données, se corrige aussi. On ne touche qu'à cette phrase ou cette cellule, on rejoue la recette du notebook (exécution
+   données, se corrige aussi, tout comme un renvoi vers une autre séance ou un autre document qui ne contient pas ce
+   qu'il annonce. On ne touche qu'à cette phrase ou cette cellule, on rejoue la recette du notebook (exécution
    complète, aucune sortie enregistrée) et la correction figure dans le compte rendu. Tout le reste des notebooks est hors
    champ, dette connue du CLAUDE.md comprise.
 6. **Quiz et jeu ne partagent rien.** Aucune question et aucune phrase d'explication en commun (voir ci-dessus).
