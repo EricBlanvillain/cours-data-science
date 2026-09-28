@@ -11,7 +11,8 @@
  *   pokemon["HP"].quantile([.25, .5, .75]), q3 + 1,5 × (q3 − q1)   → 50, 65, 80 ; limite 125 ; 18 Pokémon au-dessus
  *   moustaches (valeurs extrêmes dans les limites) ; sous q1 − 1,5 × (q3 − q1) = 5 → 10 et 125 ; Shedinja, 1 HP
  *   pokemon[pokemon["HP"] > 125]["HP"]                             → hpHorsLimite (Blissey 255, Chansey 250…)
- *   pokemon[stats].corr().round(2)                                 → correlations ; max Sp. Atk / Sp. Def 0,51, min Defense / Speed 0,02
+ *   pokemon[stats].corr().round(2)                                 → correlations ; paires triées sur les valeurs non arrondies : max Defense / Sp. Def 0,5107
+ *                                                                     (devant Sp. Atk / Sp. Def 0,5061), min Defense / Speed 0,0152
  *   glaces / noyades, default_rng(0), 120 journées simulées        → corrélation 0,72
  *   sondage, default_rng(1), 1 000 personnes                       → 41,5 % de joueurs ; au hasard 38 % ; devant le magasin 90 %
  *   abonnés [1020, 1035, 1028, 1050, 1062, 1071]                   → + 5,0 % en six mois
@@ -39,7 +40,7 @@ export const correlations = [
   [0.38, 0.26, 0.51, 0.51, 1.00, 0.26],
   [0.18, 0.38, 0.02, 0.47, 0.26, 1.00],
 ];
-export const pairePlusCorrelee = { a: "Sp. Atk", b: "Sp. Def", r: 0.51 };
+export const pairePlusCorrelee = { a: "Defense", b: "Sp. Def", r: 0.51 };
 export const paireMoinsCorrelee = { a: "Defense", b: "Speed", r: 0.02 };
 
 export const glacesNoyades = { journees: 120, correlation: 0.72 };
