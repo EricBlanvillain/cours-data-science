@@ -294,12 +294,14 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
    l'écart au centre (--melange, 0 % au milieu, 100 % aux bouts) et grossit de 14 à 26 px (--taille). Les trois variables
    sont posées sur l'élément par le composant. */
 .curseur-avis { --melange: 0%; --taille: 14px; --cote: var(--encre-2); --couleur: color-mix(in oklab, var(--cote) var(--melange), var(--encre-2)); display: grid; gap: 0.3rem; width: min(100%, 36rem); margin: 0.4rem auto 0; }
-.curseur-avis input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; }
+.curseur-avis input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer; }
 .curseur-avis input[type="range"]:focus-visible { outline: 2px solid var(--encre); outline-offset: 4px; }
 .curseur-avis input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--trait-fort); }
 .curseur-avis input[type="range"]::-moz-range-track { height: 2px; background: var(--trait-fort); }
-.curseur-avis input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: var(--taille); height: var(--taille); margin-top: calc((2px - var(--taille)) / 2); border: 0; border-radius: 50%; background: var(--couleur); transition: width .25s var(--ease), height .25s var(--ease), margin-top .25s var(--ease), background-color .25s var(--ease); }
-.curseur-avis input[type="range"]::-moz-range-thumb { width: var(--taille); height: var(--taille); border: 0; border-radius: 50%; background: var(--couleur); transition: width .25s var(--ease), height .25s var(--ease), background-color .25s var(--ease); }
+/* Le point visible garde sa taille (14 → 26 px) ; une bordure transparente porte la zone de toucher à 44 px, quelle que soit
+   la taille du point, et background-clip ne peint que le point. Le pouce fait donc toujours 44 px : centré sur la piste. */
+.curseur-avis input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: content-box; width: var(--taille); height: var(--taille); border: calc((44px - var(--taille)) / 2) solid transparent; background-clip: content-box; margin-top: -21px; border-radius: 50%; background-color: var(--couleur); transition: width .25s var(--ease), height .25s var(--ease), border-width .25s var(--ease), background-color .25s var(--ease); }
+.curseur-avis input[type="range"]::-moz-range-thumb { box-sizing: content-box; width: var(--taille); height: var(--taille); border: calc((44px - var(--taille)) / 2) solid transparent; background-clip: content-box; border-radius: 50%; background-color: var(--couleur); transition: width .25s var(--ease), height .25s var(--ease), border-width .25s var(--ease), background-color .25s var(--ease); }
 .curseur-bouts { display: flex; justify-content: space-between; color: var(--encre-2); }
 @media (prefers-reduced-motion: reduce) { .curseur-avis input[type="range"]::-webkit-slider-thumb, .curseur-avis input[type="range"]::-moz-range-thumb { transition: none; } }
 .debat-arguments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; font-size: 0.92rem; line-height: 1.4; }
@@ -320,10 +322,24 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 
 /* Séance 0 : la navigation des écrans est épinglée au bas de la fenêtre. Le corps de la page est rembourré d'autant
    (.avec-barre-basse, posé sur <body> par l'îlot) pour que rien ne passe dessous, pied de page compris. */
-.barre-ecrans { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--fond); border-top: 1px solid var(--trait); }
+.barre-ecrans { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--fond); border-top: 1px solid var(--trait); container-type: inline-size; }
 .barre-ecrans-jauge { height: 3px; background: var(--fond-3); }
 .barre-ecrans-jauge > div { height: 100%; background: var(--encre); transition: width .4s var(--ease); }
 .barre-ecrans-ligne { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 2rem 0.75rem; }
+.barre-ecrans-bouton { flex: none; white-space: nowrap; }
+.barre-ecrans-position { min-width: 0; text-align: center; }
+/* Au téléphone, la barre ne garde que les flèches (44 × 44 au moins) et la position sur une ligne. Container query sur la
+   barre elle-même : elle fait toute la largeur de la fenêtre, et l'audit peut la simuler à 390 px (Chrome headless ne
+   descend pas sous 500 px de fenêtre). */
+@container (max-width: 479px) {
+  .barre-ecrans-ligne { gap: 0.5rem; padding: 0.5rem 1rem 0.6rem; }
+  .barre-ecrans-mot { display: none; }
+  .barre-ecrans-bouton { min-width: 44px; min-height: 44px; padding: 0 0.9rem; font-size: 1rem; letter-spacing: 0; display: inline-flex; align-items: center; justify-content: center; }
+  .barre-ecrans-position { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+/* Les étapes au-dessus des écrans : elles se chevauchent sous 720 px ; la barre du bas dit déjà « 2 / 6 · Une affirmation ». */
+.etapes-ecrans { display: flex; justify-content: space-between; list-style: none; padding: 0 0 0.6rem; margin: 0 0 1.2rem; border-bottom: 1px solid var(--trait); font-size: 0.72rem; text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--encre-2); }
+@media (max-width: 720px) { .etapes-ecrans { display: none; } }
 .avec-barre-basse main { padding-bottom: 7.5rem; }
 .avec-barre-basse .pied { padding-bottom: 7.5rem; }
 

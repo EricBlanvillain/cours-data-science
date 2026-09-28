@@ -140,7 +140,7 @@ export default function AccueilSeance0() {
   return (
     <div ref={racine}>
       {/* les cinq étapes, en repère ; la jauge et les commandes sont dans la barre épinglée en bas */}
-      <ol className="mono" style={{ display: "flex", justifyContent: "space-between", listStyle: "none", padding: "0 0 0.6rem", margin: "0 0 1.2rem", borderBottom: "1px solid var(--trait)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "var(--tracking-label)", color: "var(--encre-2)" }}>
+      <ol className="mono etapes-ecrans">
         {ETAPES.map((t, i) => (
           <li key={t} style={i + 1 === ecran ? { color: "var(--encre)", fontWeight: 500 } : undefined}>{t}</li>
         ))}
@@ -324,9 +324,9 @@ export default function AccueilSeance0() {
       <nav aria-label="Écrans" className="barre-ecrans">
         <div className="barre-ecrans-jauge" aria-hidden="true"><div style={{ width: `${(ecran / NB) * 100}%` }} /></div>
         <div className="conteneur barre-ecrans-ligne">
-          <button type="button" className="bouton" onClick={() => aller(ecran - 1)} disabled={ecran === 1}>← Précédent</button>
-          <span className="mono-caps" style={{ color: "var(--encre-2)" }}><span style={{ color: "var(--encre)" }}>{ecran} / {NB}</span> · {ETAPES[ecran - 1]}</span>
-          <button type="button" className="bouton principal" onClick={() => aller(ecran + 1)} disabled={ecran === NB}>Suivant →</button>
+          <button type="button" className="bouton barre-ecrans-bouton" aria-label="Précédent" onClick={() => aller(ecran - 1)} disabled={ecran === 1}><span aria-hidden="true">←</span><span className="barre-ecrans-mot" aria-hidden="true"> Précédent</span></button>
+          <span className="mono-caps barre-ecrans-position" style={{ color: "var(--encre-2)" }}><span style={{ color: "var(--encre)" }}>{ecran} / {NB}</span> · {ETAPES[ecran - 1]}</span>
+          <button type="button" className="bouton principal barre-ecrans-bouton" aria-label="Suivant" onClick={() => aller(ecran + 1)} disabled={ecran === NB}><span className="barre-ecrans-mot" aria-hidden="true">Suivant </span><span aria-hidden="true">→</span></button>
         </div>
       </nav>
     </div>

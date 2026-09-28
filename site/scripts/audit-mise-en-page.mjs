@@ -100,6 +100,19 @@ const MESURE = (pilote) => `
       out.debordsHorizontaux.push({ quoi: el.tagName + (el.className && typeof el.className === 'string' ? '.' + el.className.split(' ')[0] : ''), droite: Math.round(r.right), page: Math.round(largeurPage) });
     });
     out.debordsHorizontaux = out.debordsHorizontaux.slice(0, 8);
+    // la séance 0 au téléphone : aucun libellé des étapes ni de la barre du bas n'en chevauche un autre, les flèches font
+    // 44 × 44 au moins, la position tient sur une ligne
+    out.libelles = [];
+    var visibles = function (els) { return Array.prototype.filter.call(els, function (e) { var r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden'; }); };
+    var chevauche = function (a, b) { var r = a.getBoundingClientRect(), s = b.getBoundingClientRect(); return r.left < s.right - 0.5 && s.left < r.right - 0.5 && r.top < s.bottom - 0.5 && s.top < r.bottom - 0.5; };
+    var paires = function (els, ou) { for (var i = 0; i < els.length; i++) for (var j = i + 1; j < els.length; j++) if (chevauche(els[i], els[j])) out.libelles.push(ou + ' : « ' + els[i].textContent.trim() + ' » chevauche « ' + els[j].textContent.trim() + ' »'); };
+    paires(visibles(document.querySelectorAll('.etapes-ecrans li')), 'étapes');
+    var ligne = document.querySelector('.barre-ecrans-ligne');
+    if (ligne) {
+      paires(visibles(ligne.children), 'barre du bas');
+      visibles(ligne.querySelectorAll('button')).forEach(function (b) { var r = b.getBoundingClientRect(); if (r.width < 44 - 0.5 || r.height < 44 - 0.5) out.libelles.push('barre du bas : bouton « ' + b.getAttribute('aria-label') + ' » de ' + Math.round(r.width) + ' × ' + Math.round(r.height) + ' px, 44 × 44 au moins'); });
+      var pos = ligne.querySelector('.barre-ecrans-position'); if (pos) { var lh = parseFloat(getComputedStyle(pos).lineHeight) || parseFloat(getComputedStyle(pos).fontSize) * 1.5; if (pos.getBoundingClientRect().height > lh * 1.5) out.libelles.push('barre du bas : la position tient sur ' + Math.round(pos.getBoundingClientRect().height / lh) + ' lignes'); }
+    }
   }
 
   // 1. les grilles
@@ -154,7 +167,7 @@ const server = http.createServer((req, res) => {
   const p = path.join(DIST, decodeURIComponent(chemin));
   if (!fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { "Content-Type": MIME[path.extname(p)] || "application/octet-stream" });
-  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); const sim = new URLSearchParams(query).get("simule"); res.end(fs.readFileSync(p, "utf8").replace("</body>", (sim ? `<style>html{width:${Number(sim)}px}</style>` : "") + MESURE(etat ? etat.pilote : ""))); }
+  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); const sim = new URLSearchParams(query).get("simule"); res.end(fs.readFileSync(p, "utf8").replace("</body>", (sim ? `<style>html{width:${Number(sim)}px}.barre-ecrans{right:auto;width:${Number(sim)}px}</style>` : "") + MESURE(etat ? etat.pilote : ""))); }
   else fs.createReadStream(p).pipe(res);
 });
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
@@ -178,6 +191,7 @@ for (const etat of PAGES) {
   const res = await mesurer(etat, 500, LARGEUR_TELEPHONE);
   const ou = `${etat.id} @${LARGEUR_TELEPHONE} (simulé)`;
   if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
+  if (res.libelles && res.libelles.length) { fautes += res.libelles.length; lignes.push(`${ou} · libellés :\n   !! ${res.libelles.join("\n   !! ")}`); }
   if (res.debordsHorizontaux.length) { fautes += res.debordsHorizontaux.length; lignes.push(`${ou} · déborde à droite :\n   !! ${res.debordsHorizontaux.map((d) => d.quoi + " jusqu'à " + d.droite + "px pour " + d.page).join("\n   !! ")}`); }
   else lignes.push(`${ou.padEnd(40)} rien ne déborde à droite`);
 }
