@@ -53,8 +53,10 @@ const PAGES = [
   { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "seance-9-limite-juste", pilote: `const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "1 · Hallucination").click(); await w(300);` },
   { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "seance-10", pilote: "" },
   { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "seance-10-consigne-juste", pilote: `const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "2 · Oubliée").click(); await w(300);` },
+  { page: "lecons/seance-11-rag.html", id: "seance-11", pilote: "" },
+  { page: "lecons/seance-11-rag.html", id: "seance-11-rag-juste", pilote: `const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "1 · La recherche").click(); await w(300);` },
 ];
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.

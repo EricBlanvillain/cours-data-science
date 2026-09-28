@@ -1,0 +1,76 @@
+---
+numero: 11
+titre: Le RAG
+niveau: ⭐⭐⭐
+duree: 1 h 30
+resume: "Donner de la mémoire à son IA : un modèle ne connaît pas tes documents, alors on cherche les bons passages et on les glisse dans le prompt. Découper, vectoriser, chercher, injecter, répondre."
+livrable: Un assistant RAG qui répond à des questions sur des documents choisis par soi.
+objectifs:
+  - Tu sauras dire pourquoi un modèle invente sur tes documents, et comment le RAG l'en empêche.
+  - Tu sauras ce qu'est un embedding et lire une similarité cosinus.
+  - Tu sauras construire les cinq étapes d'un RAG et dire, quand il se trompe, si c'est la recherche ou la réponse.
+aRetenir:
+  - Un modèle ne connaît pas tes documents ; si on ne lui donne rien, il invente.
+  - Le RAG est un examen à livre ouvert, on cherche la bonne page et on la glisse dans le prompt.
+  - Un embedding fait d'un texte une liste de nombres ; des sens proches donnent des points proches.
+  - Cinq étapes, découper, vectoriser, chercher, injecter, répondre.
+  - Quand un RAG se trompe, on regarde d'abord les passages trouvés, puis la réponse.
+---
+import SansAvecRag from "../../components/schemas/SansAvecRag.astro";
+import Embeddings2D from "../../components/schemas/Embeddings2D.astro";
+import PipelineRag from "../../components/schemas/PipelineRag.astro";
+import ScoresSeuil from "../../components/schemas/ScoresSeuil.astro";
+import OuARateLeRag from "../../components/islands/OuARateLeRag";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Le modèle ne connaît pas tes documents
+
+Le notebook invente un jeu de cartes, Sardine Express, et écrit ses règles : aucun modèle ne les a jamais lues. La même question, posée trois fois au vrai modèle du notebook :
+
+<SansAvecRag />
+
+<details>
+<summary>Pourquoi ne pas toujours coller tout le texte ?</summary>
+
+Quinze paragraphes tiennent dans un prompt, un livre de 300 pages non : chaque token se paie en calcul ou en argent, et un petit modèle se perd dans trop de texte. Ici, même avec les règles sous les yeux, il a écrit « poser » au lieu de « piocher ». Le RAG ne donne que les passages utiles.
+
+</details>
+
+## Des sens proches, des points proches
+
+Pour trouver la bonne page, il faut mesurer si deux textes parlent de la même chose.
+
+<Embeddings2D />
+
+## Cinq étapes
+
+<PipelineRag />
+
+<details>
+<summary>Chercher par mots ou par sens</summary>
+
+Le notebook a deux façons de vectoriser. Les embeddings cherchent par sens : « la carte qui fait piocher deux cartes » et « la carte Mouette » sont à 0,609, contre 0,145 pour « le jeu a été créé en 2019 ». Le repli TF-IDF compte les mots en commun, comme un Ctrl+F. Parfois, il gagne : pour « Qui a créé le jeu ? », c'est lui qui trouve le bon paragraphe.
+
+</details>
+
+## Quand il se trompe
+
+Un RAG peut rater à deux endroits : la recherche ne trouve pas la bonne page, ou le modèle l'a sous les yeux et répond autre chose. Voici six vraies questions, leurs passages trouvés et la vraie réponse.
+
+<OuARateLeRag client:load />
+
+<ScoresSeuil />
+
+### À toi : pose une question à ton cours
+
+Tes notes, les règles d'un jeu, le résumé d'un livre : 25 minutes pour ton assistant.
+
+- **Colle ton texte**, au moins huit paragraphes séparés par une ligne vide, puis découpe et vectorise.
+- **Pose cinq questions**, dont une hors sujet, et note si chaque réponse est juste.
+- **Quand il se trompe, affiche les passages trouvés** : recherche ou réponse ? Puis règle la taille des chunks, `k` ou la consigne.
+
+<BoutonsSeance dossier="seance-11-rag" lecon="11_rag.ipynb" exercices="11_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `11_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il s'ouvre par une question, à se poser à voix haute au début de la séance suivante.

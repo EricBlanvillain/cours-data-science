@@ -37,6 +37,6 @@ export const seances: Seance[] = [
   { numero: 8, dossier: "seance-08-kaggle-titanic-2", titre: "Kaggle Titanic 2/2", niveau: "⭐⭐⭐", bloc: 3, resume: "Comparer 4 modèles, éviter les fuites, régler les hyperparamètres, présenter.", slug: "seance-08-kaggle-titanic-2" },
   { numero: 9, dossier: "seance-09-comment-fonctionne-un-llm", titre: "Comment fonctionne un LLM", niveau: "⭐⭐", bloc: 4, resume: "Tokens, prédiction du mot suivant, température, hallucinations, LLM et SLM.", slug: "seance-09-comment-fonctionne-un-llm" },
   { numero: 10, dossier: "seance-10-parler-a-un-llm-par-le-code", titre: "Parler à un LLM par le code", niveau: "⭐⭐", bloc: 4, resume: "Une API, les trois rôles, le prompt système, l'historique, la sortie JSON, un chatbot à soi.", slug: "seance-10-parler-a-un-llm-par-le-code" },
-  { numero: 11, dossier: "seance-11-rag", titre: "Le RAG", niveau: "⭐⭐⭐", bloc: 4, resume: "Donner de la mémoire à son IA : découper, vectoriser, chercher, injecter, répondre." },
+  { numero: 11, dossier: "seance-11-rag", titre: "Le RAG", niveau: "⭐⭐⭐", bloc: 4, resume: "Donner de la mémoire à son IA : découper, vectoriser, chercher, injecter, répondre.", slug: "seance-11-rag" },
   { numero: 12, dossier: "seance-12-agents-et-projet-final", titre: "Agents et projet final", niveau: "⭐⭐⭐", bloc: 4, resume: "Un agent avec trois outils, les bonnes pratiques, le portfolio et la présentation finale." },
 ];

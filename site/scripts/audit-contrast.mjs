@@ -216,6 +216,16 @@ const ETATS = [
   { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-faux", pilote: `
       const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "1 · Tenue").click(); await w(300);
       if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-11-rag.html", id: "s11-initiale", pilote: "" },
+  { page: "lecons/seance-11-rag.html", id: "s11-rag-ouvert", pilote: `
+      const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300);
+      if (!g.textContent.includes("diagnostic ouvert")) throw new Error("le cuivre « diagnostic ouvert » manque");` },
+  { page: "lecons/seance-11-rag.html", id: "s11-rag-juste", pilote: `
+      const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "1 · La recherche").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-11-rag.html", id: "s11-rag-faux", pilote: `
+      const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "3 · Rien").click(); await w(300);
+      if (!g.textContent.includes("pas ce diagnostic-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

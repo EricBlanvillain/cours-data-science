@@ -1,0 +1,40 @@
+---
+/**
+ * L'idée d'embedding sur les vecteurs du notebook, écrits à la main en deux dimensions (objet ↔ animal, petit ↔ gros),
+ * et trois similarités cosinus calculées ; les vrais embeddings du RAG en ont 384 (src/data/rag.ts).
+ */
+import { mots2d, sim2d, EMBEDDINGS } from "../../data/rag";
+const X0 = 60, Y0 = 20, W = 420, H = 260;
+const sx = (v: number) => X0 + v * W, sy = (v: number) => Y0 + (1 - v) * H;
+const fr = (v: number) => v.toFixed(2).replace(".", ",");
+const decal: Record<string, [number, number]> = { chien: [8, -6], chat: [8, 12], souris: [8, 4], pomme: [-50, 4], banane: [8, 4] };
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 320" role="img" aria-labelledby="e2-titre e2-desc">
+    <title id="e2-titre">Des mots proches sont des points proches</title>
+    <desc id="e2-desc">Dix mots placés à la main sur deux axes, objet vers animal et petit vers gros. Chat et chien sont côte à côte, similarité cosinus 0,98 ; chat et camion sont loin, 0,24 ; pomme et banane, 0,99. Les vrais embeddings du RAG ont 384 dimensions.</desc>
+    <rect x={X0} y={Y0} width={W} height={H} class="fond-2 trait" stroke-width="1" />
+    {Object.entries(mots2d).map(([m, [x, y]]) => (
+      <g>
+        <circle cx={sx(x)} cy={sy(y)} r="5" class="plein" />
+        <text x={sx(x) + (decal[m]?.[0] ?? 8)} y={sy(y) + (decal[m]?.[1] ?? 4)} class="encre" font-size="12.5">{m}</text>
+      </g>
+    ))}
+    <text x={X0 + W / 2} y={Y0 + H + 22} text-anchor="middle" class="encre-2" font-size="12">objet ←→ animal</text>
+    <text x={X0 - 12} y={Y0 + H / 2} text-anchor="middle" class="encre-2" font-size="12" transform={`rotate(-90 ${X0 - 12} ${Y0 + H / 2})`}>petit ←→ gros</text>
+
+    <text x="540" y="40" class="encre" font-size="15" font-weight="700">similarité cosinus</text>
+    <text x="540" y="60" class="encre-2" font-size="12">l'angle entre deux flèches : 1 = même direction, 0 = rien à voir</text>
+    {[["chat · chien", sim2d.chat_chien], ["pomme · banane", sim2d.pomme_banane], ["chat · camion", sim2d.chat_camion]].map(([l, v], i) => (
+      <g>
+        <text x="540" y={100 + i * 40} class="encre" font-size="13">{l}</text>
+        <rect x="680" y={86 + i * 40} width={220 * (v as number)} height="20" class={(v as number) > 0.5 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={688 + 220 * (v as number)} y={101 + i * 40} class="encre mono" font-size="12.5" font-weight="700">{fr(v as number)}</text>
+      </g>
+    ))}
+    <text x="540" y="240" class="encre" font-size="13" font-weight="700">Ici, deux nombres par mot, écrits à la main.</text>
+    <text x="540" y="260" class="encre-2" font-size="12">Le modèle d'embeddings du RAG en calcule {EMBEDDINGS.dimensions} par paragraphe :</text>
+    <text x="540" y="276" class="encre-2" font-size="12">impossible à dessiner, même calcul de cosinus.</text>
+  </svg>
+  <figcaption>Un embedding fait d'un texte une liste de nombres ; des sens proches donnent des points proches.</figcaption>
+</figure>

@@ -1,0 +1,42 @@
+---
+/**
+ * Les cinq étapes du RAG du notebook, sur le vrai passage (src/data/rag.ts) : découper, vectoriser, chercher, injecter,
+ * répondre, avec les trois paragraphes trouvés pour la carte Mouette et leur score.
+ */
+import { mouette as m, nbParagraphes, EMBEDDINGS } from "../../data/rag";
+const etapes = [
+  { mot: "découper", ligne: `${nbParagraphes} paragraphes`, sous: "un paragraphe = un chunk" },
+  { mot: "vectoriser", ligne: `${nbParagraphes} × ${EMBEDDINGS.dimensions} nombres`, sous: "un embedding par chunk" },
+  { mot: "chercher", ligne: "les 3 plus proches", sous: "cosinus avec la question" },
+  { mot: "injecter", ligne: "dans le prompt système", sous: "consigne : ce contexte seul" },
+  { mot: "répondre", ligne: "le modèle écrit", sous: "en 2 phrases au plus" },
+];
+const fr = (v: number) => v.toFixed(3).replace(".", ",");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 330" role="img" aria-labelledby="pr-titre pr-desc">
+    <title id="pr-titre">Les cinq étapes du RAG</title>
+    <desc id="pr-desc">Découper les règles en 15 paragraphes, les vectoriser en 15 fois 384 nombres, chercher les trois plus proches de la question, les injecter dans le prompt système, puis répondre. Pour la carte Mouette : le paragraphe 6 à 0,616, les paragraphes 3 et 9 à 0,510 ; réponse du modèle : le joueur suivant doit piocher 2 cartes et passer son tour.</desc>
+    {etapes.map((e, i) => (
+      <g>
+        <rect x={20 + i * 188} y="20" width="172" height="92" class={i === 2 ? "plein" : "fond-2 plein-trait"} stroke-width="1.5" />
+        <text x={34 + i * 188} y="44" class={(i === 2 ? "sur-plein" : "encre-2") + " mono"} font-size="11.5">{i + 1}</text>
+        <text x={34 + i * 188} y="68" class={i === 2 ? "sur-plein" : "encre"} font-size="16" font-weight="700">{e.mot}</text>
+        <text x={34 + i * 188} y="88" class={i === 2 ? "sur-plein" : "encre"} font-size="12">{e.ligne}</text>
+        <text x={34 + i * 188} y="104" class={i === 2 ? "sur-plein" : "encre-2"} font-size="11">{e.sous}</text>
+        {i < 4 && <g class="trait" stroke-width="2" fill="none"><path d={`M${194 + i * 188} 66 H${206 + i * 188}`} /></g>}
+      </g>
+    ))}
+    <text x="20" y="150" class="encre" font-size="13.5" font-weight="700">« {m.question} »</text>
+    <text x="20" y="172" class="encre-2" font-size="12">les trois paragraphes trouvés, et leur score :</text>
+    {m.passages.map((p, i) => (
+      <g>
+        <text x="20" y={198 + i * 24} class="encre mono" font-size="12" font-weight={i === 0 ? "700" : "400"}>¶{p.n}  {fr(p.score)}</text>
+        <text x="130" y={198 + i * 24} class="encre" font-size="12.5" font-weight={i === 0 ? "700" : "400"}>{p.debut}</text>
+      </g>
+    ))}
+    <rect x="20" y="272" width="920" height="40" class="plein" />
+    <text x="34" y="297" class="sur-plein" font-size="13"><tspan font-weight="700">le modèle répond : </tspan>{m.avecRag}</text>
+  </svg>
+  <figcaption>Un RAG cherche la bonne page, la glisse dans le prompt, puis laisse le modèle répondre.</figcaption>
+</figure>

@@ -1,0 +1,26 @@
+---
+/**
+ * Le meilleur score de recherche pour quatre questions, deux sur le jeu et deux hors sujet, avec le seuil de 0,3 sous
+ * lequel on répond « rien trouvé » avant même d'appeler le modèle (src/data/rag.ts, embeddings du notebook).
+ */
+import { meilleursScores, seuil } from "../../data/rag";
+const X0 = 330, L = 560;
+const fr = (v: number) => v.toFixed(3).replace(".", ",");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 230" role="img" aria-labelledby="ss-titre ss-desc">
+    <title id="ss-titre">Un seuil pour les questions hors sujet</title>
+    <desc id="ss-desc">Meilleur score de similarité : carte Mouette 0,616, durée d'une partie 0,373, Coupe du monde 2022 0,271, capitale du Japon 0,105. Un seuil à 0,3 laisse passer les deux questions sur le jeu et arrête les deux autres.</desc>
+    {meilleursScores.map((q, i) => (
+      <g>
+        <text x="30" y={44 + i * 40} class="encre" font-size="13">{q.question}</text>
+        <rect x={X0} y={30 + i * 40} width={L * q.score} height="22" class={q.surLeJeu ? "plein" : "fond-3 plein-trait"} stroke-width="1.5" />
+        <text x={Math.abs(L * q.score - L * seuil) < 50 && q.score < seuil ? X0 + L * seuil + 8 : X0 + 8 + L * q.score} y={46 + i * 40} class="encre mono" font-size="12.5" font-weight="700">{fr(q.score)}</text>
+      </g>
+    ))}
+    <line x1={X0 + L * seuil} x2={X0 + L * seuil} y1="20" y2="196" class="plein-trait" stroke-width="1.5" stroke-dasharray="5 3" />
+    <text x={X0 + L * seuil + 6} y="212" class="encre" font-size="12">seuil {String(seuil).replace(".", ",")} : en dessous, « rien trouvé dans les documents »</text>
+    <text x="30" y="212" class="encre-2" font-size="12">plein : question sur le jeu · clair : hors sujet</text>
+  </svg>
+  <figcaption>Hors sujet, les scores restent bas : un seuil refuse la question avant même d'appeler le modèle.</figcaption>
+</figure>

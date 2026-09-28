@@ -293,4 +293,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "« Voici le JSON : {…} » n'est pas du JSON valide. On isole la partie entre accolades, on essaie json.loads dans un try, et on redemande si ça rate.",
     },
   ],
+  11: [
+    {
+      question: "Dans le dessin à deux axes, chat et camion ont une similarité cosinus de 0,24. Ça veut dire quoi ?",
+      options: ["Ils sont presque identiques", "Leurs flèches partent dans des directions très différentes : ils ne parlent pas de la même chose", "Le camion est plus gros", "Il y a une erreur de calcul"],
+      bonne: 1,
+      explication: "La similarité cosinus regarde l'angle entre deux vecteurs : 1, même direction ; proche de 0, rien à voir. Chat et chien, eux, sont à 0,98.",
+    },
+    {
+      question: "Pourquoi ne pas coller tout un livre de 300 pages dans le prompt, au lieu de chercher des passages ?",
+      options: ["Le modèle refuse les livres", "Chaque token se paie, et un petit modèle se perd dans trop de texte", "Les livres sont protégés", "Le prompt système ne prend que des questions"],
+      bonne: 1,
+      explication: "Plus le prompt est long, plus il coûte, en temps ou en argent, et plus le modèle se disperse. Le RAG n'envoie que les quelques passages qui servent.",
+    },
+    {
+      question: "« La carte qui fait piocher deux cartes » et « la carte Mouette » sont à 0,609 avec les embeddings. Pourquoi si proches ?",
+      options: ["Elles ont beaucoup de mots en commun", "Le modèle d'embeddings rapproche les textes par leur sens, pas seulement par leurs mots", "Le mot « carte » compte double", "Par hasard"],
+      bonne: 1,
+      explication: "Seul « carte » est commun aux deux phrases. Le modèle d'embeddings a appris que des phrases de sens voisin donnent des vecteurs voisins ; TF-IDF, lui, ne voit que les mots.",
+    },
+    {
+      question: "« Quelle est la capitale du Japon ? » obtient un meilleur score de 0,105, sous le seuil de 0,3. Que fait l'assistant ?",
+      options: ["Il envoie quand même les passages au modèle", "Il répond « rien trouvé dans les documents » sans appeler le modèle", "Il cherche sur internet", "Il baisse le seuil"],
+      bonne: 1,
+      explication: "Sous le seuil, aucun passage ne parle vraiment de la question. Refuser avant d'appeler le modèle évite une réponse inventée et économise des tokens.",
+    },
+  ],
 };

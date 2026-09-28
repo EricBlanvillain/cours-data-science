@@ -1,0 +1,23 @@
+---
+/**
+ * La même question sur la carte Mouette, trois fois, au vrai modèle : sans rien, avec toutes les règles collées dans le
+ * prompt, avec le RAG (src/data/rag.ts). Trois cartes de la primitive.
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { mouette as m } from "../../data/rag";
+const cas = [
+  { titre: "sans rien", ligne: "le modèle ne connaît pas ce jeu", rep: m.sansRag, verdict: "inventé" },
+  { titre: "toutes les règles dans le prompt", ligne: "15 paragraphes collés d'un bloc", rep: m.toutLeTexte, verdict: "presque : « poser » au lieu de « piocher »" },
+  { titre: "avec le RAG", ligne: "les 3 paragraphes les plus proches", rep: m.avecRag, verdict: "juste" },
+];
+---
+<GrilleCartes bandes={4} liste={false} class="large" min="14rem">
+  {cas.map((c) => (
+    <article class="carte">
+      <p class="etiquette">{c.titre}</p>
+      <p class="discret">{c.ligne}</p>
+      <p class="encart" style="font-size: 0.93rem;"><span class="mono-caps" style="display: block; color: var(--encre-2);">le modèle répond</span>{c.rep}</p>
+      <p class="mono-caps" style="color: var(--encre);">{c.verdict}</p>
+    </article>
+  ))}
+</GrilleCartes>
