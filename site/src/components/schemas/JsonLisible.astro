@@ -1,0 +1,38 @@
+---
+/**
+ * Du texte au dictionnaire : la vraie réponse JSON du modèle pour la fiche de Pikachu, extraite entre accolades, lue par
+ * json.loads, et relue par un humain (src/data/dialogue.ts ; Pikachu est de type Électrik dans la PokéAPI, séance 4).
+ */
+import { jsonPikachu } from "../../data/dialogue";
+const lignes = jsonPikachu.essais[0].texte.split("\n");
+const r = jsonPikachu.resultat as Record<string, string | number>;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 250" role="img" aria-labelledby="jl-titre jl-desc">
+    <title id="jl-titre">Un JSON lisible, un contenu faux</title>
+    <desc id="jl-desc">La réponse du modèle est un objet JSON : nom Pikachu, type Eaux, pv 100, attaque préférée « Type de la forme ». extraire_json garde ce qui est entre les accolades, json.loads en fait un dictionnaire du premier coup. Mais Pikachu est de type électrique : le programme lit sans erreur une information fausse.</desc>
+    <text x="30" y="26" class="encre" font-size="14" font-weight="700">1. le texte du modèle</text>
+    <rect x="30" y="38" width="290" height={lignes.length * 20 + 16} class="fond-3 trait" stroke-width="1.5" />
+    {lignes.map((l, i) => <text x="42" y={58 + i * 20} class="encre mono" font-size="12" font-weight={l.includes("type") ? "700" : "400"}>{l}</text>)}
+    <g class="trait" stroke-width="2" fill="none"><path d="M330 100 H372" /><path d="M367 95 L375 100 L367 105" /></g>
+    <text x="352" y="90" text-anchor="middle" class="encre mono" font-size="11">{"{ … }"}</text>
+
+    <text x="390" y="26" class="encre" font-size="14" font-weight="700">2. json.loads : un dictionnaire</text>
+    <rect x="390" y="38" width="290" height={Object.keys(r).length * 26 + 12} class="fond-2 plein-trait" stroke-width="1.5" />
+    {Object.entries(r).map(([k, v], i) => (
+      <g>
+        <text x="402" y={60 + i * 26} class="encre-2 mono" font-size="12">{k}</text>
+        <text x="540" y={60 + i * 26} class={(k === "type" ? "encre" : "encre") + " mono"} font-size="12.5" font-weight={k === "type" ? "700" : "400"}>{String(v)}</text>
+      </g>
+    ))}
+    <text x="390" y="172" class="encre-2" font-size="12">lu du premier essai, aucune erreur Python</text>
+
+    <text x="700" y="26" class="encre" font-size="14" font-weight="700">3. relu par un humain</text>
+    <rect x="700" y="40" width="240" height="84" class="plein" />
+    <text x="714" y="66" class="sur-plein" font-size="13" font-weight="700">« type » : Eaux ?</text>
+    <text x="714" y="88" class="sur-plein" font-size="12">Pikachu est de type Électrik.</text>
+    <text x="714" y="108" class="sur-plein" font-size="12">La forme est juste, le fond non.</text>
+    <text x="30" y="226" class="encre-2" font-size="12">extraire_json garde ce qui est entre la première et la dernière accolade ; si json.loads échoue, demander_json redemande, trois fois au plus.</text>
+  </svg>
+  <figcaption>Du JSON se lit par programme ; ce qu'il contient se vérifie quand même.</figcaption>
+</figure>

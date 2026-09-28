@@ -24,7 +24,7 @@ const QUIZ = path.join(ROOT, "src/data/quiz.ts");
 /* Le vocabulaire des blocs : ce qu'une leçon a le droit d'importer. */
 const VOCABULAIRE = [
   /^\.\.\/\.\.\/components\/schemas\/[A-Za-z0-9]+\.astro$/,                      // schémas et courbes SVG
-  /^\.\.\/\.\.\/components\/islands\/(Frise|ClassifOuRegression|AccueilSeance0|QuelGraphique|QuelleCommande|SupprimerRemplirGarder|QuelPiege|CeModeleACompris|QuiAPlusDeChances|FuiteOuPas|QuelleLimite)$/,  // îlots interactifs
+  /^\.\.\/\.\.\/components\/islands\/(Frise|ClassifOuRegression|AccueilSeance0|QuelGraphique|QuelleCommande|SupprimerRemplirGarder|QuelPiege|CeModeleACompris|QuiAPlusDeChances|FuiteOuPas|QuelleLimite|ConsigneTenue)$/,  // îlots interactifs
   /^\.\.\/\.\.\/components\/(Causes|CartesNumerotees|BoutonsSeance)\.astro$/,     // blocs composés
   /^\.\.\/\.\.\/data\/[a-z0-9-]+$/,                                             // données typées
 ];

@@ -1,0 +1,42 @@
+---
+/**
+ * Une liste de messages et ses trois rôles, sur le vrai coach de révisions du notebook : le prompt système découpé en
+ * qui / comment / quoi faire / quoi ne pas faire, la question, la vraie réponse du modèle (src/data/dialogue.ts).
+ */
+import { coach } from "../../data/dialogue";
+const morceaux = [
+  { t: "Tu es un coach de révisions pour un débutant.", r: "qui" },
+  { t: "Tu tutoies, tu réponds en français en 3 phrases maximum.", r: "comment" },
+  { t: "Tu poses toujours une question à la fin.", r: "quoi faire" },
+  { t: "Tu ne donnes jamais la réponse d'un exercice directement : tu donnes un indice.", r: "quoi ne pas faire" },
+];
+const couper = (s: string, n: number) => { const mots = s.split(" "); const l: string[] = []; let c = ""; for (const m of mots) { if ((c + " " + m).trim().length > n) { l.push(c.trim()); c = m; } else c += " " + m; } if (c.trim()) l.push(c.trim()); return l; };
+const rep = couper(coach.reponse, 92);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 400" role="img" aria-labelledby="rm-titre rm-desc">
+    <title id="rm-titre">Trois rôles dans une liste de messages</title>
+    <desc id="rm-desc">Le message system porte le prompt du coach en quatre morceaux : qui, comment, quoi faire, quoi ne pas faire. Le message user : « J'ai un contrôle de maths demain et je stresse. » Le message assistant : la vraie réponse du modèle, qui vouvoie et ne pose pas de question à la fin.</desc>
+    <text x="30" y="26" class="encre mono" font-size="12.5" font-weight="700">role: "system"</text>
+    <text x="200" y="26" class="encre-2" font-size="12">la fiche de poste, invisible pour l'utilisateur</text>
+    {morceaux.map((m, i) => (
+      <g>
+        <rect x="30" y={38 + i * 34} width="660" height="28" class="fond-3" />
+        <text x="42" y={57 + i * 34} class="encre" font-size="12.5">{m.t}</text>
+        <path d={`M696 ${52 + i * 34} H712`} class="trait" stroke-width="1.5" />
+        <text x="718" y={57 + i * 34} class="encre mono" font-size="12.5" font-weight="700">{m.r}</text>
+      </g>
+    ))}
+    <text x="30" y="200" class="encre mono" font-size="12.5" font-weight="700">role: "user"</text>
+    <rect x="30" y="210" width="660" height="30" class="fond-2 plein-trait" stroke-width="1.5" />
+    <text x="42" y="230" class="encre" font-size="13">{coach.question}</text>
+    <text x="30" y="266" class="encre mono" font-size="12.5" font-weight="700">role: "assistant"</text>
+    <text x="200" y="266" class="encre-2" font-size="12">la vraie réponse du modèle</text>
+    <rect x="30" y="276" width="660" height={18 * rep.length + 16} class="plein" />
+    {rep.map((l, i) => <text x="42" y={296 + i * 18} class="sur-plein" font-size="12.5">{l}</text>)}
+    <text x="718" y="296" class="encre" font-size="12.5" font-weight="700">vouvoie</text>
+    <text x="718" y="314" class="encre" font-size="12.5" font-weight="700">et ne pose pas</text>
+    <text x="718" y="332" class="encre" font-size="12.5" font-weight="700">de question</text>
+  </svg>
+  <figcaption>On envoie une liste de messages, chacun avec son rôle ; le prompt système dit qui, comment, quoi faire et quoi éviter.</figcaption>
+</figure>

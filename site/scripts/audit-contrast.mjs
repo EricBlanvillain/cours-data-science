@@ -206,6 +206,16 @@ const ETATS = [
   { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-faux", pilote: `
       const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "3 · Calcul").click(); await w(300);
       if (!g.textContent.includes("pas cette limite-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-initiale", pilote: "" },
+  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-ouvert", pilote: `
+      const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300);
+      if (!g.textContent.includes("réponse ouverte")) throw new Error("le cuivre « réponse ouverte » manque");` },
+  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-juste", pilote: `
+      const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "2 · Oubliée").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-faux", pilote: `
+      const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "1 · Tenue").click(); await w(300);
+      if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

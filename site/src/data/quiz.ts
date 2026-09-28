@@ -267,4 +267,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "Le notebook télécharge le modèle une fois, puis tout se calcule dans ta session Colab. Avec l'API d'un gros modèle, au contraire, chaque message part sur le serveur de son éditeur.",
     },
   ],
+  10: [
+    {
+      question: "Où ranges-tu la personnalité et les règles de ton chatbot ?",
+      options: ["Dans le message user", "Dans le message system", "Dans le message assistant", "Dans le nom de la fonction"],
+      bonne: 1,
+      explication: "Le message system passe avant tout le reste et l'utilisateur ne le voit pas : c'est la fiche de poste. user, c'est toi ; assistant, ce que le modèle a déjà répondu.",
+    },
+    {
+      question: "Ton chatbot se souvient de ton prénom au tour suivant. Comment ?",
+      options: ["Le modèle a une mémoire", "Le programme renvoie toute la conversation à chaque tour", "Colab enregistre le prénom", "Le prénom est dans le prompt système"],
+      bonne: 1,
+      explication: "Le modèle repart de zéro à chaque appel. La classe Chatbot ajoute chaque message à sa liste et renvoie la liste entière : c'est elle, la mémoire.",
+    },
+    {
+      question: "Le guide de Paris reçoit 47 tokens au premier tour et 285 au cinquième. Pourquoi ?",
+      options: ["Les questions sont plus longues", "L'historique entier est renvoyé à chaque tour, et il grandit", "Le modèle ralentit", "Le prompt système change"],
+      bonne: 1,
+      explication: "Chaque tour ajoute une question et une réponse à ce qu'on renvoie. Une longue conversation coûte de plus en plus cher, et un petit modèle finit par perdre le fil.",
+    },
+    {
+      question: "Pourquoi extraire_json garde-t-il seulement ce qui se trouve entre la première et la dernière accolade ?",
+      options: ["Pour aller plus vite", "Parce que le modèle ajoute parfois du texte autour, qui ferait échouer json.loads", "Parce que JSON interdit les espaces", "Pour enlever les clés inutiles"],
+      bonne: 1,
+      explication: "« Voici le JSON : {…} » n'est pas du JSON valide. On isole la partie entre accolades, on essaie json.loads dans un try, et on redemande si ça rate.",
+    },
+  ],
 };

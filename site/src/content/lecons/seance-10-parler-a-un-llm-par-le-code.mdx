@@ -1,0 +1,80 @@
+---
+numero: 10
+titre: Parler à un LLM par le code
+niveau: ⭐⭐
+duree: 1 h 30
+resume: "Parler à un modèle depuis Python : une liste de messages, trois rôles, un prompt système qui donne une personnalité et des règles, un historique qui fait la mémoire, et du JSON pour réutiliser les réponses."
+livrable: Un chatbot à thème qui fonctionne, avec sa personnalité écrite par soi.
+objectifs:
+  - Tu sauras envoyer une liste de messages à un modèle et distinguer les rôles system, user et assistant.
+  - Tu sauras écrire un prompt système avec un rôle, un ton, une tâche et une règle.
+  - Tu sauras garder l'historique d'une conversation et obtenir une réponse en JSON lisible par un programme.
+aRetenir:
+  - Un LLM s'utilise comme une API, une commande part, une réponse revient.
+  - On envoie une liste de messages, chacun avec son rôle, system, user ou assistant.
+  - Le prompt système est la fiche de poste, qui, comment, quoi faire, quoi ne pas faire.
+  - Le modèle n'a aucune mémoire ; le chatbot renvoie tout l'historique, et chaque tour coûte plus.
+  - Du JSON se lit par programme, dans un try, avec une nouvelle demande si ça rate ; son contenu se vérifie quand même.
+---
+import RolesMessages from "../../components/schemas/RolesMessages.astro";
+import HistoriqueGrandit from "../../components/schemas/HistoriqueGrandit.astro";
+import JsonLisible from "../../components/schemas/JsonLisible.astro";
+import ConsigneTenue from "../../components/islands/ConsigneTenue";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Une commande, une réponse
+
+Une API, c'est un serveur de restaurant : une commande précise part, un plat revient. Avec un modèle de langage, la commande est une liste de messages et le plat est du texte.
+
+```python
+messages = [{"role": "user", "content": "Quelle est la capitale de la France ?"}]
+reponse = llm(messages)
+```
+
+<details>
+<summary>Petit modèle dans Colab ou gros modèle par une clé</summary>
+
+Le notebook appelle toujours `llm(messages)`. Que le modèle tourne dans ta session Colab ou chez un éditeur avec une clé d'API, le reste du code revient au même : seule la fonction `llm` change. La clé, elle, se range dans les Secrets de Colab, jamais dans le code.
+
+</details>
+
+## Trois rôles
+
+Tout ce qui suit sort du modèle du notebook, Qwen 2.5 0.5B, lancé pour de vrai.
+
+<RolesMessages />
+
+<ConsigneTenue client:load />
+
+## Une mémoire qui n'en est pas une
+
+Chaque question repart de zéro : le modèle n'a aucune mémoire. Un chatbot garde la liste de tous les messages et la renvoie entière à chaque tour.
+
+<HistoriqueGrandit />
+
+## Du JSON pour un programme
+
+Pour réutiliser une réponse, afficher un quiz ou remplir un tableau, on demande un format fixe, du JSON, et on le transforme en dictionnaire.
+
+<JsonLisible />
+
+<details>
+<summary>Le maître du jeu du notebook</summary>
+
+Le projet propose un maître du jeu : décrire la scène, proposer deux choix, finir par « Que fais-tu ? ». Lancé pour de vrai, le petit modèle n'a tenu aucune de ces règles sur les trois tours, et n'a pas répété le nom de l'archère quand on le lui a demandé. Ta personnalité tiendra mieux si elle est courte et précise, et encore mieux sur un gros modèle.
+
+</details>
+
+### À toi : ton bot à thème
+
+Un coach de révisions, un générateur de quiz ou un maître du jeu : 25 minutes pour le tien.
+
+- **Le prompt système** : qui, comment, quoi faire, quoi ne pas faire.
+- **Un scénario de test** de trois messages, dont « tu te souviens de… ? ».
+- **Une réponse en JSON** qui résume l'état de la conversation : un score, un inventaire, une fiche.
+
+<BoutonsSeance dossier="seance-10-parler-a-un-llm-par-le-code" lecon="10_parler_a_un_llm_par_le_code.ipynb" exercices="10_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `10_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées.

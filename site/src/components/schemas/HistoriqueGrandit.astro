@@ -1,0 +1,32 @@
+---
+/**
+ * L'historique d'un chatbot : à chaque tour, le programme renvoie toute la conversation. Le vrai guide de Paris du
+ * notebook, cinq tours : les tokens envoyés au modèle, et ce qu'il répond au prénom (src/data/dialogue.ts).
+ */
+import { lina } from "../../data/dialogue";
+const X0 = 250, L = 480, MAX = 300;
+const court = (s: string, n = 78) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 330" role="img" aria-labelledby="hg-titre hg-desc">
+    <title id="hg-titre">Chaque tour renvoie toute la conversation</title>
+    <desc id="hg-desc">Cinq tours avec le guide de Paris : le programme envoie 47 tokens au premier tour, 78 au deuxième, 129 au troisième, 189 au quatrième, 285 au cinquième. Au premier tour, Lina donne son prénom ; au cinquième, le modèle répond que son prénom n'a pas été mentionné.</desc>
+    <text x="30" y="26" class="encre" font-size="15" font-weight="700">tokens envoyés au modèle, tour après tour</text>
+    {lina.map((t, i) => (
+      <g>
+        <text x="30" y={60 + i * 44} class="encre mono" font-size="12">tour {i + 1}</text>
+        <text x="90" y={60 + i * 44} class="encre-2" font-size="12">{court(t.moi, 24)}</text>
+        <rect x={X0} y={46 + i * 44} width={L * t.tokens_envoyes / MAX} height="20" class={i === lina.length - 1 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={X0 + 8 + L * t.tokens_envoyes / MAX} y={61 + i * 44} class="encre mono" font-size="12" font-weight="700">{t.tokens_envoyes}</text>
+      </g>
+    ))}
+    <text x="30" y="286" class="encre-2" font-size="12">tour 1, Lina : « {lina[0].moi} »</text>
+    <text x="30" y="306" class="encre" font-size="12">tour 5, le modèle : « {court(lina[4].bot, 110)} »</text>
+    <text x="760" y="70" class="encre" font-size="12.5" font-weight="700">le modèle n'a</text>
+    <text x="760" y="88" class="encre" font-size="12.5" font-weight="700">aucune mémoire :</text>
+    <text x="760" y="110" class="encre-2" font-size="12">on lui remontre tout,</text>
+    <text x="760" y="126" class="encre-2" font-size="12">et chaque tour coûte</text>
+    <text x="760" y="142" class="encre-2" font-size="12">plus que le précédent</text>
+  </svg>
+  <figcaption>Un chatbot, c'est un programme qui garde l'historique et le renvoie entier à chaque tour.</figcaption>
+</figure>
