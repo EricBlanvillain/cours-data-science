@@ -12,7 +12,7 @@ const total = seances.length;
 ---
 
 <Base titre="Les séances" largeur="large">
-  {/* Ouverture sombre : le seul endroit de la page où le cuivre parle, sur ce qui n'est pas encore fait. */}
+  {/* Ouverture sombre : le compteur des séances restantes, en cuivre comme tout ce qui n'est pas encore fait. */}
   <section slot="hero" class="sombre hero">
     <div class="conteneur">
       <p class="etiquette">Cours Data Science &amp; IA · {total} séances de 1 h 30</p>
@@ -35,7 +35,7 @@ const total = seances.length;
         <h2 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--encre-2);">{titre}</h2>
         {/* Cinq bandes alignées sur toute la rangée : sur-titre, titre, description, pied, action.
             Le pied répond à deux questions distinctes : ce qui est disponible sur le site (ne change jamais) et où en est
-            l'élève (porte le cuivre sur « en cours » seulement : la séance qu'on fait). La bande d'action garde sa hauteur même vide :
+            l'élève (cuivre sur toute séance pas encore terminée, vert une fois terminée ; « leçon à écrire » en rouge). La bande d'action garde sa hauteur même vide :
             une séance pas encore faite n'annonce pas la porte, le titre reste cliquable, rien n'est bloqué. */}
         <GrilleCartes bandes={5} class="mt-5">
           {liste.map((s) => {
@@ -51,8 +51,8 @@ const total = seances.length;
                 {lecon ? <a href={lecon} class="no-underline" style="color: var(--encre);">{s.titre}</a> : s.titre}
               </h3>
               <p class="discret" style="font-size: 0.95rem;">{s.resume}</p>
-              <div class="pt-3">
-                <p class="mono-caps" style="color: var(--encre-2);">{lecon ? "Leçon en ligne · notebooks" : "Notebooks seuls · leçon à écrire"}</p>
+              <div class="pied-seance pt-3">
+                <p class:list={["mono-caps dispo-seance", !lecon && "sans-lecon"]}>{lecon ? "Leçon en ligne · notebooks" : "Notebooks seuls · leçon à écrire"}</p>
                 <p class="mono-caps etat-seance mt-1">
                   <span class="pastille" aria-hidden="true"></span><span data-etat-libelle>Pas encore faite</span>
                 </p>

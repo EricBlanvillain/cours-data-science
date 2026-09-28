@@ -162,8 +162,8 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
 ## Le système visuel
 
 - Trois familles de couleurs, assignées par rôle : `ink` (fond sombre, texte sur fond clair), `cream` (fond clair), `copper`.
-- **Le cuivre marque ce qui n'est pas résolu**, jamais décoratif : une question de quiz sans réponse, la séance en cours (une
-  seule), une source en désaccord. Classes : `.ouvert` (texte), `.ouvert-bord`, `.pastille-ouverte`.
+- **Le cuivre marque ce qui n'est pas résolu**, jamais décoratif : une question de quiz sans réponse, toute séance pas encore
+  terminée, une source en désaccord. Classes : `.ouvert` (texte), `.ouvert-bord`, `.pastille-ouverte`.
 - Le cuivre ne passe pas 4,5:1 sur les deux fonds avec une seule valeur : `--cuivre-texte` vaut copper-ink (#a33f13) sur fond
   clair et copper-light (#e06a33) sur fond sombre ; `--cuivre-plein` (#c24a16) est un remplissage, jamais du texte.
   `npm run audit` vérifie ces règles sur les pages construites, dans chaque état atteint par clic (quiz avec et sans réponse,
@@ -172,9 +172,12 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
 - Le cuivre marque l'état, jamais le contenant : quand plusieurs éléments non résolus coexistent (les six cartes du quiz), seul
   le libellé de statut est cuivre, la bordure des cartes reste le filet neutre. Le libellé passe au neutre dès que c'est résolu,
   la carte ne change pas.
-- Sur les séances, le cuivre marque **la séance en cours** (état « En cours », `ouverte` dans le code), et elle seule : pastille et libellé cuivre sur sa
-  carte, pastille cuivre et texte appuyé dans la barre latérale. C'est le même fait montré à deux endroits. Les séances pas encore
-  ouvertes sont neutres, pastille vide : douze séances futures en cuivre seraient douze faits distincts.
+- Sur les séances, le cuivre marque **toute séance pas encore terminée**, et rien d'autre dans leur interface : « Pas encore
+  faite » (pastille vide cerclée de cuivre, libellé cuivre) et « En cours » (pastille pleine cuivre, libellé cuivre, filet encre
+  sur la carte, texte appuyé dans la barre). « Terminée » passe au vert (`--etat-fait`), « Notebooks seuls · leçon à écrire » au
+  rouge (`--etat-indisponible`), valeurs claires et sombres à 4,5:1 au moins en texte. La couleur va sur la pastille et le libellé,
+  jamais sur la carte entière ; le libellé écrit reste, l'état se lit sans la couleur. L'opacité réduite d'une carte terminée
+  épargne son pied, pour que le vert garde son contraste.
 - Flèches : `→` mène à une page du site, `↗` à une destination externe (Colab, GitHub). Jamais l'une pour l'autre.
 - Deux couleurs de plus, réservées au curseur d'avis de la séance 0 : `--avis-contre` (ambre, à gauche) et `--avis-pour` (bleu,
   à droite), valeurs claires et sombres, 3:1 au moins contre le fond de la case. Ni l'une ni l'autre n'est le cuivre : il garde son
@@ -182,9 +185,10 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
   14 à 26 px (`color-mix`, variables posées par le composant) ; l'audit de contraste mesure le pouce à trois positions.
 - Le pied d'une carte de séance a trois éléments, dans cet ordre, qui répondent à des questions distinctes :
   1. **disponibilité** : « Leçon en ligne · notebooks » ou « Notebooks seuls · leçon à écrire ». Un fait sur le site, il ne change
-     jamais pour un élève donné, jamais cuivre.
-  2. **état de l'élève** : « Pas encore faite » (pastille vide), « En cours » (pastille cuivre), « Terminée »
-     (pastille pleine). Sa progression sur cet appareil ; c'est lui qui porte le cuivre, sur « En cours » seulement.
+     jamais pour un élève donné, jamais cuivre ; « leçon à écrire » en rouge.
+  2. **état de l'élève** : « Pas encore faite » (pastille vide, cuivre), « En cours » (pastille pleine, cuivre),
+     « Terminée » (pastille pleine, vert). Sa progression sur cet appareil ; c'est lui qui porte le cuivre, tant que la séance
+     n'est pas terminée.
   3. **action** : vide si pas encore faite (le déblocage sert à ne pas commencer la suivante par accident, on n'annonce pas la
      porte ; le titre reste cliquable) ; « Ouvrir la leçon → » ou « Ouvrir les notebooks ↗ » si en cours ; « Relire la leçon → »
      ou « Revoir les notebooks ↗ » si terminée. La bande garde la hauteur d'un bouton même vide.
@@ -217,9 +221,9 @@ colonne de prose garde son plafond de 46 rem quelle que soit la page : dans le t
 `src/components/Laterale.astro`, posée par `Base.astro` quand une page passe `barre` (et `courant={n}` pour mettre la séance
 de la page en avant). Elle montre les blocs en sur-titre, les séances numérotées avec une pastille, un séparateur, les pages
 transverses **qui existent** (aujourd'hui : Glossaire ; pas d'entrée grisée pour ce qui n'est pas écrit), et en bas
-« Séances terminées · N / 13 » avec sa jauge. Mêmes faits et même vocabulaire que les cartes : terminée = pastille pleine, texte
-neutre ; en cours = pastille cuivre, texte appuyé ; pas encore faite = pastille vide, texte neutre ; leçon en préparation =
-titre en retrait sans lien, libellé « Notebooks seuls · leçon à écrire », la pastille suit la progression. Repliable (bouton en
+« Séances terminées · N / 13 » avec sa jauge. Mêmes faits et même vocabulaire que les cartes : terminée = pastille pleine verte, texte
+neutre ; en cours = pastille pleine cuivre, texte appuyé ; pas encore faite = pastille vide cerclée de cuivre, texte neutre ; leçon
+en préparation = titre en retrait sans lien, libellé « Notebooks seuls · leçon à écrire » en rouge, la pastille suit la progression. Repliable (bouton en
 tête du contenu, état gardé dans le navigateur, clé `cours-data-science-barre`) ; sous 900 px, c'est un menu en haut, fermé par
 défaut. Sans JavaScript, dépliée sur grand écran.
 

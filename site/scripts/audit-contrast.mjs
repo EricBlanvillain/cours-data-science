@@ -5,7 +5,9 @@
  * dans le Chrome de la machine (headless, pas de dépendance), FAIT CLIQUER pour atteindre chaque état où le cuivre
  * apparaît ou disparaît, et mesure la couleur calculée de chaque nœud de texte contre son fond composité, en clair
  * puis en sombre. Il vérifie aussi la règle du cuivre : jamais #c24a16 en texte, copper-ink sur les fonds clairs
- * seulement, copper-light sur les fonds sombres seulement.
+ * seulement, copper-light sur les fonds sombres seulement. Et son sens sur les séances (cartes, barre latérale) : cuivre sur
+ * toute séance pas encore terminée (pastille vide cerclée de cuivre, ou pleine pour « en cours », libellé cuivre), nulle
+ * part ailleurs ; vert (--etat-fait) une fois terminée ; « leçon à écrire » en rouge (--etat-indisponible).
  *
  * Un état qui ne peut pas être atteint est une FAUTE (pas une ligne de log) ; les états volontairement non couverts
  * sont listés en clair dans la sortie (NON_COUVERTS), pour ne jamais laisser croire à une couverture complète.
@@ -373,6 +375,25 @@ const MESURE = (pilote) => `
     var disabled = el.closest('button:disabled, [aria-disabled="true"]') !== null;
     out.text.push({ text: own.slice(0, 50), fg: hex(fg), bg: hex(bg), size: size, weight: weight, ratio: +cr.toFixed(2), need: need, pass: cr >= need, disabled: disabled, cls: String(el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className || '').slice(0, 80) });
   }
+  // Les états de séance (cartes de l'accueil, barre latérale) : couleur calculée de la pastille, du libellé d'état et du
+  // libellé de disponibilité, plus tout autre descendant en cuivre. Les jetons sont lus sur une sonde, dans le thème courant.
+  var sonde = document.createElement('span'); document.body.appendChild(sonde);
+  var jeton = function (nom) { sonde.style.color = 'var(' + nom + ')'; return hex(parse(getComputedStyle(sonde).color)); };
+  out.jetons = { cuivreTexte: jeton('--cuivre-texte'), cuivrePlein: jeton('--cuivre-plein'), fait: jeton('--etat-fait'), indisponible: jeton('--etat-indisponible') };
+  sonde.remove();
+  var couleur = function (el, prop) { var c = el ? parse(getComputedStyle(el)[prop]) : null; return c && c[3] > 0 ? hex(c) : null; };
+  out.seances = [];
+  document.querySelectorAll('.carte-seance[data-seance], .laterale li[data-seance]').forEach(function (el) {
+    if (el.getBoundingClientRect().width === 0) return;
+    var pa = el.querySelector('.pastille'), lib = el.querySelector('.etat-seance'), dispo = el.querySelector('.dispo-seance, .prep');
+    var autres = [];
+    el.querySelectorAll('*').forEach(function (d) {
+      if (d === pa || d === lib || (lib && lib.contains(d)) || d.getBoundingClientRect().width === 0) return;
+      ['color', 'backgroundColor', 'borderTopColor', 'borderLeftColor'].forEach(function (pr) { var c = couleur(d, pr); if (c && (pr === 'color' ? d.textContent.trim() : getComputedStyle(d)[pr.replace('Color', 'Width')] !== '0px' || pr === 'backgroundColor')) autres.push({ cls: String(d.className || d.tagName).slice(0, 40), prop: pr, c: c }); });
+    });
+    out.seances.push({ id: (el.classList.contains('carte-seance') ? 'carte ' : 'barre ') + el.getAttribute('data-seance'), etat: el.getAttribute('data-etat'), sansLecon: el.classList.contains('sans-lecon') || !!(dispo && dispo.classList.contains('sans-lecon')),
+      pastilleFond: couleur(pa, 'backgroundColor'), pastilleBord: couleur(pa, 'borderTopColor'), libelle: couleur(lib, 'color'), dispo: couleur(dispo, 'color'), autres: autres });
+  });
   var pre = document.createElement('pre'); pre.id = '__audit'; pre.textContent = JSON.stringify(out); document.body.appendChild(pre);
 })();
 </script></body>`;
@@ -433,6 +454,22 @@ for (const etat of ETATS) {
         if (!legal) cuivreFautes.push({ where: ou, text: t.text, fg: t.fg, bg: t.bg, ratio: t.ratio, regle: t.fg === copperRules.fillOnly.toLowerCase() ? "copper (#c24a16) est un remplissage, jamais du texte" : bgLight ? "sur fond clair, seul copper-ink est légal" : bgDark ? "sur fond sombre, seul copper-light est légal" : "fond hors palette (le cuivre n'a que deux fonds légaux)" });
       }
     }
+    // Le sens du cuivre sur les séances : cuivre sur toute séance pas encore terminée, et nulle part ailleurs dans leur interface.
+    const j = res.jetons, cuivres = new Set([...coppers, j.cuivreTexte, j.cuivrePlein]);
+    for (const s of res.seances || []) {
+      const f = (regle) => cuivreFautes.push({ where: ou, text: `séance ${s.id} (${s.etat})`, regle });
+      if (s.etat === "a-venir" && (s.pastilleBord !== j.cuivrePlein || s.pastilleFond)) f(`pastille vide cerclée de cuivre attendue (bord ${s.pastilleBord}, fond ${s.pastilleFond})`);
+      if (s.etat === "ouverte" && s.pastilleFond !== j.cuivrePlein) f(`pastille pleine cuivre attendue (fond ${s.pastilleFond})`);
+      if (s.etat === "terminee" && s.pastilleFond !== j.fait) f(`pastille pleine --etat-fait attendue (fond ${s.pastilleFond})`);
+      if (s.id.startsWith("carte")) {
+        const attenduLib = s.etat === "terminee" ? j.fait : j.cuivreTexte;
+        if (s.libelle !== attenduLib) f(`libellé d'état ${attenduLib} attendu (mesuré ${s.libelle})`);
+      }
+      if (s.sansLecon && s.dispo !== j.indisponible) f(`« leçon à écrire » en --etat-indisponible attendu (mesuré ${s.dispo})`);
+      if (!s.sansLecon && s.dispo && (cuivres.has(s.dispo) || s.dispo === j.indisponible)) f(`libellé de disponibilité coloré alors que la leçon existe (${s.dispo})`);
+      for (const a of s.autres) if (cuivres.has(a.c)) f(`cuivre hors pastille et libellé d'état : ${a.cls} ${a.prop} ${a.c}`);
+    }
+    if (!(res.seances || []).length && /^(accueil|barre-quatre)/.test(etat.id)) nonAtteints.push(`${ou} : aucune séance trouvée pour la règle du cuivre`);
     for (const [k, v] of Object.entries(res.borders)) bordures[k] = Math.max(bordures[k] || 0, v);
     const pouces = res.text.filter((t) => t.cls === 'range-thumb');
     lignes.push(`${ou.padEnd(52)} ${String(res.text.length).padStart(4)} textes  cuivre×${nbCuivre}${pouces.length ? "  pouce " + pouces.map((t) => t.fg + " " + t.ratio + ":1").join(", ") : ""}${res.erreurPilote ? "  !! pilote en échec" : ""}`);
@@ -444,7 +481,7 @@ console.log("\n=== ÉTATS MESURÉS (clair et sombre) ===\n" + lignes.join("\n"))
 console.log("\n=== ÉTATS NON ATTEINTS ===\n" + (nonAtteints.length ? nonAtteints.join("\n") : "aucun"));
 console.log("\n=== NON COUVERTS PAR CET AUDIT (à vérifier à la main) ===\n" + NON_COUVERTS.map((n) => "- " + n).join("\n"));
 console.log("\n=== FAUTES DE CONTRASTE (WCAG AA) ===\n" + (fautes.length ? JSON.stringify(fautes, null, 2) : "aucune"));
-console.log("\n=== RÈGLE DU CUIVRE ===\n" + (cuivreFautes.length ? JSON.stringify(cuivreFautes, null, 2) : "respectée dans tous les états : copper-ink sur clair, copper-light sur sombre, jamais #c24a16 en texte"));
+console.log("\n=== RÈGLE DU CUIVRE ===\n" + (cuivreFautes.length ? JSON.stringify(cuivreFautes, null, 2) : "respectée dans tous les états : copper-ink sur clair, copper-light sur sombre, jamais #c24a16 en texte ; cuivre sur toute séance pas encore terminée et nulle part ailleurs"));
 console.log("\n=== COULEURS DE BORDURE PEINTES (composées) ===\n" + Object.entries(bordures).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}  x${v}`).join("\n"));
 const preflight = Object.keys(bordures).includes("#e5e7eb");
 if (preflight) console.error("\n!! bordure #e5e7eb détectée : une opacité de filet est tombée sur le gris par défaut de Tailwind.");

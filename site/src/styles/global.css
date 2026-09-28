@@ -57,6 +57,8 @@
      Contraste contre le fond de la case (cream) : 3,7:1 et 5,8:1, au-dessus du 3:1 de WCAG 1.4.11. */
   --avis-contre: #c76a00;
   --avis-pour: #2563b0;
+  --etat-fait: #276130;                             /* séance terminée : 7,1:1 sur cream, 6,4:1 sur cream-sunk */
+  --etat-indisponible: #b01f3c;                     /* leçon à écrire : 6,5:1 sur cream, 5,9:1 sur cream-sunk */
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
 }
 /* Sombre : soit le système le demande et personne n'a forcé le clair, soit l'interrupteur de l'en-tête a forcé le sombre
@@ -77,6 +79,8 @@
     --bouton-texte: #14171a;
     --avis-contre: #f0a040;                         /* 7,5:1 sur ink-raised */
     --avis-pour: #6fa8e8;                           /* 6,5:1 sur ink-raised */
+    --etat-fait: #5cb86a;                           /* 6,5:1 sur ink-raised, 5,5:1 sur ink-soft */
+    --etat-indisponible: #ff7f91;                   /* 6,6:1 sur ink-raised, 5,6:1 sur ink-soft */
   }
 }
 :root[data-theme="sombre"] {
@@ -94,6 +98,8 @@
   --bouton-texte: #14171a;
   --avis-contre: #f0a040;
   --avis-pour: #6fa8e8;
+  --etat-fait: #5cb86a;
+  --etat-indisponible: #ff7f91;
 }
 :root[data-theme="clair"] { color-scheme: light; }
 
@@ -354,22 +360,30 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 
 /* ------------------------------------------------------------------
    Progression des séances (trois états, posés par le script de Base.astro sur data-etat, cartes et barre latérale).
-   Un seul cuivre : la séance EN COURS (data-etat="ouverte"), le même fait montré sur sa carte et dans la barre. Terminée = pastille
-   pleine encre ; pas encore faite = pastille vide. Douze séances futures en cuivre, ce serait douze faits distincts.
+   Le cuivre marque ce qui n'est pas résolu : toute séance pas encore terminée. En cours = pastille pleine cuivre (et filet encre
+   sur la carte) ; pas encore faite = pastille vide cerclée de cuivre ; terminée = pastille pleine verte (--etat-fait).
+   « Notebooks seuls · leçon à écrire » en rouge (--etat-indisponible). La couleur va sur la pastille et le libellé, jamais sur
+   la carte entière ; le libellé écrit reste, l'état se lit sans la couleur. Portée limitée aux cartes et à la barre : la page de
+   leçon porte aussi data-seance, et ses pastilles de quiz ne suivent pas la progression.
    ------------------------------------------------------------------ */
 .pastille { display: inline-block; box-sizing: border-box; width: 0.5em; height: 0.5em; border-radius: 50%; border: 1px solid var(--trait-fort); vertical-align: middle; margin-right: 0.45em; }
 .pastille.invisible { border-color: transparent; }
-[data-etat="terminee"] .pastille, .pastille.pleine { background: var(--encre); border-color: var(--encre); }
-[data-etat="ouverte"] .pastille { background: var(--cuivre-plein); border-color: var(--cuivre-plein); }
+.pastille.pleine { background: var(--encre); border-color: var(--encre); }
+:is(.carte-seance, .laterale li)[data-etat="a-venir"] .pastille { border-color: var(--cuivre-plein); }
+:is(.carte-seance, .laterale li)[data-etat="ouverte"] .pastille { background: var(--cuivre-plein); border-color: var(--cuivre-plein); }
+:is(.carte-seance, .laterale li)[data-etat="terminee"] .pastille { background: var(--etat-fait); border-color: var(--etat-fait); }
 .etat-seance { color: var(--encre-2); }
-[data-etat="ouverte"] .etat-seance { color: var(--cuivre-texte); }
+.carte-seance:is([data-etat="a-venir"], [data-etat="ouverte"]) .etat-seance { color: var(--cuivre-texte); }
+.carte-seance[data-etat="terminee"] .etat-seance { color: var(--etat-fait); }
+.dispo-seance { color: var(--encre-2); }
+.dispo-seance.sans-lecon, .laterale .prep { color: var(--etat-indisponible); }
 /* La bande d'action d'une carte de séance : hauteur d'un bouton réservée même vide (pas encore faite = aucune action). */
 .bande-action { min-height: 2.9rem; align-self: end; }
 .action-ouverte, .action-terminee { display: none; }
 [data-etat="ouverte"] .action-ouverte { display: inline-block; }
 [data-etat="terminee"] .action-terminee { display: inline-block; }
 [data-etat="ouverte"].carte-seance { border-color: var(--encre); }
-[data-etat="terminee"].carte-seance { opacity: 0.72; }
+[data-etat="terminee"].carte-seance > :not(.pied-seance) { opacity: 0.72; }   /* le pied garde ses couleurs d'état à 4,5:1 */
 .bandeau-a-venir { display: none; }
 [data-etat="a-venir"] > .bandeau-a-venir { display: block; }
 .bouton-annuler, .lien-suivante { display: none; }
