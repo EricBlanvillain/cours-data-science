@@ -1,0 +1,27 @@
+---
+/**
+ * Le banc de test du notebook, lancé pour de vrai : pour chaque question, l'outil attendu et l'outil que le modèle a
+ * demandé (src/data/agent.ts).
+ */
+import { banc } from "../../data/agent";
+const reussis = banc.filter((b) => b.ok).length;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="bt2-titre bt2-desc">
+    <title id="bt2-titre">Le banc de test de l'agent</title>
+    <desc id="bt2-desc">Six questions, un outil attendu pour chacune. Le petit modèle n'appelle le bon outil qu'une fois, pour les PV de Snorlax ; les cinq autres fois, il n'appelle aucun outil. Score : 1 sur 6.</desc>
+    <rect x="30" y="20" width="900" height="26" class="plein" />
+    {["question", "outil attendu", "outil demandé"].map((c, i) => <text x={42 + [0, 470, 690][i]} y="38" class="sur-plein mono" font-size="12" font-weight="700">{c}</text>)}
+    {banc.map((b, i) => (
+      <g>
+        <rect x="30" y={46 + i * 34} width="900" height="34" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="42" y={68 + i * 34} class="encre" font-size="13">{b.ok ? "✓" : "✗"}  {b.question}</text>
+        <text x="512" y={68 + i * 34} class="encre mono" font-size="12.5">{b.attendu}</text>
+        <text x="732" y={68 + i * 34} class={(b.ok ? "encre" : "encre-2") + " mono"} font-size="12.5" font-weight={b.ok ? "700" : "400"}>{b.obtenu ?? "aucun"}</text>
+      </g>
+    ))}
+    <text x="30" y="276" class="encre" font-size="14" font-weight="700">Score de l'agent : {reussis} / {banc.length}</text>
+    <text x="250" y="276" class="encre-2" font-size="12">vrai passage, Qwen 2.5 0.5B, température 0 : à cette taille, il répond presque toujours de tête</text>
+  </svg>
+  <figcaption>Un banc de test mesure l'agent question par question ; avant de lui confier quoi que ce soit, on le fait passer.</figcaption>
+</figure>

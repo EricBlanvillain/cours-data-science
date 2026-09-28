@@ -1,0 +1,37 @@
+---
+/**
+ * La boucle de l'agent sur la seule question que le vrai modèle a menée au bout : le modèle écrit OUTIL:, la boucle
+ * repère l'appel, Python exécute, le résultat repart au modèle, qui répond (src/data/agent.ts).
+ */
+import { traceReussie as t } from "../../data/agent";
+const modele = t.etapes.find((e) => e.qui === "modèle")!;
+const outil = t.etapes.find((e) => e.qui === "outil")!;
+const boites = [
+  { x: 30, titre: "la question", texte: t.question, plein: false },
+  { x: 220, titre: "le modèle écrit", texte: modele.texte, plein: true },
+  { x: 440, titre: "Python exécute", texte: outil.texte, plein: false },
+  { x: 700, titre: "le modèle répond", texte: t.reponse, plein: true },
+];
+const couper = (s: string, n: number) => { const l: string[] = []; let c = ""; for (const m of s.split(" ")) { if ((c + " " + m).trim().length > n) { l.push(c.trim()); c = m; } else c += " " + m; } if (c.trim()) l.push(c.trim()); return l; };
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 270" role="img" aria-labelledby="ba-titre ba-desc">
+    <title id="ba-titre">La boucle d'un agent, un tour complet</title>
+    <desc id="ba-desc">Question : Quels sont les PV de Snorlax ? Le modèle écrit OUTIL: chercher_pokemon(Snorlax). La boucle repère l'appel et Python exécute l'outil : Snorlax, type Normal, 160 PV, attaque 110, défense 65, vitesse 30. Le résultat repart au modèle, qui répond : Le PV de Snorlax est 160.</desc>
+    {boites.map((b, i) => {
+      const w = i === 2 ? 240 : 170; const lignes = i === 1 ? b.texte.replace("OUTIL: ", "OUTIL:|").replace("(", "|(").split("|") : couper(b.texte, i === 2 ? 34 : 22);
+      return (
+        <g>
+          <text x={b.x} y="30" class="encre-2 mono" font-size="11">{i + 1}. {b.titre}</text>
+          <rect x={b.x} y="40" width={w} height="110" class={b.plein ? "plein" : "fond-2 plein-trait"} stroke-width="1.5" />
+          {lignes.map((l, k) => <text x={b.x + 12} y={64 + k * 19} class={(b.plein ? "sur-plein" : "encre") + (i === 1 ? " mono" : "")} font-size="12.5">{l}</text>)}
+          {i < 3 && <g class="trait" stroke-width="2" fill="none"><path d={`M${b.x + w + 4} 95 H${boites[i + 1].x - 8}`} /><path d={`M${boites[i + 1].x - 13} 90 L${boites[i + 1].x - 5} 95 L${boites[i + 1].x - 13} 100`} /></g>}
+        </g>
+      );
+    })}
+    <text x="220" y="176" class="encre-2" font-size="12">la boucle repère « OUTIL: nom(arguments) » avec une expression régulière</text>
+    <text x="440" y="196" class="encre-2" font-size="12">le résultat repart au modèle, comme un nouveau message</text>
+    <text x="30" y="236" class="encre" font-size="12.5" font-weight="700">Vrai passage du modèle du notebook, température 0 : la seule question du banc de test qu'il a menée au bout.</text>
+  </svg>
+  <figcaption>Un agent, c'est un modèle, des outils et une boucle qui exécute ce qu'il demande.</figcaption>
+</figure>

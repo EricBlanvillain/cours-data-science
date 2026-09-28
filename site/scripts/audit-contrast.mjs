@@ -108,7 +108,8 @@ const ETATS = [
       window.progression.terminer(0); await w(150);
       const b = document.getElementById("laterale"); if (!b || b.offsetParent === null) throw new Error("barre absente ou repliée");
       for (const e of ["terminee", "ouverte", "a-venir"]) if (!b.querySelector('[data-etat="' + e + '"]')) throw new Error("pastille manquante : " + e);
-      if (!b.querySelector(".sans-lecon")) throw new Error("aucune leçon en préparation dans la barre");
+      // la quatrième pastille (séance sans page) n'existe que tant qu'une leçon reste à écrire ; toutes écrites, chaque séance a son lien
+      if (!b.querySelector(".sans-lecon")) { const sansLien = [...b.querySelectorAll("li[data-seance]")].filter((li) => !li.querySelector("a")); if (sansLien.length) throw new Error("séance sans lien ni style « en préparation »"); }
       if (!b.querySelector('[aria-current="page"][data-seance="1"]')) throw new Error("la séance de la page n'est pas mise en avant");` },
   { page: "lecons/seance-01-introduction-ia.html", id: "barre-repliee", pilote: `
       document.querySelector("[data-bascule-barre]").click(); await w(200);
@@ -225,6 +226,16 @@ const ETATS = [
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
   { page: "lecons/seance-11-rag.html", id: "s11-rag-faux", pilote: `
       const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "3 · Rien").click(); await w(300);
+      if (!g.textContent.includes("pas ce diagnostic-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-initiale", pilote: "" },
+  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-agent-ouvert", pilote: `
+      const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300);
+      if (!g.textContent.includes("diagnostic ouvert")) throw new Error("le cuivre « diagnostic ouvert » manque");` },
+  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-agent-juste", pilote: `
+      const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-agent-faux", pilote: `
+      const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "2 · Répond de tête").click(); await w(300);
       if (!g.textContent.includes("pas ce diagnostic-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.

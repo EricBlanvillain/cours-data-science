@@ -1,0 +1,88 @@
+---
+numero: 12
+titre: Agents et projet final
+niveau: ⭐⭐⭐
+duree: 1 h 30
+resume: "Un modèle qui agit : des outils Python, une boucle, et ce qui rate avec un petit modèle. Puis les bonnes pratiques avec l'IA, le portfolio GitHub et la présentation finale."
+livrable: Un portfolio GitHub complet et sa présentation finale.
+objectifs:
+  - Tu sauras ce qu'est un agent, un modèle, des outils et une boucle, et en lire une trace.
+  - Tu sauras écrire un outil sûr et reconnaître pourquoi un petit agent rate.
+  - Tu sauras présenter ton portfolio en trois minutes à des gens qui ne connaissent pas la data.
+aRetenir:
+  - Un agent, c'est un modèle, des outils et une boucle ; il demande, Python exécute, le résultat repart au modèle.
+  - Le modèle ne connaît que les outils qu'on lui décrit, et chaque outil vérifie ce qu'il reçoit.
+  - Jamais d'eval sur ce qu'écrit un modèle ; une calculatrice sûre n'accepte que des calculs.
+  - Un petit modèle oublie le format ou répond de tête ; un banc de test le mesure avant qu'on lui confie quoi que ce soit.
+  - Vérifier, protéger ses données, apprendre plutôt que copier, et garder la main sur les actions importantes.
+---
+import TroisOutils from "../../components/schemas/TroisOutils.astro";
+import BoucleAgent from "../../components/schemas/BoucleAgent.astro";
+import BancDeTest from "../../components/schemas/BancDeTest.astro";
+import QuAtIlRate from "../../components/islands/QuAtIlRate";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Un modèle qui agit
+
+Jusqu'ici, le modèle parlait. Un agent, c'est un modèle à qui l'on donne des outils et le droit de les appeler. Tout ce qui suit sort du notebook, lancé pour de vrai avec son petit modèle.
+
+<TroisOutils />
+
+## La boucle
+
+La règle est écrite dans le prompt système : pour utiliser un outil, réponds `OUTIL: nom(arguments)`. La boucle Python repère cette ligne, exécute la fonction et renvoie le résultat au modèle.
+
+<BoucleAgent />
+
+<details>
+<summary>Deux outils à la suite</summary>
+
+« Combien fait la vitesse de Pikachu fois 3 ? » demande deux étapes : chercher la vitesse, puis calculer. Lancé pour de vrai, le petit modèle a écrit « calculer(348 * 27) », sans « OUTIL: » et avec les nombres de l'exemple du prompt : rien ne s'est exécuté. Le mode démo du notebook, des réponses écrites à la main, montre ce que la boucle doit faire : `chercher_pokemon(Pikachu)`, qui renvoie une vitesse de 90, puis `calculer(90 * 3)`, qui renvoie 270.
+
+</details>
+
+## Ce qui rate
+
+À 0,5 milliard de paramètres, l'agent rate plus souvent qu'il ne réussit. Le notebook le mesure avec un banc de test.
+
+<BancDeTest />
+
+<QuAtIlRate client:load />
+
+## Les bonnes pratiques avec l'IA
+
+Savoir comment ça marche change la façon de s'en servir.
+
+| La pratique | Pourquoi |
+|---|---|
+| Vérifier une date, un chiffre, une citation | Le modèle écrit le plausible, pas le vrai |
+| Ne rien taper qu'on n'écrirait pas sur un mur public | Ce qu'on envoie peut être stocké et relu |
+| Faire faire les calculs par Python | Le modèle écrit des chiffres, il ne pose pas l'opération |
+| Se faire expliquer plutôt que copier | Le test : sais-tu le refaire sans lui ? |
+| Garder la main sur envoyer, payer, effacer | Un agent bien construit demande avant les actions importantes |
+
+### À toi : ton portfolio et ta présentation
+
+Trente minutes pour finir la vitrine de douze séances.
+
+- **Quatre projets dans ton dépôt GitHub** : une analyse, un dashboard et un modèle, Kaggle Titanic, un assistant IA, chacun avec son README.
+- **Le README d'accueil**, que la cellule du notebook génère : qui tu es, tes quatre projets, ce que tu as appris.
+- **Ta fiche projet**, puis une répétition à deux avec le gabarit des trois minutes.
+
+<BoutonsSeance dossier="seance-12-agents-et-projet-final" lecon="12_agents_et_projet_final.ipynb" exercices="12_exercices.ipynb" />
+
+## Trois minutes devant les invités
+
+Les invités ne connaissent ni pandas ni les tokens : montre ce que tu as fait et pourquoi c'est intéressant.
+
+| Temps | Durée | Ce que tu montres |
+|---|---|---|
+| Le projet en une phrase | 20 s | « J'ai construit… qui permet de… » |
+| Le problème | 30 s | Pourquoi c'était difficile, avec un exemple |
+| La démo | 1 min | En vrai : une question à ton assistant, un graphique, ton score |
+| Ce que j'ai appris | 40 s | Deux choses nouvelles, et une fois où ça a raté |
+| La suite | 30 s | Avec plus de temps, et le lien de ton portfolio |
+
+## Entre deux séances
+
+Le carnet `12_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées.

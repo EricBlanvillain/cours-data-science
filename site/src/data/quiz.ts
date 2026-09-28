@@ -319,4 +319,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "Sous le seuil, aucun passage ne parle vraiment de la question. Refuser avant d'appeler le modèle évite une réponse inventée et économise des tokens.",
     },
   ],
+  12: [
+    {
+      question: "Pourquoi la calculatrice du notebook n'utilise-t-elle jamais eval() sur ce qu'écrit le modèle ?",
+      options: ["eval est trop lent", "eval exécuterait n'importe quel code, même un ordre d'effacer des fichiers", "eval ne connaît pas les multiplications", "Python interdit eval"],
+      bonne: 1,
+      explication: "Le modèle, ou quelqu'un qui lui parle, peut écrire du code déguisé en calcul. calculer() lit l'expression avec ast et n'accepte que des nombres et + − × ÷ : un appel de fonction est refusé.",
+    },
+    {
+      question: "Tu ajoutes un outil plus_rapide au dictionnaire OUTILS, mais l'agent ne l'appelle jamais. Qu'as-tu oublié ?",
+      options: ["De redémarrer Colab", "De le décrire dans le prompt système : le modèle ne connaît que les outils qu'on lui présente", "De l'écrire en majuscules", "De baisser la température"],
+      bonne: 1,
+      explication: "Le dictionnaire sert à Python pour exécuter l'outil ; le modèle, lui, ne voit que le prompt système. Un outil qu'on ne lui décrit pas n'existe pas pour lui.",
+    },
+    {
+      question: "Ton agent peut envoyer des mails. Quelle précaution prendre ?",
+      options: ["Aucune, il sait ce qu'il fait", "Lui faire demander ton accord avant chaque envoi", "Lui donner plus d'outils", "Monter la température"],
+      bonne: 1,
+      explication: "Même un gros modèle se trompe. Pour les actions qu'on ne peut pas annuler, envoyer, payer, effacer, on garde un humain dans la boucle.",
+    },
+    {
+      question: "Pendant ta présentation de trois minutes, que montres-tu dans la minute de démo ?",
+      options: ["Le code de TF-IDF", "Ton projet en vrai : une question à ton assistant, un graphique ou ton score", "La liste des bibliothèques installées", "Rien, tu racontes"],
+      bonne: 1,
+      explication: "Les invités ne connaissent pas les outils : ce qui les convainc, c'est de voir le projet marcher, et même rater une fois, avec ce que tu en as compris.",
+    },
+  ],
 };

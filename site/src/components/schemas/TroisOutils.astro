@@ -1,0 +1,32 @@
+---
+/**
+ * Sans outil, le vrai modèle se trompe ; avec des outils, ce sont des fonctions Python qui répondent. Les sorties sont
+ * celles des trois outils du notebook, appelés pour de vrai (src/data/agent.ts).
+ */
+import { sansOutil, outils } from "../../data/agent";
+const court = (s: string, n = 64) => (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 330" role="img" aria-labelledby="to-titre to-desc">
+    <title id="to-titre">De tête, puis avec des outils</title>
+    <desc id="to-desc">Sans outil, le modèle dit que Pikachu se déplace à 100 kilomètres-heure et que 348 fois 27 font 9 164 ; la vitesse est 90 et le calcul 9 396. Avec des outils, chercher_pokemon lit le fichier, calculer donne 9 396 et refuse un appel de code, chercher_dans_mes_notes renvoie le paragraphe sur la température.</desc>
+    <text x="30" y="26" class="encre" font-size="14" font-weight="700">1. de tête, le vrai modèle</text>
+    {sansOutil.map((s, i) => (
+      <g>
+        <text x="30" y={54 + i * 58} class="encre-2" font-size="12">{s.question}</text>
+        <text x="30" y={74 + i * 58} class="encre" font-size="13" font-weight="700">« {s.reponse} »</text>
+        <text x="30" y={92 + i * 58} class="encre-2" font-size="12">vérité : {s.verite}</text>
+      </g>
+    ))}
+    <text x="400" y="26" class="encre" font-size="14" font-weight="700">2. avec des outils : des fonctions Python</text>
+    {outils.map((o, i) => (
+      <g>
+        <rect x="400" y={40 + i * 54} width="540" height="46" class={i % 2 ? "fond-3" : "fond-2"} />
+        <text x="412" y={58 + i * 54} class="encre mono" font-size="11.5" font-weight="700">{o.appel}</text>
+        <text x="412" y={77 + i * 54} class="encre" font-size="12">→ {court(o.sortie, 78)}</text>
+      </g>
+    ))}
+    <text x="30" y="316" class="encre-2" font-size="12">Un outil prend du texte et renvoie du texte ; la calculatrice lit l'expression avec ast et refuse tout ce qui n'est pas un calcul.</text>
+  </svg>
+  <figcaption>Le modèle invente ce qu'il ne sait pas ; un outil va le chercher ou le calcule.</figcaption>
+</figure>
