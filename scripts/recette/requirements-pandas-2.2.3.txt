@@ -1,0 +1,30 @@
+# Environnement de recette, pandas 2.2.3. Python 3.13, comme Colab.
+# pandas 2.2.3 est la version de Colab ; l'autre environnement teste pandas 3.
+# Versions : celles de l'image Colab publiée le 23/09/2026
+# (https://github.com/googlecolab/backend-info/blob/main/pip-freeze.txt, consulté le 28/09/2026).
+# On n'y met que ce que Colab préinstalle et que les notebooks importent sans l'installer eux-mêmes ;
+# le reste (optuna…) passe par l'installation conditionnelle des notebooks, qui appelle pip comme Colab.
+pandas==2.2.3
+numpy==2.1.3
+matplotlib==3.10.0
+seaborn==0.13.2
+plotly==5.24.1
+scikit-learn==1.6.1
+scipy==1.16.3
+requests==2.32.4
+psutil==5.9.5
+tiktoken==0.14.0
+xgboost==3.4.1
+shap==0.52.0
+imbalanced-learn==0.14.2
+tensorflow==2.21.0
+torch==2.11.0
+transformers==5.17.0
+sentence-transformers==5.7.0
+peft==0.21.0
+accelerate==1.15.0
+
+# L'outillage de la recette elle-même
+nbclient==0.11.0
+nbformat==5.11.1
+ipykernel==7.3.0

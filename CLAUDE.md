@@ -25,6 +25,24 @@ Règles :
 
 Un notebook lourd porte en plus un drapeau `MODE_RAPIDE` en tête : à `True`, il s'exécute en entier en quelques minutes sur CPU.
 
+### La recette
+
+`scripts/recette/recette.py` exécute les notebooks en mémoire, depuis leur dossier, avec `USE_MODEL = False` et `MODE_RAPIDE = True` forcés. Il ne réécrit rien, supprime les fichiers que le notebook a créés dans son dossier, et signale un notebook versionné qui contient des sorties. Avec `--solutions`, chaque solution repliée prend la place du premier trou de son squelette (une fonction à trous, un `x = None`, une valeur de départ comme `x = 0`) avant que le squelette ne tourne : toutes les vérifications d'exercice doivent alors afficher ✅. Une solution qui ne s'exécute pas seule (un morceau à coller ailleurs) est signalée et son squelette tourne à sa place.
+
+Deux environnements, un par version de pandas, en Python 3.13 et avec les versions de l'image Colab (sources dans les fichiers requirements). pip doit y être disponible : les installations conditionnelles des notebooks l'appellent, comme sur Colab. Commandes lancées depuis la racine du dépôt :
+
+```bash
+python3.13 -m venv ~/.venvs/recette-pandas2 && ~/.venvs/recette-pandas2/bin/pip install -r scripts/recette/requirements-pandas-2.2.3.txt
+python3.13 -m venv ~/.venvs/recette-pandas3 && ~/.venvs/recette-pandas3/bin/pip install -r scripts/recette/requirements-pandas-3.0.6.txt
+
+~/.venvs/recette-pandas2/bin/python scripts/recette/recette.py --solutions seances/seance-05-analyser-raconter/05_exercices.ipynb
+~/.venvs/recette-pandas3/bin/python scripts/recette/recette.py --solutions        # sans chemin : tous les notebooks du dépôt
+```
+
+Sur Mac, deux réglages que Colab (Linux) n'a pas besoin : xgboost cherche la bibliothèque OpenMP (`brew install libomp`, puis `DYLD_FALLBACK_LIBRARY_PATH=$(brew --prefix libomp)/lib` si Homebrew n'est pas dans `/opt/homebrew`) ; et un Python qui n'utilise pas le trousseau du système peut refuser les certificats HTTPS (réseau d'entreprise) : exporter les racines avec `security find-certificate -a -p /Library/Keychains/System.keychain /System/Library/Keychains/SystemRootCertificates.keychain > racines.pem` et pointer `SSL_CERT_FILE` et `REQUESTS_CA_BUNDLE` dessus.
+
+Après une modification de notebook, on rejoue sa recette sous les deux environnements, l'un après l'autre (deux passages en parallèle sur le même dossier effaceraient les fichiers l'un de l'autre). Le script sort en code 1 si un notebook plante, contient des sorties ou, avec `--solutions`, affiche un ❌. Un module introuvable donne « SKIP : dépendance Colab », qui ne fait pas échouer.
+
 ### Où en est le dépôt
 
 La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, A2, A3, A6) et par les **15 notebooks d'exercices** des séances (`NN_exercices.ipynb`, `SO1_exercices.ipynb`, `SO2_exercices.ipynb`).
