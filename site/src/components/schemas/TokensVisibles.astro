@@ -1,0 +1,47 @@
+---
+/**
+ * Ce que voit le modèle : la phrase du notebook découpée par le vrai tokenizer de Qwen, avec les numéros ; le coût du
+ * français contre l'anglais ; les morceaux de « strawberry » (src/data/llm.ts).
+ */
+import { tokens as t } from "../../data/llm";
+const X0 = 30;
+let x = X0; const cases = t.morceaux.map((m, i) => { const w = Math.max(30, m.length * 9 + 14); const c = { x, w, m, n: t.numeros[i] }; x += w + 4; return c; });
+const visible = (m: string) => m.replace(/ /g, "␣");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 300" role="img" aria-labelledby="tv-titre tv-desc">
+    <title id="tv-titre">La phrase du notebook en tokens</title>
+    <desc id="tv-desc">« Les manchots de l'Antarctique adorent le machine learning. » devient 17 tokens : Les, man, ch, ots, de, l, apostrophe, Ant, ar, ct, ique, adore, nt, le, machine, learning, point, chacun avec son numéro. En français, la phrase de l'exercice coûte 15 tokens, sa traduction anglaise 12. Strawberry devient str, aw, berry.</desc>
+    <text x={X0} y="26" class="encre" font-size="15" font-weight="700">1. ce que lit le modèle : {t.morceaux.length} tokens, pas des lettres</text>
+    {cases.map((c) => (
+      <g>
+        <rect x={c.x} y="40" width={c.w} height="34" class="fond-3 plein-trait" stroke-width="1" />
+        <text x={c.x + c.w / 2} y="62" text-anchor="middle" class="encre mono" font-size="13">{visible(c.m)}</text>
+        <text x={c.x + c.w / 2} y="92" text-anchor="middle" class="encre-2 mono" font-size="9.5">{c.n}</text>
+      </g>
+    ))}
+    <text x={X0} y="118" class="encre-2" font-size="12">␣ marque l'espace collé au début du token ; sous chaque morceau, le numéro que le modèle reçoit vraiment</text>
+
+    <text x={X0} y="162" class="encre" font-size="15" font-weight="700">2. le même message, deux langues</text>
+    {[t.fr, t.en].map((l, i) => (
+      <g>
+        <text x={X0} y={190 + i * 34} class="encre-2" font-size="12">{i === 0 ? "français" : "anglais"}</text>
+        <rect x={X0 + 70} y={176 + i * 34} width={l.qwen * 22} height="20" class={i === 0 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={X0 + 78 + l.qwen * 22} y={191 + i * 34} class="encre mono" font-size="12.5" font-weight="700">{l.qwen} tokens</text>
+      </g>
+    ))}
+    <text x={X0} y="262" class="encre-2" font-size="12">« {t.fr.texte} »</text>
+    <text x={X0} y="280" class="encre-2" font-size="12">« {t.en.texte} »</text>
+
+    <text x="560" y="162" class="encre" font-size="15" font-weight="700">3. pourquoi il compte mal les lettres</text>
+    {t.mots.strawberry.map((m, i) => (
+      <g>
+        <rect x={560 + i * 76} y="178" width="70" height="34" class="fond-3 plein-trait" stroke-width="1" />
+        <text x={595 + i * 76} y="200" text-anchor="middle" class="encre mono" font-size="14">{m}</text>
+      </g>
+    ))}
+    <text x="560" y="236" class="encre-2" font-size="12">« strawberry », pour le modèle : trois numéros,</text>
+    <text x="560" y="252" class="encre-2" font-size="12">aucune lettre isolée à compter</text>
+  </svg>
+  <figcaption>Un modèle lit des morceaux de mots numérotés ; le français en demande plus que l'anglais.</figcaption>
+</figure>

@@ -241,4 +241,30 @@ export const quiz: Record<number, QuestionQuiz[]> = {
       explication: "12 combinaisons, et chacune est entraînée 5 fois, une par paquet : 60 entraînements. C'est pour ça qu'une grille trop grande devient vite lente.",
     },
   ],
+  9: [
+    {
+      question: "La même idée coûte 15 tokens en français et 12 en anglais. Pourquoi ?",
+      options: ["Le français a plus de lettres", "Le découpage a été construit sur beaucoup plus de texte anglais : ses gros morceaux sont surtout des mots anglais", "Les accents comptent double", "C'est un hasard"],
+      bonne: 1,
+      explication: "Un tokenizer garde en un seul morceau les suites de lettres qu'il a le plus vues. Un mot français est plus souvent coupé en deux ou trois : la même phrase coûte plus de tokens, donc plus de calcul.",
+    },
+    {
+      question: "Parti de « le », le bigramme écrit « le chat dort dans le chat dort dans le chat… ». Pourquoi tourne-t-il en rond ?",
+      options: ["Il manque des phrases", "Il choisit toujours le mot le plus fréquent après le mot d'avant, et « dans » ramène toujours à « le »", "Le mot « chat » est interdit", "Il a trop de paramètres"],
+      bonne: 1,
+      explication: "Un bigramme ne regarde qu'un mot en arrière. Toujours prendre le plus fréquent l'enferme dans une boucle ; tirer au sort parmi les mots probables, c'est ce que règle la température.",
+    },
+    {
+      question: "Trois fois la même question à température 0 : que se passe-t-il ?",
+      options: ["Trois réponses différentes", "Trois fois la même réponse, le token le plus probable à chaque étape", "Le modèle refuse de répondre", "La réponse est plus juste"],
+      bonne: 1,
+      explication: "À température 0, il n'y a plus de tirage : le vrai modèle a répondu « Kitty » les trois fois. Plus haut, les réponses varient, parfois jusqu'à l'absurde.",
+    },
+    {
+      question: "Avec le petit modèle du cours, dans Colab, où partent tes messages ?",
+      options: ["Sur les serveurs d'une grande entreprise", "Nulle part : le modèle tourne dans ta session, tes données restent là", "Chez Hugging Face à chaque question", "Sur ton compte Google Drive"],
+      bonne: 1,
+      explication: "Le notebook télécharge le modèle une fois, puis tout se calcule dans ta session Colab. Avec l'API d'un gros modèle, au contraire, chaque message part sur le serveur de son éditeur.",
+    },
+  ],
 };

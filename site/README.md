@@ -85,7 +85,7 @@ repli seul le résumé compte, les îlots et les SVG ne comptent pas.
 | Courbe | Une série chiffrée sourcée, `schemas/Courbe.astro` nourri par un fichier de `src/data/` | `<Courbe id="…" points={…} log />` |
 | Cartes numérotées | Un bloc de 2 à 4 cartes dépouillées, motif `chiffre` (numéro, mot, chiffre, ligne) ou `verdict` (numéro, mot, question, verdict) ; données dans `src/data/` | `<CartesNumerotees cartes={conditions} motif="verdict" />` |
 | Causes | Les trois courbes « Pourquoi maintenant » de la séance 1, spécifiques à cette leçon | `<Causes />` |
-| Îlot interactif | Ce qui réagit au clic ou au clavier, `components/islands/*` avec `client:load` : frise, jeu classification / régression, jeu « quel graphique ? », jeu « quelle commande git ? », jeu « supprimer, remplir ou garder ? », jeu « quel piège ? », jeu « ce modèle a-t-il compris ? », jeu « qui avait le plus de chances ? », jeu « fuite ou pas fuite ? », écrans de la séance 0 | `<Frise client:load />` |
+| Îlot interactif | Ce qui réagit au clic ou au clavier, `components/islands/*` avec `client:load` : frise, jeu classification / régression, jeu « quel graphique ? », jeu « quelle commande git ? », jeu « supprimer, remplir ou garder ? », jeu « quel piège ? », jeu « ce modèle a-t-il compris ? », jeu « qui avait le plus de chances ? », jeu « fuite ou pas fuite ? », jeu « quelle limite ? », écrans de la séance 0 | `<Frise client:load />` |
 | Boutons de séance | La rangée Colab leçon, Colab exercices, dossier GitHub, en ↗ ; `BoutonsSeance.astro` construit les URL | `<BoutonsSeance dossier="seance-02-python-pour-la-data" lecon="02_python_pour_la_data.ipynb" exercices="02_exercices.ipynb" />` |
 | Liste courte | Le déroulé du notebook ou trois consignes, une ligne par puce | `- **Python répond ?** puis le diagnostic (15 min)…` |
 | Tableau de référence | Une fiche à retrouver ensuite, quatre colonnes au plus, en Markdown | `| Verbe | La question | La ligne pandas | Exemple |` |
@@ -121,6 +121,18 @@ changé, une ligne par correction, ou dit que rien n'a eu besoin de l'être.
    complète, aucune sortie enregistrée) et la correction figure dans le compte rendu. Tout le reste des notebooks est hors
    champ, dette connue du CLAUDE.md comprise.
 6. **Quiz et jeu ne partagent rien.** Aucune question et aucune phrase d'explication en commun (voir ci-dessus).
+
+### Bloc 4 : sorties de modèle et faits sur l'IA
+
+Deux règles de plus pour les séances 9 à 12.
+
+1. **Toute sortie de modèle montrée sur la page vient d'un vrai passage du modèle du notebook** (Qwen 2.5 0.5B Instruct ;
+   le CPU suffit) : texte généré, probabilités du mot suivant, passages retrouvés, étapes d'un agent. Le modèle, les
+   réglages et la graine sont écrits dans l'en-tête du fichier de données, comme pour les autres données. Si un passage
+   est impossible, la page montre la sortie du `llm_factice` du notebook et le dit. Les faits sur les tokens viennent du
+   vrai tokenizer.
+2. **Tout fait sur des modèles ou des entreprises réels** (dates, tailles, longueurs de contexte, prix) porte un lien vers
+   sa source et une date de vérification dans le fichier de données. Sans source qui le confirme, il n'apparaît pas.
 
 ## Une figure remplace son explication
 

@@ -1,0 +1,26 @@
+---
+/**
+ * Trois tailles de modèle en nombre de paramètres, sur une échelle où chaque graduation multiplie par 1 000 : le bigramme
+ * du notebook, Qwen compté sur le modèle chargé, Mistral 7B selon Mistral AI (src/data/llm.ts, sources dans l'en-tête).
+ */
+import { tailles, SOURCES } from "../../data/llm";
+const X0 = 250, L = 560, LOGMAX = 10;
+const sx = (n: number) => X0 + (Math.log10(n) / LOGMAX) * L;
+const fr = (n: number) => n >= 1e9 ? (n / 1e9).toFixed(1).replace(".", ",") + " milliards" : n >= 1e6 ? Math.round(n / 1e6) + " millions" : String(n);
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 200" role="img" aria-labelledby="tm-titre tm-desc">
+    <title id="tm-titre">Du bigramme à Mistral 7B</title>
+    <desc id="tm-desc">Le bigramme du notebook a environ 249 paramètres, Qwen 2.5 0.5B en a 494 millions, Mistral 7B 7,3 milliards. Chaque graduation de l'échelle multiplie par mille.</desc>
+    {[0, 3, 6, 9].map((e) => <g><line x1={X0 + e / LOGMAX * L} x2={X0 + e / LOGMAX * L} y1="20" y2="150" class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={X0 + e / LOGMAX * L} y="168" text-anchor="middle" class="encre-2 mono" font-size="11">{["1", "1 000", "1 million", "1 milliard"][e / 3]}</text></g>)}
+    {tailles.map((t, i) => (
+      <g>
+        <text x="30" y={44 + i * 42} class="encre" font-size="13" font-weight={i === 1 ? "700" : "400"}>{t.nom}</text>
+        <rect x={X0} y={30 + i * 42} width={sx(t.parametres) - X0} height="20" class={i === 1 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={sx(t.parametres) + 8} y={45 + i * 42} class="encre mono" font-size="12">{fr(t.parametres)}</text>
+      </g>
+    ))}
+    <text x="30" y="192" class="encre-2" font-size="11.5">Qwen compté sur le modèle chargé ; Mistral 7B selon son annonce ({SOURCES.mistral.titre}, vérifiée le {SOURCES.mistral.verifie}).</text>
+  </svg>
+  <figcaption>Un paramètre est un nombre réglé pendant l'entraînement ; le petit modèle du cours en a un demi-milliard.</figcaption>
+</figure>

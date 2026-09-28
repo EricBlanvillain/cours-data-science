@@ -1,0 +1,47 @@
+---
+/**
+ * La température sur le vrai modèle : les probabilités des six premiers tokens après « Le chat dort sur le », divisées
+ * par T avant le softmax (T = 0,5, 1, 2) ; puis trois réponses à température 0 et à 1,5 (src/data/llm.ts).
+ */
+import { motSuivant as m, temperatureModele as tm } from "../../data/llm";
+const Ts = ["0.5", "1.0", "2.0"];
+const toks = m.probas["0.5"].slice(0, 6).map((x) => x[0]);
+const p = (T: string, tk: string) => (m.probas[T].find((x) => x[0] === tk) || [tk, 0])[1] as number;
+const vis = (s: string) => s.replace(/ /g, "␣");
+const pc = (v: number) => (v * 100).toFixed(1).replace(".", ",");
+const X0 = 60, GW = 64, H = 150, Y0 = 60, MAX = 0.4;
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 310" role="img" aria-labelledby="te-titre te-desc">
+    <title id="te-titre">La température aplatit les probabilités</title>
+    <desc id="te-desc">Pour les six premiers tokens après « Le chat dort sur le », la probabilité du premier vaut 36,1 % à température 0,5, 9,5 % à 1, 0,6 % à 2 : plus la température monte, plus les choix s'égalisent. À droite, trois réponses du modèle à « un nom original pour un chat » : à température 0, Kitty trois fois ; à 1,5, Papillon, ChatGym, Chatbot.</desc>
+    <text x={X0 - 30} y="26" class="encre" font-size="15" font-weight="700">même phrase, trois températures</text>
+    {toks.map((tk, i) => (
+      <g>
+        {Ts.map((T, k) => (
+          <rect x={X0 + i * (GW + 16) + k * (GW / 3)} y={Y0 + H - H * p(T, tk) / MAX} width={GW / 3 - 2} height={H * p(T, tk) / MAX} class={k === 0 ? "plein" : k === 1 ? "fond-3 plein-trait" : "fond-2 plein-trait"} stroke-width="1" />
+        ))}
+        <text x={X0 + i * (GW + 16) + GW / 2} y={Y0 + H + 18} text-anchor="middle" class="encre mono" font-size="12">{vis(tk)}</text>
+      </g>
+    ))}
+    <line x1={X0 - 6} x2={X0 + 6 * (GW + 16)} y1={Y0 + H} y2={Y0 + H} class="plein-trait" stroke-width="1" />
+    <text x={X0 + 4} y={Y0 + H - H * p("0.5", toks[0]) / MAX - 6} class="encre mono" font-size="11" font-weight="700">{pc(p("0.5", toks[0]))} %</text>
+    {Ts.map((T, k) => (
+      <g>
+        <rect x={X0 + k * 170} y="262" width="14" height="14" class={k === 0 ? "plein" : k === 1 ? "fond-3 plein-trait" : "fond-2 plein-trait"} stroke-width="1" />
+        <text x={X0 + 20 + k * 170} y="274" class="encre" font-size="12">T = {T.replace(".0", "").replace(".", ",")} : {pc(p(T, toks[0]))} %</text>
+      </g>
+    ))}
+    <text x={X0 - 30} y="300" class="encre-2" font-size="12">le pourcentage : la part du premier token, « ␣p », à chaque température ; softmax(logits ÷ T)</text>
+
+    <text x="620" y="26" class="encre" font-size="15" font-weight="700">« un nom original pour un chat »</text>
+    {["0", "1.5"].map((T, k) => (
+      <g>
+        <text x="620" y={64 + k * 110} class="encre mono" font-size="12.5" font-weight="700">température {T.replace(".", ",")}</text>
+        {tm.reponses[T].map((r, i) => <text x="636" y={88 + k * 110 + i * 22} class="encre" font-size="13">{r}</text>)}
+      </g>
+    ))}
+    <text x="620" y="286" class="encre-2" font-size="12">vrai modèle, graines 0, 1, 2</text>
+  </svg>
+  <figcaption>La température règle le hasard : basse, toujours la même réponse ; haute, des choix de plus en plus égaux.</figcaption>
+</figure>

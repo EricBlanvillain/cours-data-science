@@ -196,6 +196,16 @@ const ETATS = [
   { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-faux", pilote: `
       const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "Pas de fuite").click(); await w(300);
       if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-initiale", pilote: "" },
+  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-ouvert", pilote: `
+      const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300);
+      if (!g.textContent.includes("réponse ouverte")) throw new Error("le cuivre « réponse ouverte » manque");` },
+  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-juste", pilote: `
+      const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "1 · Hallucination").click(); await w(300);
+      if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
+  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-faux", pilote: `
+      const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "3 · Calcul").click(); await w(300);
+      if (!g.textContent.includes("pas cette limite-là")) throw new Error("réponse fausse non reconnue");` },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `

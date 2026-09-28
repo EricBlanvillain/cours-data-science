@@ -1,0 +1,92 @@
+---
+numero: 9
+titre: Comment fonctionne un LLM
+niveau: ⭐⭐
+duree: 1 h 30
+resume: "Ouvrir le capot d'un modèle de langage : des tokens, un seul geste répété, deviner le mot suivant, la température qui règle le hasard, et un petit modèle qu'on fait halluciner exprès."
+livrable: Un petit modèle qu'on a fait tourner et « halluciner » volontairement, et une fiche « 3 limites d'un LLM » observées soi-même.
+objectifs:
+  - Tu sauras ce qu'est un token, et pourquoi un modèle compte mal les lettres.
+  - Tu sauras expliquer « prédire le mot suivant » et ce que change la température.
+  - Tu sauras reconnaître une hallucination, une date de connaissance dépassée et un calcul faux.
+aRetenir:
+  - Un modèle lit des tokens, des morceaux de mots numérotés, pas des lettres.
+  - Un LLM ne fait qu'une chose, prédire le token suivant, encore et encore.
+  - La température règle le hasard, basse pour la même réponse, haute pour la variété puis le n'importe quoi.
+  - Il écrit le plausible, pas le vrai ; plus la question est précise, plus il faut vérifier.
+  - Petit modèle, gratuit et chez toi ; gros modèle, dans le cloud, meilleur et payant.
+---
+import TokensVisibles from "../../components/schemas/TokensVisibles.astro";
+import MotSuivant from "../../components/schemas/MotSuivant.astro";
+import Temperature from "../../components/schemas/Temperature.astro";
+import CeQuilNeSaitPas from "../../components/schemas/CeQuilNeSaitPas.astro";
+import TaillesModeles from "../../components/schemas/TaillesModeles.astro";
+import QuelleLimite from "../../components/islands/QuelleLimite";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Des tokens, pas des lettres
+
+Un ordinateur ne lit que des nombres. Avant de lire ta phrase, le modèle la découpe en tokens, et chaque token a un numéro. Tout ce qui suit sort du modèle du notebook, Qwen 2.5 0.5B, lancé pour de vrai.
+
+<TokensVisibles />
+
+## Deviner le mot suivant
+
+Un modèle de langage ne fait qu'une chose : lire ce qui précède et deviner le token suivant, puis recommencer. Le notebook construit d'abord le plus petit modèle possible, un bigramme.
+
+<MotSuivant />
+
+<details>
+<summary>Pourquoi le bigramme tourne en rond</summary>
+
+Parti de « le », le bigramme choisit toujours le mot le plus fréquent : « chat », puis « dort », puis « dans », puis de nouveau « le ». Il écrit « le chat dort dans le chat dort dans le chat… » sans fin. Un vrai modèle regarde des milliers de tokens précédents, pas un seul, et il a lu des milliards de phrases, pas 36.
+
+</details>
+
+## La température
+
+Les vrais modèles tirent au sort parmi les tokens probables. La température règle ce hasard.
+
+<Temperature />
+
+## Ce qu'il ne sait pas
+
+Le modèle écrit le plus plausible, pas le vrai. Posées au vrai modèle, quatre questions précises :
+
+<CeQuilNeSaitPas />
+
+<QuelleLimite client:load />
+
+<details>
+<summary>Et la consigne « si tu n'es pas sûr, dis je ne sais pas » ?</summary>
+
+Ajoutée au prompt système, elle n'a pas suffi au petit modèle : il a inventé un autre maire, avec une date d'élection. Plus le modèle est petit, moins il suit les consignes.
+
+</details>
+
+## Petit modèle, gros modèle
+
+Le modèle du cours tourne dans Colab gratuit, et même sur un ordinateur portable. Un gros modèle tourne sur les serveurs de son éditeur : il faut du réseau, et tes messages partent là-bas.
+
+<TaillesModeles />
+
+<details>
+<summary>Le sac de mots, avant les LLM</summary>
+
+Avant les LLM, un filtre anti-spam comptait les mots d'un message : « gagné », « gratuit », « cliquez » sentent le spam. Le notebook refait cette méthode sur 20 messages, puis la piège. Résultat du vrai passage : le sac de mots laisse passer le faux message de la banque, faute d'en connaître les mots, et le petit modèle répond « spam » à tout, même à « On se voit demain au foot ? ». À cette taille, il suit mal la consigne.
+
+</details>
+
+### À toi : fais halluciner le modèle
+
+Tu deviens testeur de LLM, 20 minutes.
+
+- **Cinq pièges**, un par catégorie : un événement futur, une personne inventée, un calcul, l'actualité, des lettres à compter.
+- **Note la réponse et la vérité**, vérifiée avec Python ou une source fiable. Une bonne réponse est aussi une observation.
+- **Ta fiche « 3 limites »**, chacune avec son explication et ton meilleur piège.
+
+<BoutonsSeance dossier="seance-09-comment-fonctionne-un-llm" lecon="09_comment_fonctionne_un_llm.ipynb" exercices="09_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `09_exercices.ipynb` : 12 exercices, de ⭐ à ⭐⭐⭐, avec vérification automatique, indices et solutions repliées. Il s'ouvre par un quiz de deux questions, à se poser à voix haute au début de la séance suivante.

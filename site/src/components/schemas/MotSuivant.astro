@@ -1,0 +1,39 @@
+---
+/**
+ * Prédire le mot suivant, deux fois : le bigramme du notebook (ses comptages après « le ») et le vrai modèle (ses
+ * probabilités pour le token qui suit « Le chat dort sur le », température 1) (src/data/llm.ts).
+ */
+import { bigramme as b, motSuivant as m } from "../../data/llm";
+const top = m.probas["1.0"].slice(0, 6);
+const maxP = top[0][1];
+const maxC = b.apresLe[0][1];
+const pc = (p: number) => (p * 100).toFixed(1).replace(".", ",");
+const vis = (s: string) => s.replace(/ /g, "␣");
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 290" role="img" aria-labelledby="ms-titre ms-desc">
+    <title id="ms-titre">Le mot suivant : un comptage, puis des probabilités</title>
+    <desc id="ms-desc">À gauche, le bigramme : après « le », il a vu chat 5 fois, chien 5, prof 4, modèle 4, jardin 2, poisson 2. À droite, le vrai modèle après « Le chat dort sur le » : le token « p » à 9,5 %, banc 6,1 %, lit 4,5 %, sol 4,2 %, « to » 3,9 %, mur 3,5 %.</desc>
+    <text x="30" y="26" class="encre" font-size="15" font-weight="700">le bigramme : après « le », il a vu…</text>
+    <text x="30" y="44" class="encre-2" font-size="12">{b.phrases} phrases, un comptage par couple de mots</text>
+    {b.apresLe.map(([mot, n], i) => (
+      <g>
+        <text x="130" y={76 + i * 32} text-anchor="end" class="encre mono" font-size="13">{mot}</text>
+        <rect x="140" y={62 + i * 32} width={260 * n / maxC} height="20" class={i === 0 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={148 + 260 * n / maxC} y={77 + i * 32} class="encre mono" font-size="12">{n} fois</text>
+      </g>
+    ))}
+
+    <text x="500" y="26" class="encre" font-size="15" font-weight="700">le vrai modèle : après « {m.debut} »…</text>
+    <text x="500" y="44" class="encre-2" font-size="12">probabilité de chaque token suivant, sur {">"} 150 000 possibles</text>
+    {top.map(([tk, p], i) => (
+      <g>
+        <text x="590" y={76 + i * 32} text-anchor="end" class="encre mono" font-size="13">{vis(tk)}</text>
+        <rect x="600" y={62 + i * 32} width={280 * p / maxP} height="20" class={i === 0 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={608 + 280 * p / maxP} y={77 + i * 32} class="encre mono" font-size="12">{pc(p)} %</text>
+      </g>
+    ))}
+    <text x="500" y="272" class="encre-2" font-size="12">« ␣p », « ␣to » : des débuts de mots ; le mot se finit au token d'après</text>
+  </svg>
+  <figcaption>Le bigramme compte après un seul mot ; le vrai modèle calcule une probabilité après toute la phrase.</figcaption>
+</figure>

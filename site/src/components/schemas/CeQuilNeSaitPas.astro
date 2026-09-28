@@ -1,0 +1,17 @@
+---
+/**
+ * Quatre questions au vrai modèle, sa réponse telle quelle, et la vérité (src/data/llm.ts, graine 0).
+ */
+import GrilleCartes from "../GrilleCartes.astro";
+import { cartesLimites } from "../../data/llm";
+---
+<GrilleCartes bandes={4} liste={false} class="large" min="10.5rem">
+  {cartesLimites.map((c) => (
+    <article class="carte">
+      <p class="etiquette">la question</p>
+      <p style="font-size: 0.95rem;">{c.question}</p>
+      <p class="encart" style="font-size: 0.92rem;"><span class="mono-caps" style="display: block; color: var(--encre-2);">le modèle répond</span>{c.reponse}</p>
+      <p class="discret"><b>La vérité.</b> {c.verite}</p>
+    </article>
+  ))}
+</GrilleCartes>
