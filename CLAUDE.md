@@ -47,6 +47,6 @@ Après une modification de notebook, on rejoue sa recette sous les deux environn
 
 La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, A2, A3, A6) et par les **15 notebooks d'exercices** des séances (`NN_exercices.ipynb`, `SO1_exercices.ipynb`, `SO2_exercices.ipynb`).
 
-**pandas 3** : les trois cassures connues (04 ex 6, 05 ex 6, partie mémoire de SO2) sont réparées le 28/09/2026 ; ces carnets passent leur recette sous pandas 2.2 (Colab) comme sous pandas 3.0, solutions injectées. Le reste du dépôt n'a pas été recetté sous pandas 3.
+**pandas 3** : les trois cassures connues (04 ex 6, 05 ex 6, partie mémoire de SO2) sont réparées le 28/09/2026 ; ces carnets passent leur recette sous pandas 2.2 (Colab) comme sous pandas 3.0, solutions injectées. Le 29/09/2026, tout le dépôt a été recetté sous les deux versions, solutions injectées : aucun notebook ne plante, et aucun écart ne vient de pandas 3.
 
-**Dette restante : 12 notebooks embarquent encore la solution dans la cellule d'énoncé**, donc avant le squelette — les 4 projets de `projets-optionnels/` (B1 à B4), les 3 projets de `projets/` (projets 1, 2 et 3), et les 5 leçons des séances 04 à 08. À aligner quand on y touchera pour autre chose ; ce n'est pas un chantier à ouvrir pour lui-même.
+**Ordre des cellules** : depuis le 28/09/2026, aucune solution ne précède plus son squelette dans le dépôt. Les leçons 04 à 08 et les projets 1 à 3 n'ont pas de cellule de vérification pour leurs exercices « À toi » : leur solution suit directement le squelette.
