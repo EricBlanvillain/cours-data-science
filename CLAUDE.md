@@ -49,4 +49,4 @@ La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, 
 
 **pandas 3** : les trois cassures connues (04 ex 6, 05 ex 6, partie mémoire de SO2) sont réparées le 28/09/2026 ; ces carnets passent leur recette sous pandas 2.2 (Colab) comme sous pandas 3.0, solutions injectées. Le 29/09/2026, tout le dépôt a été recetté sous les deux versions, solutions injectées : aucun notebook ne plante, et aucun écart ne vient de pandas 3.
 
-**Ordre des cellules** : depuis le 28/09/2026, aucune solution ne précède plus son squelette dans le dépôt. Les leçons 04 à 08 et les projets 1 à 3 n'ont pas de cellule de vérification pour leurs exercices « À toi » : leur solution suit directement le squelette.
+**Ordre des cellules** : depuis le 28/09/2026, aucune solution ne précède plus son squelette dans le dépôt. Depuis le 29/09/2026, les leçons 04 à 08 ont une cellule de vérification (`verifier`, qui n'affiche jamais la réponse) après chaque exercice à résultat vérifiable, dont le squelette nomme le résultat ; leurs exercices ouverts (questions à rédiger, graphiques) et les projets 1 à 3 n'en ont pas, et leur solution suit directement le squelette.
