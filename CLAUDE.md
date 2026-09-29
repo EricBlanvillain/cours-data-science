@@ -49,6 +49,22 @@ Aucun PDF n'est versionné : l'élève enregistre la leçon (bouton « Enregistr
 
 `cd site && npm run pdf:verifier` (script `site/scripts/pdf.mjs`) est un contrôle local : il construit le site, imprime chaque leçon et le cours complet avec le Chrome de la machine dans `site/.verif-pdf/` (ignoré par git), et vérifie que rien ne dépasse à droite, que chaque jeu et chaque mini-quiz a son corrigé, puis donne le nombre de pages. À lancer après une modification des styles d'impression, d'un jeu ou d'une leçon.
 
+### Audits ciblés
+
+Les audits complets du site durent environ 25 minutes. Les deux audits et le vérificateur de PDF acceptent une portée (`site/scripts/portee.mjs`) : `--pages seance-03,index` (l'accueil s'écrit `index`, une séance avec ses deux chiffres, sinon `glossaire`, `cours-complet`) ne mesure que ces pages ; `--impression` ne lance que les contrôles d'impression ; sans option, tout tourne.
+
+```bash
+cd site && npm run build                                   # lint des leçons et plafond de prose compris
+npm run audit -- --pages seance-03                         # contraste
+npm run audit:mise-en-page -- --pages seance-03 --impression
+npm run pdf:verifier -- --pages seance-03,cours-complet
+```
+
+La règle :
+- après chaque modification : le build, plus les audits limités aux pages et aux modes que la modification touche (une leçon et ses données : sa page ; les styles d'impression, un corrigé, un jeu : `--impression` et le vérificateur sur ses pages) ;
+- la suite complète, sans option : une fois à la fin d'une série de modifications, juste avant le push final, et chaque fois qu'un fichier partagé change (`global.css`, `Base.astro`, `palette.mjs`, un composant utilisé sur plusieurs pages comme `BoutonsSeance`, `CorpsLecon`, `GrilleCartes`, `Nav`, `Laterale`, `ImpressionJeu`, ou `src/data/impression.ts`) ;
+- chaque compte rendu dit quelle portée a tourné, et pourquoi.
+
 ### Où en est le dépôt
 
 La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, A2, A3, A6) et par les **15 notebooks d'exercices** des séances (`NN_exercices.ipynb`, `SO1_exercices.ipynb`, `SO2_exercices.ipynb`).

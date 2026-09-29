@@ -14,6 +14,7 @@
  * sont listés en clair dans la sortie (NON_COUVERTS), pour ne jamais laisser croire à une couverture complète.
  *
  * Lancer :  npm run build && npm run audit        (ou node scripts/audit-contrast.mjs)
+ * Portée :  npm run audit -- --pages seance-03,index   ·   npm run audit -- --impression   (scripts/portee.mjs)
  * Sort en code 1 à la moindre faute AA, de règle ou d'état non atteint ; en code 2 s'il ne peut pas mesurer.
  */
 import http from "node:http";
@@ -23,6 +24,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { palette, copperRules } from "../src/styles/palette.mjs";
+import { portee } from "./portee.mjs";
 
 const execFileP = promisify(execFile);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -462,7 +464,11 @@ const coppers = [palette.copper.DEFAULT, palette.copper.ink, palette.copper.ligh
 const lights = [palette.cream.DEFAULT, palette.cream.sunk, "#ffffff"].map((c) => c.toLowerCase());   // blanc : le papier, à l'impression
 const darks = [palette.ink.DEFAULT, palette.ink.raised, palette.ink.soft].map((c) => c.toLowerCase());
 
-for (const etat of ETATS) {
+const P = portee();
+const RETENUS = ETATS.filter((e) => P.vise(e.page) && (!P.impression || e.fond === "impression"));
+if (!RETENUS.length) { console.error(`Portée vide (${P.libelle}) : aucun état ne correspond. Pages : ${[...new Set(ETATS.map((e) => e.page))].join(", ")}`); process.exit(2); }
+console.log(`Portée : ${P.libelle} · ${RETENUS.length} état(s) sur ${ETATS.length}`);
+for (const etat of RETENUS) {
   for (const mode of ["clair", "sombre"]) {
     const ou = `${etat.id} [${mode}]`;
     const res = await mesurer(etat, mode === "sombre");
@@ -522,5 +528,5 @@ console.log("\n=== COULEURS DE BORDURE PEINTES (composées) ===\n" + Object.entr
 const preflight = Object.keys(bordures).includes("#e5e7eb");
 if (preflight) console.error("\n!! bordure #e5e7eb détectée : une opacité de filet est tombée sur le gris par défaut de Tailwind.");
 const bad = fautes.length + cuivreFautes.length + nonAtteints.length + (preflight ? 1 : 0);
-console.log(`\n${bad === 0 ? "PASS" : "FAIL"} — ${ETATS.length * 2} états mesurés, ${fautes.length} faute(s) de contraste, ${cuivreFautes.length} faute(s) de cuivre, ${nonAtteints.length} état(s) non atteint(s)`);
+console.log(`\n${bad === 0 ? "PASS" : "FAIL"} — ${RETENUS.length * 2} états mesurés (portée : ${P.libelle}), ${fautes.length} faute(s) de contraste, ${cuivreFautes.length} faute(s) de cuivre, ${nonAtteints.length} état(s) non atteint(s)`);
 process.exit(bad === 0 ? 0 : 1);

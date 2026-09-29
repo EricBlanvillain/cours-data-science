@@ -8,6 +8,8 @@
  * boîtes de marge), <details> ouverts. Contrôles : rien ne dépasse à droite (à la largeur de texte d'une page A4), chaque
  * jeu et chaque mini-quiz imprimés ont leur corrigé avec autant de réponses que de situations, aucune interface
  * interactive imprimée telle quelle ; puis le nombre de pages de chaque PDF. Sort en code 1 à la moindre faute.
+ * Portée : npm run pdf:verifier -- --pages seance-03,cours-complet (scripts/portee.mjs) ; --impression ne change rien
+ * ici, tous ses contrôles sont des contrôles d'impression.
  */
 import http from "node:http";
 import fs from "node:fs";
@@ -15,6 +17,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn, execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { portee } from "./portee.mjs";
 
 const SITE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(SITE, "dist");
@@ -113,9 +116,12 @@ const liste = fs.readdirSync(LECONS).filter((f) => f.endsWith(".mdx")).map((f) =
   .filter((l) => l.numero >= 0 && l.numero <= 12).sort((a, b) => a.numero - b.numero)
   .map((l) => ({ fichier: `seance-${String(l.numero).padStart(2, "0")}.pdf`, url: `lecons/${l.slug}.html` }));
 liste.push({ fichier: "cours-complet.pdf", url: "cours-complet.html?verifier" });   // le paramètre : pas de fenêtre d'impression automatique
+const P = portee();
+const retenus = liste.filter((l) => P.vise(l.url));
+if (!retenus.length) { console.error(`Portée vide (${P.libelle}) : ${liste.map((l) => l.url).join(", ")}`); process.exit(2); }
 let fautes = 0;
-console.log("\n2. impression dans .verif-pdf/");
-for (const { fichier, url } of liste) {
+console.log(`\n2. impression dans .verif-pdf/ (portée : ${P.libelle}, ${retenus.length} PDF sur ${liste.length})`);
+for (const { fichier, url } of retenus) {
   const r = await imprimer(`http://127.0.0.1:${PORT}/${url}`, path.join(SORTIE, fichier));
   const problemes = [...r.coupes.map((c) => `texte coupé à droite : ${c}`), ...r.sansCorrige.map((c) => `corrigé manquant : ${c}`), ...r.ilotsVisibles.map((i) => `îlot interactif imprimé tel quel : ${i}`)];
   fautes += problemes.length;
@@ -124,5 +130,5 @@ for (const { fichier, url } of liste) {
 }
 ws.close(); chrome.kill(); serveur.close();
 fs.rmSync(profil, { recursive: true, force: true });
-console.log(`\n${fautes ? "FAIL" : "PASS"} — ${liste.length} PDF dans site/.verif-pdf/ (non versionnés), ${fautes} faute(s)`);
+console.log(`\n${fautes ? "FAIL" : "PASS"} — portée : ${P.libelle} · ${retenus.length} PDF dans site/.verif-pdf/ (non versionnés), ${fautes} faute(s)`);
 process.exit(fautes ? 1 : 0);

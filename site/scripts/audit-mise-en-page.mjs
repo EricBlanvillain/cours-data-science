@@ -18,6 +18,7 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { portee } from "./portee.mjs";
 
 const execFileP = promisify(execFile);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -203,9 +204,15 @@ async function mesurerUneFois(etat, largeur, simulee) {
   return m ? JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'")) : null;
 }
 
+const P = portee();
+const PAGES_R = P.impression ? [] : PAGES.filter((e) => P.vise(e.page));
+const IMPRESSION_R = IMPRESSION.filter((e) => P.vise(e.page));
+const AVEC_ECRANS = !P.impression && P.vise("lecons/seance-00-faire-connaissance.html");
+if (!PAGES_R.length && !IMPRESSION_R.length) { console.error(`Portée vide (${P.libelle}) : aucune page ne correspond. Pages : ${[...new Set([...PAGES, ...IMPRESSION].map((e) => e.page))].join(", ")}`); process.exit(2); }
 let fautes = 0; const lignes = [];
+lignes.push(`Portée : ${P.libelle} · ${PAGES_R.length} page(s) écran, ${IMPRESSION_R.length} à l'impression${AVEC_ECRANS ? ", écrans de la séance 0" : ""}`);
 // Le téléphone d'abord : chaque page à 390 px simulés, aucun débordement horizontal hors des conteneurs qui défilent.
-for (const etat of PAGES) {
+for (const etat of PAGES_R) {
   const res = await mesurer(etat, 500, LARGEUR_TELEPHONE);
   const ou = `${etat.id} @${LARGEUR_TELEPHONE} (simulé)`;
   if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
@@ -214,7 +221,7 @@ for (const etat of PAGES) {
   else lignes.push(`${ou.padEnd(40)} rien ne déborde à droite`);
 }
 // L'impression ensuite : rien ne dépasse à droite de la page A4.
-for (const etat of IMPRESSION) {
+for (const etat of IMPRESSION_R) {
   const res = await mesurer(etat, 1280, LARGEUR_A4);
   const ou = `${etat.id} @${LARGEUR_A4} (A4, impression)`;
   if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
@@ -222,9 +229,9 @@ for (const etat of IMPRESSION) {
   if (res.debordsHorizontaux.length) { fautes += res.debordsHorizontaux.length; lignes.push(`${ou} · déborde à droite :\n   !! ${res.debordsHorizontaux.map((d) => d.quoi + " jusqu'à " + d.droite + "px pour " + d.page).join("\n   !! ")}`); }
   else lignes.push(`${ou.padEnd(48)} rien ne déborde à droite`);
 }
-for (const largeur of LARGEURS) {
+for (const largeur of PAGES_R.length ? LARGEURS : []) {
   const enTetes = {};
-  for (const etat of PAGES) {
+  for (const etat of PAGES_R) {
     const res = await mesurer(etat, largeur);
     const ou = `${etat.id} @${largeur}`;
     if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
@@ -242,10 +249,11 @@ for (const largeur of LARGEURS) {
     for (const id of ids.slice(1)) for (const k of ["logoGauche", "dernierLienDroite", "largeurEnTete", "piedGauche", "piedLargeur"]) {
       if (Math.abs((enTetes[id][k] ?? NaN) - (ref[k] ?? NaN)) > 0.5 || Number.isNaN(enTetes[id][k])) { fautes++; lignes.push(`@${largeur} : ${k} diffère entre ${ids[0]} (${ref[k]}) et ${id} (${enTetes[id][k]})`); }
     }
-  } else { fautes++; lignes.push(`@${largeur} : en-tête mesuré sur ${ids.length} page(s) au lieu de ${PAGES_EN_TETE.length}`); }
+  } else if (!P.complete) { lignes.push(`@${largeur} : identité de l'en-tête non vérifiée (portée réduite : ${ids.length} page(s) sur ${PAGES_EN_TETE.length})`); }
+  else { fautes++; lignes.push(`@${largeur} : en-tête mesuré sur ${ids.length} page(s) au lieu de ${PAGES_EN_TETE.length}`); }
 }
 const FENETRES = [[1440, 900], [1280, 720]];
-for (const [L, H] of FENETRES) {
+for (const [L, H] of AVEC_ECRANS ? FENETRES : []) {
   const etat = ECRANS(L);
   let stdout = "";
   try { ({ stdout } = await execFileP(CHROME, ["--headless=new", "--disable-gpu", "--hide-scrollbars", `--window-size=${L},${H + 121}`, "--virtual-time-budget=9000", "--dump-dom", `http://127.0.0.1:${PORT}/${etat.page}?etat=${etat.id}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 60000 })); } catch (e) { stdout = e.stdout || ""; }
@@ -263,5 +271,13 @@ for (const [L, H] of FENETRES) {
 }
 server.close();
 console.log(lignes.join("\n"));
-console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * (LARGEURS.length + 1) + IMPRESSION.length} mesures sur ${LARGEUR_TELEPHONE} (simulé), ${LARGEURS.join(", ")} px : rien ne déborde au téléphone ni à l'impression (A4), grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond, écrans de la séance 0 dans 1440 × 900${fautes ? ` · ${fautes} faute(s)` : ""}`);
+const controles = [
+  PAGES_R.length && `rien ne déborde au téléphone (${LARGEUR_TELEPHONE} px simulés)`,
+  IMPRESSION_R.length && (PAGES_R.length ? "ni à l'impression (A4)" : "rien ne déborde à l'impression (A4)"),
+  PAGES_R.length && `grilles alignées à ${LARGEURS.join(", ")} px`,
+  PAGES_R.length && (P.complete ? `en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages` : "identité de l'en-tête non vérifiée (portée réduite)"),
+  PAGES_R.length && "prose sous son plafond",
+  AVEC_ECRANS && "écrans de la séance 0 dans 1440 × 900",
+].filter(Boolean).join(", ");
+console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — portée : ${P.libelle} · ${PAGES_R.length * (LARGEURS.length + 1) + IMPRESSION_R.length} mesures : ${controles}${fautes ? ` · ${fautes} faute(s)` : ""}`);
 process.exit(fautes === 0 ? 0 : 1);
