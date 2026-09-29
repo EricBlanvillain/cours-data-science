@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GRAPHIQUES, questionsGraphiques, type Graphique } from "../../data/graphiques";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Quel graphique pour quelle question ? » : on choisit une question, puis l'un des trois graphiques ; le verdict et son
@@ -26,6 +28,7 @@ export default function QuelGraphique() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {questionsGraphiques.map((x, i) => (
@@ -67,5 +70,7 @@ export default function QuelGraphique() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.QuelGraphique} />
+    </>
   );
 }

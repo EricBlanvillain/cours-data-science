@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { VERDICTS_FUITE, situationsFuite, type Fuite } from "../../data/competition";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Fuite ou pas fuite ? » : on choisit une colonne ajoutée, puis l'un des deux verdicts ; le verdict et son
@@ -25,6 +27,7 @@ export default function FuiteOuPas() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situationsFuite.map((x, i) => (
@@ -67,5 +70,7 @@ export default function FuiteOuPas() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.FuiteOuPas} />
+    </>
   );
 }

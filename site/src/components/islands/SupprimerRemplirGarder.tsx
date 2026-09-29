@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CHOIX, situationsVides, type Choix } from "../../data/nettoyage";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Supprimer, remplir ou garder ? » : on choisit une case vide, puis l'une des trois stratégies ; le verdict et son
@@ -25,6 +27,7 @@ export default function SupprimerRemplirGarder() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situationsVides.map((x, i) => (
@@ -67,5 +70,7 @@ export default function SupprimerRemplirGarder() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.SupprimerRemplirGarder} />
+    </>
   );
 }

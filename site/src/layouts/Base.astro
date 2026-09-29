@@ -12,8 +12,10 @@ interface Props {
   barre?: boolean;
   /** numéro de la séance de la page, pour la mettre en avant dans la barre */
   courant?: number;
+  /** page fabriquée pour l'impression (le cours complet) : pas d'indexation */
+  noindex?: boolean;
 }
-const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture", barre = false, courant } = Astro.props;
+const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture", barre = false, courant, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -23,6 +25,9 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {noindex && <meta name="robots" content="noindex" />}
+    {/* À l'impression, chaque repli <details> s'imprime ouvert (le CSS ne sait pas ouvrir un <details>). */}
+    <script is:inline>window.addEventListener("beforeprint", function () { document.querySelectorAll("details").forEach(function (d) { d.open = true; }); });</script>
     <title>{titre} · Cours Data Science & IA</title>
     {/*
       Thème : système (défaut), clair, sombre. Choix gardé dans le navigateur (localStorage), posé sur <html data-theme>

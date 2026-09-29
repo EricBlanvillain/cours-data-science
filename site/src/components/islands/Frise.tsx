@@ -52,6 +52,7 @@ export default function Frise() {
   const periodeCourante = liste[courant]?.periode;
 
   return (
+    <>
     <div className="large" style={{ display: "grid", gap: "0.9rem", gridTemplateColumns: "minmax(0, 1fr)", minWidth: 0 }}>
       {/* Les périodes : un raccourci et un repère */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }} role="tablist" aria-label="Périodes">
@@ -141,5 +142,17 @@ export default function Frise() {
         <button type="button" className="bouton principal" onClick={() => aller(courant + 1)} disabled={courant === liste.length - 1} aria-label="Jalon suivant">Suivant →</button>
       </div>
     </div>
+      {/* À l'impression : tous les jalons, période par période, à la place de la frise à déplier. */}
+      <div className="imprime-seul frise-imprimee">
+        {(Object.keys(periodes) as Periode[]).map((p) => (
+          <div key={p}>
+            <p className="mono-caps">{periodes[p].titre} · {periodes[p].annees}</p>
+            <ul>
+              {liste.filter((j) => j.periode === p).map((j) => <li key={j.titre}><b>{j.date ?? j.annee}</b> · {j.titre} : {j.phrase}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

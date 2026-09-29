@@ -43,6 +43,10 @@ Sur Mac, deux réglages que Colab (Linux) n'a pas besoin : xgboost cherche la bi
 
 Après une modification de notebook, on rejoue sa recette sous les deux environnements, l'un après l'autre (deux passages en parallèle sur le même dossier effaceraient les fichiers l'un de l'autre). Le script sort en code 1 si un notebook plante, contient des sorties ou, avec `--solutions`, affiche un ❌. Un module introuvable donne « SKIP : dépendance Colab », qui ne fait pas échouer.
 
+### Les PDF du site
+
+`cd site && npm run pdf` (script `site/scripts/pdf.mjs`) construit le site, puis imprime avec le Chrome de la machine un PDF par leçon (`site/public/pdf/seance-00.pdf` … `seance-12.pdf`) et le cours complet (`cours-complet.pdf` : couverture, sommaire cliquable, séances 0 à 12, sans les modules optionnels). Il vérifie au passage que rien ne dépasse à droite et que chaque jeu a son corrigé, puis écrit `site/public/pdf/manifest.json` : pour chaque PDF, l'empreinte de ses sources (le MDX de la leçon et les fichiers de `src/data/` qu'il importe). Au début de chaque `npm run build`, Vercel compris, `site/scripts/garde-pdf.mjs` recalcule ces empreintes : une leçon modifiée sans PDF refait fait échouer le build (« PDF périmé : lancer npm run pdf »). Après toute modification d'une leçon ou de ses données : `npm run pdf`, puis commiter les PDF et le manifeste avec la modification.
+
 ### Où en est le dépôt
 
 La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, A2, A3, A6) et par les **15 notebooks d'exercices** des séances (`NN_exercices.ipynb`, `SO1_exercices.ipynb`, `SO2_exercices.ipynb`).

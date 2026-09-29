@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LIMITES, ORDRE_LIMITES, situationsLimites, type Limite } from "../../data/llm";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Quelle limite ? » : on choisit une question posée au vrai modèle, on lit sa réponse (réelle, src/data/llm.ts), puis on
@@ -23,6 +25,7 @@ export default function QuelleLimite() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situationsLimites.map((x, i) => (
@@ -64,5 +67,7 @@ export default function QuelleLimite() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.QuelleLimite} />
+    </>
   );
 }

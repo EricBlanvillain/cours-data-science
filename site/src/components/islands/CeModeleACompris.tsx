@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { VERDICTS, situationsModeles, type Verdict } from "../../data/modele";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Ce modèle a-t-il compris ? » : on choisit un modèle et ses scores, puis l'un des trois verdicts ; le verdict et son
@@ -25,6 +27,7 @@ export default function CeModeleACompris() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situationsModeles.map((x, i) => (
@@ -67,5 +70,7 @@ export default function CeModeleACompris() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.CeModeleACompris} />
+    </>
   );
 }

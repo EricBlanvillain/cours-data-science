@@ -1,5 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import { questions, type Question } from "../../data/questions";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 type Verdict = Question["reponse"] | "inconnu";
 
@@ -87,6 +89,7 @@ export default function ClassifOuRegression() {
   }
 
   return (
+    <>
     <div className="large" style={{ display: "grid", gap: "1.1rem" }}>
       {/* Les exemples */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
@@ -177,5 +180,7 @@ export default function ClassifOuRegression() {
         <p className="discret"><span className="pastille-ouverte" /><span className="ouvert">Aucune question posée pour l'instant.</span> Clique sur une question, ou écris la tienne. Le bon réflexe : regarder la forme de la réponse, pas le sujet.</p>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.ClassifOuRegression} />
+    </>
   );
 }

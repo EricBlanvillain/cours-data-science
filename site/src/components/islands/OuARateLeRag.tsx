@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { VERDICTS_RAG, casRag, type Verdict } from "../../data/rag";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Où le RAG a-t-il raté ? » : pour une vraie question posée au RAG du notebook, on voit les trois paragraphes vraiment
@@ -26,6 +28,7 @@ export default function OuARateLeRag() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {casRag.map((x, i) => (
@@ -73,5 +76,7 @@ export default function OuARateLeRag() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.OuARateLeRag} />
+    </>
   );
 }

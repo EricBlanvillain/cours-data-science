@@ -1,9 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
+import CorpsLecon from "../../components/CorpsLecon.astro";
 import Base from "../../layouts/Base.astro";
+import fs from "node:fs";
+import path from "node:path";
 import { seances } from "../../data/seances";
-import Quiz from "../../components/islands/Quiz";
-import { quiz } from "../../data/quiz";
 
 export async function getStaticPaths() {
   const lecons = await getCollection("lecons");
@@ -11,13 +12,13 @@ export async function getStaticPaths() {
 }
 
 const { lecon } = Astro.props;
-const { Content, headings } = await render(lecon);
+const { headings } = await render(lecon);
 const sections = headings.filter((h) => h.depth === 2);
 const n = lecon.data.numero;
 const suivante = seances.find((s) => s.numero === n + 1);
-const objectifs = lecon.data.objectifs ?? [];
-const aRetenir = lecon.data.aRetenir ?? [];
-const aUnQuiz = (quiz[n] ?? []).length > 0;
+// Le PDF de la leçon s'annonce dans la rangée de boutons (BoutonsSeance) ; une leçon qui n'a pas cette rangée l'a ici.
+const fichierPdf = `seance-${String(n).padStart(2, "0")}.pdf`;
+const pdfIci = !(lecon.body ?? "").includes("<BoutonsSeance") && fs.existsSync(path.join(process.cwd(), "public", "pdf", fichierPdf));
 ---
 
 <Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume} barre courant={n}>
@@ -47,36 +48,9 @@ const aUnQuiz = (quiz[n] ?? []).length > 0;
       </nav>
     )}
 
-    {/* Le cadre de la leçon : objectifs en tête (frontmatter), « à retenir » et mini-quiz en pied, avant la navigation. */}
-    {objectifs.length > 0 && (
-      <section class="mt-10 objectifs" style="max-width: 46rem;" aria-labelledby="objectifs-titre">
-        <p id="objectifs-titre" class="mono-caps" style="color: var(--encre-2);">À la fin de la séance</p>
-        <ul class="mt-2" style="padding-left: 1.3em;">
-          {objectifs.map((o) => <li>{o}</li>)}
-        </ul>
-      </section>
-    )}
+    {pdfIci && <p class="mt-8 boutons-seance"><a class="bouton" href={`/pdf/${fichierPdf}`} download>Télécharger la leçon (PDF) ↓</a></p>}
 
-    <article class="prose mt-14">
-      <Content />
-    </article>
-
-    {aUnQuiz && (
-      <section class="mt-20" style="max-width: 46rem;" aria-labelledby="quiz-titre">
-        <h2 id="quiz-titre">Mini-quiz</h2>
-        <p class="discret mt-2">Quatre questions sur ce que tu viens de lire. Une à la fois, l'explication vient après chaque réponse.</p>
-        <div class="mt-5"><Quiz client:load seance={n} /></div>
-      </section>
-    )}
-
-    {aRetenir.length > 0 && (
-      <section class="mt-20 a-retenir" style="max-width: 46rem;" aria-labelledby="retenir-titre">
-        <h2 id="retenir-titre">À retenir</h2>
-        <ol class="mt-4" style="padding-left: 1.6em;">
-          {aRetenir.map((l) => <li class="mt-2">{l}</li>)}
-        </ol>
-      </section>
-    )}
+    <CorpsLecon lecon={lecon} />
 
     {/* Terminer la séance : c'est l'élève qui le dit, depuis ici. Ouvre la suivante. */}
     <section class="mt-20 pt-8 fin-de-seance" style="max-width: 46rem; border-top: 1px solid var(--trait);">
@@ -89,6 +63,6 @@ const aUnQuiz = (quiz[n] ?? []).length > 0;
       <p class="discret mt-4">Terminer ouvre la séance suivante. L'état est gardé dans ce navigateur, sur cet appareil : sur une autre machine, on repart de zéro, et ce n'est pas un bug.</p>
     </section>
 
-    <p class="mt-12 mono-caps"><a href="/" class="no-underline" style="color: var(--encre-2);">← Toutes les séances</a></p>
+    <p class="mt-12 mono-caps retour-seances"><a href="/" class="no-underline" style="color: var(--encre-2);">← Toutes les séances</a></p>
   </div>
 </Base>

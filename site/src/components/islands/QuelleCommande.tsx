@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { COMMANDES, ORDRE, situations, type Commande } from "../../data/git";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Quelle commande git ? » : on choisit une situation, puis l'une des quatre commandes ; le verdict et son explication
@@ -23,6 +25,7 @@ export default function QuelleCommande() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situations.map((x, i) => (
@@ -65,5 +68,7 @@ export default function QuelleCommande() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.QuelleCommande} />
+    </>
   );
 }

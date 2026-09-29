@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { duels } from "../../data/titanic";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Qui avait le plus de chances ? » : on choisit un duel entre deux groupes de passagers, puis celui qui a le mieux
@@ -25,6 +27,7 @@ export default function QuiAPlusDeChances() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {duels.map((x, i) => (
@@ -66,5 +69,7 @@ export default function QuiAPlusDeChances() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.QuiAPlusDeChances} />
+    </>
   );
 }

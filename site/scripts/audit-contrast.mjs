@@ -262,6 +262,23 @@ const ETATS = [
       if (!z.textContent.includes("✓ juste")) throw new Error("clavier : 2 puis Entrée devrait valider la bonne réponse");
       touche("Enter"); await w(200);
       if (!z.textContent.includes("Question 2 / 4")) throw new Error("clavier : Entrée devrait passer à la question suivante");` },
+  // L'impression (et les PDF) : règles @media print activées à l'écran, <details> ouverts ; le thème clair est forcé,
+  // fond blanc attendu même dans la passe sombre.
+  { page: "lecons/seance-00-faire-connaissance.html", id: "impression-seance-00", fond: "impression", pilote: `
+  var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
+  if (!css) throw new Error("aucune règle @media print trouvée");
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  document.querySelectorAll("details").forEach(function (d) { d.open = true; });` },
+  { page: "lecons/seance-01-introduction-ia.html", id: "impression-seance-01", fond: "impression", pilote: `
+  var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
+  if (!css) throw new Error("aucune règle @media print trouvée");
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  document.querySelectorAll("details").forEach(function (d) { d.open = true; });` },
+  { page: "lecons/seance-05-analyser-raconter.html", id: "impression-seance-05", fond: "impression", pilote: `
+  var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
+  if (!css) throw new Error("aucune règle @media print trouvée");
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  document.querySelectorAll("details").forEach(function (d) { d.open = true; });` },
 ];
 
 /* Ce que l'audit ne mesure pas, dit explicitement. */
@@ -439,10 +456,10 @@ async function mesurerUneFois(etat, sombre) {
   return JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'"));
 }
 
-const attendu = { clair: palette.cream.DEFAULT, sombre: palette.ink.raised };
+const attendu = { clair: palette.cream.DEFAULT, sombre: palette.ink.raised, impression: "#ffffff" };
 const fautes = [], cuivreFautes = [], nonAtteints = [], lignes = [], bordures = {};
 const coppers = [palette.copper.DEFAULT, palette.copper.ink, palette.copper.light].map((c) => c.toLowerCase());
-const lights = [palette.cream.DEFAULT, palette.cream.sunk].map((c) => c.toLowerCase());
+const lights = [palette.cream.DEFAULT, palette.cream.sunk, "#ffffff"].map((c) => c.toLowerCase());   // blanc : le papier, à l'impression
 const darks = [palette.ink.DEFAULT, palette.ink.raised, palette.ink.soft].map((c) => c.toLowerCase());
 
 for (const etat of ETATS) {

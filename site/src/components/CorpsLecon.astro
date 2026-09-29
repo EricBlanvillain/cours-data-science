@@ -1,0 +1,68 @@
+---
+/**
+ * Le corps d'une leçon, commun à sa page et au cours complet imprimé : objectifs (frontmatter), article (MDX), mini-quiz,
+ * « à retenir », et le corrigé des jeux et du quiz, qui n'apparaît qu'à l'impression (les jeux, eux, s'impriment à leur
+ * place sous forme de liste : voir ImpressionJeu et src/data/impression.ts).
+ */
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import Quiz from "./islands/Quiz";
+import { quiz } from "../data/quiz";
+import { jeuxImprimes, quizImprime, jeuxDeLaLecon } from "../data/impression";
+
+interface Props {
+  lecon: CollectionEntry<"lecons">;
+}
+const { lecon } = Astro.props;
+const { Content } = await render(lecon);
+const n = lecon.data.numero;
+const objectifs = lecon.data.objectifs ?? [];
+const aRetenir = lecon.data.aRetenir ?? [];
+const aUnQuiz = (quiz[n] ?? []).length > 0;
+const corrige = [...jeuxDeLaLecon(lecon.body ?? "").map((j) => jeuxImprimes[j]), quizImprime(n)].filter((j) => j !== null);
+---
+
+{/* Le cadre de la leçon : objectifs en tête (frontmatter), « à retenir » et mini-quiz en pied, avant la navigation. */}
+{objectifs.length > 0 && (
+  <section class="mt-10 objectifs" style="max-width: 46rem;" aria-labelledby={`objectifs-titre-${n}`}>
+    <p id={`objectifs-titre-${n}`} class="mono-caps" style="color: var(--encre-2);">À la fin de la séance</p>
+    <ul class="mt-2" style="padding-left: 1.3em;">
+      {objectifs.map((o) => <li>{o}</li>)}
+    </ul>
+  </section>
+)}
+
+<article class="prose mt-14">
+  <Content />
+</article>
+
+{aUnQuiz && (
+  <section class="mt-20" style="max-width: 46rem;" aria-labelledby={`quiz-titre-${n}`}>
+    <h2 id={`quiz-titre-${n}`}>Mini-quiz</h2>
+    <p class="discret mt-2 ecran-seul">Quatre questions sur ce que tu viens de lire. Une à la fois, l'explication vient après chaque réponse.</p>
+    <div class="mt-5"><Quiz client:load seance={n} /></div>
+  </section>
+)}
+
+{aRetenir.length > 0 && (
+  <section class="mt-20 a-retenir" style="max-width: 46rem;" aria-labelledby={`retenir-titre-${n}`}>
+    <h2 id={`retenir-titre-${n}`}>À retenir</h2>
+    <ol class="mt-4" style="padding-left: 1.6em;">
+      {aRetenir.map((l) => <li class="mt-2">{l}</li>)}
+    </ol>
+  </section>
+)}
+
+{corrige.length > 0 && (
+  <section class="imprime-seul corrige" style="max-width: 46rem;" aria-labelledby={`corrige-titre-${n}`}>
+    <h2 id={`corrige-titre-${n}`}>Corrigé</h2>
+    {corrige.map((j) => (
+      <div class="corrige-jeu" data-jeu={j.titre}>
+        <h3>{j.titre}</h3>
+        <ol>
+          {j.items.map((it) => <li><b>{it.reponse}</b> · {it.pourquoi}</li>)}
+        </ol>
+      </div>
+    ))}
+  </section>
+)}

@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import GrilleCartes from "../components/GrilleCartes.astro";
+import fs from "node:fs";
+import path from "node:path";
 import { seances, blocs, DEPOT, modulesOptionnels } from "../data/seances";
 
 const parBloc = [0, 1, 2, 3, 4].map((b) => ({
@@ -9,6 +11,10 @@ const parBloc = [0, 1, 2, 3, 4].map((b) => ({
   liste: seances.filter((s) => s.bloc === b),
 }));
 const total = seances.length;
+// Le cours complet en PDF (npm run pdf), annoncé avec son nombre de pages, seulement s'il a été fabriqué.
+const manifestePdf = path.join(process.cwd(), "public", "pdf", "manifest.json");
+const pagesCours = fs.existsSync(manifestePdf) && fs.existsSync(path.join(process.cwd(), "public", "pdf", "cours-complet.pdf"))
+  ? JSON.parse(fs.readFileSync(manifestePdf, "utf8")).pdfs?.["cours-complet.pdf"]?.pages ?? null : null;
 ---
 
 <Base titre="Les séances" largeur="large">
@@ -28,6 +34,10 @@ const total = seances.length;
       <p class="hero-ligne mono-caps">Portfolio GitHub · score Kaggle · un assistant IA construit soi-même</p>
     </div>
   </section>
+
+  {pagesCours && (
+    <p class="pt-8 mono-caps"><a href="/pdf/cours-complet.pdf" download class="lien-mono">Télécharger le cours complet (PDF, {pagesCours} pages) ↓</a></p>
+  )}
 
   <div class="space-y-16 pt-14">
     {parBloc.map(({ titre, liste }) => (

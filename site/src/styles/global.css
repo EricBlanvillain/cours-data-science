@@ -426,3 +426,64 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
   .laterale { display: none; padding: 0.6rem 0 1.2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--trait); }
   html[data-menu="ouvert"] .laterale { display: block; }
 }
+
+/* ------------------------------------------------------------------
+   Impression (et PDF, que scripts/pdf.mjs fabrique avec le même Chrome) : le thème clair est forcé, quel que soit le
+   réglage ; la navigation et les boutons disparaissent ; les jeux et le mini-quiz s'impriment en liste (.imprime-seul,
+   rendue par chaque îlot) et leur corrigé suit en fin de leçon ; l'accueil de la séance 0 (six écrans) est laissé de côté.
+   Les <details> sont ouverts par le script « beforeprint » de Base.astro. Hors impression, .imprime-seul reste caché.
+   ------------------------------------------------------------------ */
+.imprime-seul { display: none; }
+@media print {
+  /* :not(#_) pèse plus lourd que les blocs sombres (média et data-theme) et que .sombre : le clair gagne partout. */
+  :root:not(#_), :root:not(#_) .sombre {
+    --fond: #ffffff; --fond-2: #ffffff; --fond-3: #f1efea;
+    --encre: #14171a; --encre-2: color-mix(in srgb, #14171a 66%, #fbfaf8);
+    --trait: color-mix(in srgb, #14171a 12%, transparent); --trait-fort: color-mix(in srgb, #14171a 32%, transparent);
+    --cuivre-texte: #a33f13; --cuivre-plein: #c24a16; --bouton-fond: #14171a; --bouton-texte: #fbfaf8;
+    --etat-fait: #276130; --etat-indisponible: #b01f3c;
+    color-scheme: light;
+  }
+  @page { size: A4; margin: 16mm 15mm 18mm; }
+  html { font-size: 14px !important; }             /* environ 10,5 pt : la taille d'un document imprimé, pas d'un écran */
+  html, body { background: #ffffff !important; }
+  .hero::before, .hero::after { display: none !important; }   /* les filets verticaux de l'ouverture sombre */
+  .sombre { background: none !important; color: var(--encre) !important; }
+  .hero { padding: 0 0 1.2rem !important; }
+  .hero-titre { font-size: 2rem !important; }
+  .conteneur { max-width: none !important; padding-left: 0 !important; padding-right: 0 !important; }
+
+  /* ce qui ne sert qu'à l'écran */
+  .entete, .laterale, .barre-bascule, .barre-ecrans, .choix-theme, button, .bouton, .lien-mono[download],
+  .fin-de-seance, .bandeau-a-venir, .pied, .ecran-seul, .retour-seances, .boutons-seance { display: none !important; }
+  .avec-laterale { display: block !important; }
+
+  /* les jeux : l'interface disparaît, la liste papier prend sa place ; un îlot sans version papier (l'accueil de la
+     séance 0) disparaît tout entier */
+  .imprime-seul { display: block !important; }
+  astro-island > :not(.imprime-seul) { display: none !important; }
+  astro-island:not(:has(.imprime-seul)) { display: none !important; }
+  .jeu-imprime { border: 1px solid var(--trait-fort); padding: 0.8rem 1rem; margin: 0.8rem 0; }
+  .jeu-imprime ol, .jeu-imprime ul { padding-left: 1.4em; }
+  .jeu-imprime li + li { margin-top: 0.3rem; }
+  .jeu-imprime-choix { font-size: 0.9em; color: var(--encre-2); }
+  /* numérotées : le corrigé renvoie aux situations par leur numéro */
+  .jeu-imprime-items, .corrige-jeu ol, .a-retenir ol { list-style: decimal !important; padding-left: 1.6em !important; }
+  .jeu-imprime-choix, .jeu-imprime-options { list-style: none !important; }
+  .frise-imprimee > div + div { margin-top: 1rem; }
+  .corrige { break-before: page; margin-top: 0; }
+  .corrige-jeu { margin-top: 1.2rem; }
+  .corrige-jeu li { margin-top: 0.35rem; }
+
+  /* ne pas couper une figure, une carte, un tableau ou un bloc de code ; ne rien laisser dépasser à droite */
+  figure, .carte, table, pre, svg, .schema, .encart, .jeu-imprime li, .corrige-jeu li { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+  pre, code { white-space: pre-wrap !important; overflow-wrap: anywhere; }
+  svg, img, table { max-width: 100% !important; height: auto; }
+  .defile-x { overflow: visible !important; }
+  a { color: inherit; }
+
+  /* le cours complet : une page de couverture, le sommaire, puis chaque leçon sur une nouvelle page */
+  .couverture { break-after: page; }
+  .lecon-imprimee { break-before: page; }
+}

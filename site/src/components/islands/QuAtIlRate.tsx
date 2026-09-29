@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { VERDICTS_AGENT, casAgent, type Verdict } from "../../data/agent";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Qu'est-ce qui a raté ? » : pour une vraie question posée à l'agent du notebook, on voit ce qu'il a vraiment écrit et
@@ -26,6 +28,7 @@ export default function QuAtIlRate() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {casAgent.map((x, i) => (
@@ -75,5 +78,7 @@ export default function QuAtIlRate() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.QuAtIlRate} />
+    </>
   );
 }

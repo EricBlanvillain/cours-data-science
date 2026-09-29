@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { quiz } from "../../data/quiz";
+import ImpressionJeu from "../ImpressionJeu";
+import { quizImprime } from "../../data/impression";
 
 /**
  * Le mini-quiz de fin de leçon : une question à la fois, validation explicite, l'explication reste lisible après
@@ -48,6 +50,7 @@ export default function Quiz({ seance }: { seance: number }) {
   const juste = valide && choix === q.bonne;
 
   return (
+    <>
     <div ref={racine} tabIndex={-1} className="quiz carte" data-valide={valide ? "oui" : "non"} data-fini={fini ? "oui" : "non"} style={{ outline: "none", maxWidth: "46rem" }}>
       {fini ? (
         <div>
@@ -103,5 +106,7 @@ export default function Quiz({ seance }: { seance: number }) {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={quizImprime(seance)} />
+    </>
   );
 }

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { VERDICTS_CONSIGNE, situationsConsigne, type Verdict } from "../../data/dialogue";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 const ORDRE: Verdict[] = ["tenue", "oubliee"];
 
 /**
@@ -24,6 +26,7 @@ export default function ConsigneTenue() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situationsConsigne.map((x, i) => (
@@ -65,5 +68,7 @@ export default function ConsigneTenue() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.ConsigneTenue} />
+    </>
   );
 }

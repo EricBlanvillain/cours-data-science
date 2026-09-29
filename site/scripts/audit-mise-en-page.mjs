@@ -58,6 +58,16 @@ const PAGES = [
   { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12", pilote: "" },
   { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12-agent-juste", pilote: `const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);` },
 ];
+// L'impression (et les PDF) : chaque leçon et le cours complet, règles @media print activées, <details> ouverts, à la
+// largeur de texte d'une page A4 (180 mm = 680 px, simulée comme le téléphone) : rien ne dépasse à droite.
+const LARGEUR_A4 = 680;
+const PILOTE_IMPRESSION = `
+  var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
+  if (!css) throw new Error("aucune règle @media print trouvée");
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  document.querySelectorAll("details").forEach(function (d) { d.open = true; });`;
+const IMPRESSION = [...PAGES.filter((e) => /^seance-\d+$/.test(e.id)), { page: "cours-complet.html", id: "cours-complet" }]
+  .map((e) => ({ page: e.page, id: "impression-" + e.id, pilote: PILOTE_IMPRESSION }));
 const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11", "seance-12"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
@@ -175,7 +185,7 @@ const server = http.createServer((req, res) => {
   const p = path.join(DIST, decodeURIComponent(chemin));
   if (!fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
   res.writeHead(200, { "Content-Type": MIME[path.extname(p)] || "application/octet-stream" });
-  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); const sim = new URLSearchParams(query).get("simule"); res.end(fs.readFileSync(p, "utf8").replace("</body>", (sim ? `<style>html{width:${Number(sim)}px}.barre-ecrans{right:auto;width:${Number(sim)}px}</style>` : "") + MESURE(etat ? etat.pilote : ""))); }
+  if (p.endsWith(".html")) { const idq = new URLSearchParams(query).get("etat"); const etat = PAGES.find((e) => e.id === idq) || IMPRESSION.find((e) => e.id === idq) || (idq && idq.startsWith("ecrans-") ? ECRANS(Number(idq.slice(7))) : null); const sim = new URLSearchParams(query).get("simule"); res.end(fs.readFileSync(p, "utf8").replace("</body>", (sim ? `<style>html{width:${Number(sim)}px}.barre-ecrans{right:auto;width:${Number(sim)}px}</style>` : "") + MESURE(etat ? etat.pilote : ""))); }
   else fs.createReadStream(p).pipe(res);
 });
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
@@ -202,6 +212,15 @@ for (const etat of PAGES) {
   if (res.libelles && res.libelles.length) { fautes += res.libelles.length; lignes.push(`${ou} · libellés :\n   !! ${res.libelles.join("\n   !! ")}`); }
   if (res.debordsHorizontaux.length) { fautes += res.debordsHorizontaux.length; lignes.push(`${ou} · déborde à droite :\n   !! ${res.debordsHorizontaux.map((d) => d.quoi + " jusqu'à " + d.droite + "px pour " + d.page).join("\n   !! ")}`); }
   else lignes.push(`${ou.padEnd(40)} rien ne déborde à droite`);
+}
+// L'impression ensuite : rien ne dépasse à droite de la page A4.
+for (const etat of IMPRESSION) {
+  const res = await mesurer(etat, 1280, LARGEUR_A4);
+  const ou = `${etat.id} @${LARGEUR_A4} (A4, impression)`;
+  if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
+  if (res.erreur) { lignes.push(`${ou} : pilote en échec, ${res.erreur}`); fautes++; }
+  if (res.debordsHorizontaux.length) { fautes += res.debordsHorizontaux.length; lignes.push(`${ou} · déborde à droite :\n   !! ${res.debordsHorizontaux.map((d) => d.quoi + " jusqu'à " + d.droite + "px pour " + d.page).join("\n   !! ")}`); }
+  else lignes.push(`${ou.padEnd(48)} rien ne déborde à droite`);
 }
 for (const largeur of LARGEURS) {
   const enTetes = {};
@@ -244,5 +263,5 @@ for (const [L, H] of FENETRES) {
 }
 server.close();
 console.log(lignes.join("\n"));
-console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * (LARGEURS.length + 1)} mesures sur ${LARGEUR_TELEPHONE} (simulé), ${LARGEURS.join(", ")} px : rien ne déborde au téléphone, grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond, écrans de la séance 0 dans 1440 × 900${fautes ? ` · ${fautes} faute(s)` : ""}`);
+console.log(`\n${fautes === 0 ? "PASS" : "FAIL"} — ${PAGES.length * (LARGEURS.length + 1) + IMPRESSION.length} mesures sur ${LARGEUR_TELEPHONE} (simulé), ${LARGEURS.join(", ")} px : rien ne déborde au téléphone ni à l'impression (A4), grilles alignées, en-tête et pied identiques au pixel sur ${PAGES_EN_TETE.length} pages, prose sous son plafond, écrans de la séance 0 dans 1440 × 900${fautes ? ` · ${fautes} faute(s)` : ""}`);
 process.exit(fautes === 0 ? 0 : 1);

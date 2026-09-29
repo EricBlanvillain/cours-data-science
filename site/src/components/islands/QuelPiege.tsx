@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PIEGES, situationsPieges, type Piege } from "../../data/analyse";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * « Quel piège ? » : on choisit une affirmation, puis l'un des trois pièges ; le verdict et son
@@ -25,6 +27,7 @@ export default function QuelPiege() {
   });
 
   return (
+    <>
     <div ref={racine} className="large" style={{ display: "grid", gap: "1rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
         {situationsPieges.map((x, i) => (
@@ -67,5 +70,7 @@ export default function QuelPiege() {
         </div>
       )}
     </div>
+      <ImpressionJeu jeu={jeuxImprimes.QuelPiege} />
+    </>
   );
 }
