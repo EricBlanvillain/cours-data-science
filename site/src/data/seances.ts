@@ -40,3 +40,24 @@ export const seances: Seance[] = [
   { numero: 11, dossier: "seance-11-rag", titre: "Le RAG", niveau: "⭐⭐⭐", bloc: 4, resume: "Donner de la mémoire à son IA : découper, vectoriser, chercher, injecter, répondre.", slug: "seance-11-rag" },
   { numero: 12, dossier: "seance-12-agents-et-projet-final", titre: "Agents et projet final", niveau: "⭐⭐⭐", bloc: 4, resume: "Un agent avec trois outils, les bonnes pratiques, le portfolio et la présentation finale.", slug: "seance-12-agents-et-projet-final" },
 ];
+
+/**
+ * Les modules optionnels, montrés sur l'accueil après le bloc 4. Ils ne font pas partie du parcours : pas de leçon sur
+ * le site (voulu), hors de la progression, du compteur et de la barre latérale. Titres et résumés tirés du README de
+ * chaque dossier. `notebook` : le notebook principal, ouvert dans Colab ; absent quand le module en a plusieurs.
+ */
+export type ModuleOptionnel = {
+  surtitre: string;
+  titre: string;
+  niveau: Seance["niveau"];
+  resume: string;
+  /** chemin du dossier dans le dépôt */
+  dossier: string;
+  notebook?: string;
+};
+
+export const modulesOptionnels: ModuleOptionnel[] = [
+  { surtitre: "Séance optionnelle 1", titre: "Les métiers de la data science", niveau: "⭐", dossier: "seances-optionnelles/seance-optionnelle-1-metiers-data-science", notebook: "SO1_metiers_data_science.ipynb", resume: "Quel langage pour quel usage : pourquoi Python domine la data, où R gagne, et ce que la gestion de la mémoire dit de chaque langage." },
+  { surtitre: "Séance optionnelle 2", titre: "Software engineering", niveau: "⭐", dossier: "seances-optionnelles/seance-optionnelle-2-software-engineering", notebook: "SO2_software_engineering.ipynb", resume: "On ne devine pas, on mesure : la lenteur de Python et la vectorisation, la mémoire d'un jeu de données, et où faire tourner son projet." },
+  { surtitre: "Module", titre: "Projets d'IA agentique (B1 à B4)", niveau: "⭐⭐⭐", dossier: "projets-optionnels/projet-optionnel-avance-ia-agentique", resume: "Quatre projets pour construire avec un LLM : un assistant qui lit tes cours, un agent outillé, un analyste automatique, un banc de test pour le fiabiliser." },
+];

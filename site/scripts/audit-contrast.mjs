@@ -7,7 +7,8 @@
  * puis en sombre. Il vérifie aussi la règle du cuivre : jamais #c24a16 en texte, copper-ink sur les fonds clairs
  * seulement, copper-light sur les fonds sombres seulement. Et son sens sur les séances (cartes, barre latérale) : cuivre sur
  * toute séance pas encore terminée (pastille vide cerclée de cuivre, ou pleine pour « en cours », libellé cuivre), nulle
- * part ailleurs ; vert (--etat-fait) une fois terminée ; « leçon à écrire » en rouge (--etat-indisponible).
+ * part ailleurs ; vert (--etat-fait) une fois terminée ; « leçon à écrire » en rouge (--etat-indisponible). Les modules
+ * optionnels de l'accueil restent neutres (ni pastille, ni couleur d'état) et hors du compteur « séances restantes ».
  *
  * Un état qui ne peut pas être atteint est une FAUTE (pas une ligne de log) ; les états volontairement non couverts
  * sont listés en clair dans la sortie (NON_COUVERTS), pour ne jamais laisser croire à une couverture complète.
@@ -394,6 +395,15 @@ const MESURE = (pilote) => `
     out.seances.push({ id: (el.classList.contains('carte-seance') ? 'carte ' : 'barre ') + el.getAttribute('data-seance'), etat: el.getAttribute('data-etat'), sansLecon: el.classList.contains('sans-lecon') || !!(dispo && dispo.classList.contains('sans-lecon')),
       pastilleFond: couleur(pa, 'backgroundColor'), pastilleBord: couleur(pa, 'borderTopColor'), libelle: couleur(lib, 'color'), dispo: couleur(dispo, 'color'), autres: autres });
   });
+  // Les modules optionnels de l'accueil : ni pastille, ni data-seance, ni couleur d'état ; et le compteur « séances
+  // restantes » ne compte que les cartes de séance.
+  out.modules = [].map.call(document.querySelectorAll('.carte-module'), function (m) {
+    var couleurs = [];
+    m.querySelectorAll('*').forEach(function (d) { if (d.getBoundingClientRect().width === 0) return; ['color', 'backgroundColor', 'borderTopColor'].forEach(function (pr) { var c = couleur(d, pr); if (c) couleurs.push(c); }); });
+    return { titre: (m.querySelector('h3') || {}).textContent, pastille: !!m.querySelector('.pastille'), seance: m.hasAttribute('data-seance') || !!m.querySelector('[data-seance]'), couleurs: couleurs };
+  });
+  var restantes = document.querySelector('[data-restantes]');
+  out.compteur = restantes ? { affiche: Number(restantes.textContent), attendu: document.querySelectorAll('.carte-seance[data-seance]:not([data-etat="terminee"])').length } : null;
   var pre = document.createElement('pre'); pre.id = '__audit'; pre.textContent = JSON.stringify(out); document.body.appendChild(pre);
 })();
 </script></body>`;
@@ -470,6 +480,15 @@ for (const etat of ETATS) {
       for (const a of s.autres) if (cuivres.has(a.c)) f(`cuivre hors pastille et libellé d'état : ${a.cls} ${a.prop} ${a.c}`);
     }
     if (!(res.seances || []).length && /^(accueil|barre-quatre)/.test(etat.id)) nonAtteints.push(`${ou} : aucune séance trouvée pour la règle du cuivre`);
+    if (/^accueil/.test(etat.id)) {
+      if ((res.modules || []).length !== 3) nonAtteints.push(`${ou} : ${(res.modules || []).length} carte(s) de module optionnel au lieu de 3`);
+      for (const m of res.modules || []) {
+        if (m.pastille || m.seance) cuivreFautes.push({ where: ou, text: `module « ${m.titre} »`, regle: "un module optionnel n'a ni pastille ni data-seance : il est hors de la progression" });
+        const etats = m.couleurs.filter((c) => cuivres.has(c) || c === j.fait || c === j.indisponible);
+        if (etats.length) cuivreFautes.push({ where: ou, text: `module « ${m.titre} »`, regle: `couleur d'état sur un module optionnel (${[...new Set(etats)].join(", ")}) : son pied reste neutre` });
+      }
+      if (res.compteur && res.compteur.affiche !== res.compteur.attendu) cuivreFautes.push({ where: ou, text: "compteur « séances restantes »", regle: `affiche ${res.compteur.affiche}, alors que ${res.compteur.attendu} carte(s) de séance ne sont pas terminées` });
+    }
     for (const [k, v] of Object.entries(res.borders)) bordures[k] = Math.max(bordures[k] || 0, v);
     const pouces = res.text.filter((t) => t.cls === 'range-thumb');
     lignes.push(`${ou.padEnd(52)} ${String(res.text.length).padStart(4)} textes  cuivre×${nbCuivre}${pouces.length ? "  pouce " + pouces.map((t) => t.fg + " " + t.ratio + ":1").join(", ") : ""}${res.erreurPilote ? "  !! pilote en échec" : ""}`);

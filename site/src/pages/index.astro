@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import GrilleCartes from "../components/GrilleCartes.astro";
-import { seances, blocs, DEPOT } from "../data/seances";
+import { seances, blocs, DEPOT, modulesOptionnels } from "../data/seances";
 
 const parBloc = [0, 1, 2, 3, 4].map((b) => ({
   bloc: b as keyof typeof blocs,
@@ -76,10 +76,42 @@ const total = seances.length;
         </GrilleCartes>
       </section>
     ))}
+
+    <div>
+      <p class="discret" style="max-width: 46rem;">
+        Une séance terminée ouvre la suivante : c'est un garde-fou, pas une serrure. Tout s'affiche toujours, et l'état est gardé
+        dans ce navigateur, sur cet appareil. Sur une autre machine, on repart de zéro : c'est normal.
+      </p>
+    </div>
+
+    {/* Les modules optionnels : même grille, même anatomie de carte. Pas de data-seance, donc hors de la progression,
+        du compteur « séances restantes » et de la barre latérale. Leur pied est neutre, sans pastille ni rouge : ils n'ont
+        pas de leçon sur le site par choix, ce ne sont pas des leçons à écrire. */}
+    <section>
+      <h2 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--encre-2);">Modules optionnels</h2>
+      <p class="discret mt-2" style="font-size: 0.95rem;">En plus des séances 0 à 12, hors parcours : pour aller plus loin, quand on veut.</p>
+      <GrilleCartes bandes={5} class="mt-5">
+        {modulesOptionnels.map((m) => (
+          <li class="carte carte-module">
+            <div class="flex items-baseline justify-between gap-3 mono-caps">
+              <span>{m.surtitre}</span>
+              <span aria-label={`niveau ${m.niveau}`}>{m.niveau.replace(/⭐/g, "★")}</span>
+            </div>
+            <h3>{m.titre}</h3>
+            <p class="discret" style="font-size: 0.95rem;">{m.resume}</p>
+            <div class="pt-3">
+              <p class="mono-caps dispo-seance">Notebooks · module optionnel</p>
+            </div>
+            <div class="bande-action flex flex-wrap items-center content-start gap-x-4 gap-y-2" style="align-self: stretch;">
+              {m.notebook && (
+                <a href={`https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/${m.dossier}/${m.notebook}`} class="bouton principal no-underline" target="_blank" rel="noopener">Ouvrir dans Colab ↗</a>
+              )}
+              <a href={`${DEPOT}/tree/main/${m.dossier}`} class:list={[m.notebook ? "lien-mono" : "bouton no-underline"]} target="_blank" rel="noopener">Ouvrir sur GitHub ↗</a>
+            </div>
+          </li>
+        ))}
+      </GrilleCartes>
+    </section>
   </div>
 
-  <p class="discret mt-16" style="max-width: 46rem;">
-    Une séance terminée ouvre la suivante : c'est un garde-fou, pas une serrure. Tout s'affiche toujours, et l'état est gardé
-    dans ce navigateur, sur cet appareil. Sur une autre machine, on repart de zéro : c'est normal.
-  </p>
 </Base>

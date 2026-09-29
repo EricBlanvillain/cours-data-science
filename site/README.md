@@ -192,6 +192,12 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
   3. **action** : vide si pas encore faite (le déblocage sert à ne pas commencer la suivante par accident, on n'annonce pas la
      porte ; le titre reste cliquable) ; « Ouvrir la leçon → » ou « Ouvrir les notebooks ↗ » si en cours ; « Relire la leçon → »
      ou « Revoir les notebooks ↗ » si terminée. La bande garde la hauteur d'un bouton même vide.
+- Après le bloc 4, la section **Modules optionnels** (les deux séances optionnelles et le module B1 à B4, `modulesOptionnels`
+  dans `src/data/seances.ts`) reprend la même grille et la même carte. Pied neutre, « Notebooks · module optionnel », sans
+  pastille ni rouge : ces modules n'ont pas de leçon par choix, ce ne sont pas des leçons à écrire. Actions : « Ouvrir dans
+  Colab ↗ » pour le notebook principal quand il y en a un, « Ouvrir sur GitHub ↗ » pour le dossier. Pas de `data-seance` :
+  hors de la progression, du compteur « séances restantes » et de la barre latérale. Les projets de réserve (A1 à A6) n'y
+  figurent pas.
 - Trois registres IBM Plex : le serif parle (titres), le sans explique (corps), le mono mesure (labels `.etiquette`, chiffres
   `.chiffre`, boutons). Interlettrage : label 0,14 em, wide 0,2 em, field 0,06 em. Transitions : `cubic-bezier(0.23, 1, 0.32, 1)`.
 - Les états de survol sont limités aux appareils qui survolent (`@media (hover: hover)`, et Tailwind v4 fait de même pour `hover:`).

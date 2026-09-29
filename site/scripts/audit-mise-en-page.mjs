@@ -2,7 +2,7 @@
  * Audit de mise en page sur les pages construites, dans le Chrome de la machine (headless, sans dépendance).
  *
  * Trois choses que le typage et le build ne voient pas :
- *  1. les grilles de cartes (.grille-cartes) : dans chaque rangée, la bande n démarre à la même hauteur d'une carte à
+ *  1. les grilles de cartes (.grille-cartes, dont celle des modules optionnels de l'accueil, 3 cartes) : dans chaque rangée, la bande n démarre à la même hauteur d'une carte à
  *     l'autre, les cartes ont la même hauteur, le pied (.bande-pied) colle au bas, chaque carte a exactement --bandes enfants ;
  *  2. l'en-tête : le bord gauche du logo et le bord droit du dernier lien de navigation sont AU PIXEL PRÈS à la même place sur
  *     l'accueil, le glossaire, la séance 0 et la séance 1 ; le pied de page aussi. Le conteneur est le même partout (1360 px) ;
@@ -129,7 +129,7 @@ const MESURE = (pilote) => `
     var bandes = parseInt(getComputedStyle(g).getPropertyValue('--bandes')) || 0;
     var rangees = {};
     cartes.forEach(function (c) { var t = Math.round(c.getBoundingClientRect().top); (rangees[t] = rangees[t] || []).push(c); });
-    var rapport = { grille: gi, cartes: cartes.length, bandes: bandes, rangees: 0, fautes: [] };
+    var rapport = { grille: gi, cartes: cartes.length, bandes: bandes, rangees: 0, fautes: [], modules: cartes.filter(function (c) { return c.classList.contains('carte-module'); }).length };
     Object.keys(rangees).forEach(function (t) {
       var r = rangees[t]; rapport.rangees++;
       var hauteurs = r.map(function (c) { return c.getBoundingClientRect().height; });
@@ -211,6 +211,8 @@ for (const largeur of LARGEURS) {
     if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
     if (res.erreur) { lignes.push(`${ou} : pilote en échec, ${res.erreur}`); fautes++; }
     for (const g of res.grilles) { if (g.fautes.length) { fautes += g.fautes.length; lignes.push(`${ou} · grille ${g.grille} (${g.cartes} cartes, ${g.bandes} bandes) :\n   !! ${g.fautes.join("\n   !! ")}`); } }
+    // l'accueil porte une grille « Modules optionnels » de 3 cartes, alignée comme les autres (vérifiée ci-dessus)
+    if (etat.id === "accueil" && !res.grilles.some((g) => g.modules === 3 && g.cartes === 3)) { fautes++; lignes.push(`${ou} · grille des modules optionnels absente ou incomplète (3 cartes attendues)`); }
     for (const d of res.proseDebords) { fautes++; lignes.push(`${ou} · prose au-delà du plafond : ${d.quoi} fait ${d.largeur}px pour ${d.plafond}px`); }
     if (PAGES_EN_TETE.includes(etat.id)) enTetes[etat.id] = { ...res.enTete, piedGauche: res.pied && res.pied.gauche, piedLargeur: res.pied && res.pied.largeur };
     lignes.push(`${ou.padEnd(34)} grilles ${res.grilles.length}, cartes ${res.grilles.reduce((n, g) => n + g.cartes, 0)}, en-tête logo ${res.enTete ? res.enTete.logoGauche : "?"} → dernier lien ${res.enTete ? res.enTete.dernierLienDroite : "?"}`);
