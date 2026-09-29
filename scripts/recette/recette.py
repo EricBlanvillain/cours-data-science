@@ -103,7 +103,7 @@ def squelette_de(cells, k):
         if c.cell_type == "code":
             if re.search(r"^# À toi", c.source, re.M):
                 return j
-            if "verifier(" in c.source and verifs == 0:
+            if ("verifier(" in c.source or "✅" in c.source) and verifs == 0:   # une vérification, avec ou sans verifier()
                 verifs += 1
                 continue
             return None
