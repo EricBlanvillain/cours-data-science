@@ -428,7 +428,7 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 }
 
 /* ------------------------------------------------------------------
-   Impression (et PDF, que scripts/pdf.mjs fabrique avec le même Chrome) : le thème clair est forcé, quel que soit le
+   Impression (et PDF, que l'élève enregistre depuis la fenêtre d'impression) : le thème clair est forcé, quel que soit le
    réglage ; la navigation et les boutons disparaissent ; les jeux et le mini-quiz s'impriment en liste (.imprime-seul,
    rendue par chaque îlot) et leur corrigé suit en fin de leçon ; l'accueil de la séance 0 (six écrans) est laissé de côté.
    Les <details> sont ouverts par le script « beforeprint » de Base.astro. Hors impression, .imprime-seul reste caché.
@@ -444,7 +444,13 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
     --etat-fait: #276130; --etat-indisponible: #b01f3c;
     color-scheme: light;
   }
-  @page { size: A4; margin: 16mm 15mm 18mm; }
+  /* Le pied de chaque page imprimée, par les boîtes de marge de @page (Chrome et Edge les affichent ; ailleurs, la page
+     s'imprime sans pied) : à gauche le titre, que chaque page pose elle-même (leçon, cours complet), à droite la page. */
+  @page {
+    size: A4; margin: 16mm 15mm 18mm;
+    @bottom-left { font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #555555; }
+    @bottom-right { content: counter(page) " / " counter(pages); font-family: Helvetica, Arial, sans-serif; font-size: 8pt; color: #555555; }
+  }
   html { font-size: 14px !important; }             /* environ 10,5 pt : la taille d'un document imprimé, pas d'un écran */
   html, body { background: #ffffff !important; }
   .hero::before, .hero::after { display: none !important; }   /* les filets verticaux de l'ouverture sombre */
@@ -454,7 +460,7 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
   .conteneur { max-width: none !important; padding-left: 0 !important; padding-right: 0 !important; }
 
   /* ce qui ne sert qu'à l'écran */
-  .entete, .laterale, .barre-bascule, .barre-ecrans, .choix-theme, button, .bouton, .lien-mono[download],
+  .entete, .laterale, .barre-bascule, .barre-ecrans, .choix-theme, button, .bouton, .enregistrer-pdf, .aide-pdf,
   .fin-de-seance, .bandeau-a-venir, .pied, .ecran-seul, .retour-seances, .boutons-seance { display: none !important; }
   .avec-laterale { display: block !important; }
 

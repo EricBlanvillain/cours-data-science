@@ -2,7 +2,9 @@
 /**
  * Le cours complet, fait pour être imprimé (scripts/pdf.mjs en tire public/pdf/cours-complet.pdf) : une couverture, un
  * sommaire cliquable, puis les leçons des séances 0 à 12 dans l'ordre, chacune sur une nouvelle page, avec le même corps
- * que sa page (CorpsLecon). Sans les modules optionnels. La page n'est liée nulle part et n'est pas indexée.
+ * que sa page (CorpsLecon). Sans les modules optionnels. Non indexée, liée depuis l'accueil (« Enregistrer le cours complet
+ * en PDF ») : une fois les polices et les images chargées, elle ouvre la fenêtre d'impression, sauf si son adresse porte un
+ * paramètre (les audits et npm run pdf:verifier en ajoutent un, pour ne pas ouvrir de fenêtre).
  */
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
@@ -13,6 +15,15 @@ const nn = (n: number) => String(n).padStart(2, "0");
 ---
 
 <Base titre="Cours complet" description="Le cours Data Science & IA, séances 0 à 12, en une page à imprimer." noindex>
+  <div class="ecran-seul pt-10">
+    <p class="boutons-seance"><button type="button" class="bouton principal" onclick="window.print()">Enregistrer le cours complet en PDF ↓</button></p>
+    <p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
+  </div>
+  <style is:inline>@media print { @page { @bottom-left { content: "Data Science & IA · cours complet"; } } }</style>
+  <script is:inline>
+    if (!location.search) window.addEventListener("load", function () { document.fonts.ready.then(function () { window.print(); }); });
+  </script>
+
   <section class="couverture" style="padding-top: 6rem;">
     <p class="mono-caps" style="color: var(--encre-2);">Cours · notebooks et exercices sur GitHub</p>
     <h1 class="hero-titre" style="margin-top: 1rem;">Data Science &amp; IA · {lecons.length} séances</h1>

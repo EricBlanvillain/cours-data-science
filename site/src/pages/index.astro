@@ -1,8 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import GrilleCartes from "../components/GrilleCartes.astro";
-import fs from "node:fs";
-import path from "node:path";
 import { seances, blocs, DEPOT, modulesOptionnels } from "../data/seances";
 
 const parBloc = [0, 1, 2, 3, 4].map((b) => ({
@@ -11,10 +9,6 @@ const parBloc = [0, 1, 2, 3, 4].map((b) => ({
   liste: seances.filter((s) => s.bloc === b),
 }));
 const total = seances.length;
-// Le cours complet en PDF (npm run pdf), annoncé avec son nombre de pages, seulement s'il a été fabriqué.
-const manifestePdf = path.join(process.cwd(), "public", "pdf", "manifest.json");
-const pagesCours = fs.existsSync(manifestePdf) && fs.existsSync(path.join(process.cwd(), "public", "pdf", "cours-complet.pdf"))
-  ? JSON.parse(fs.readFileSync(manifestePdf, "utf8")).pdfs?.["cours-complet.pdf"]?.pages ?? null : null;
 ---
 
 <Base titre="Les séances" largeur="large">
@@ -35,9 +29,11 @@ const pagesCours = fs.existsSync(manifestePdf) && fs.existsSync(path.join(proces
     </div>
   </section>
 
-  {pagesCours && (
-    <p class="pt-8 mono-caps"><a href="/pdf/cours-complet.pdf" download class="lien-mono">Télécharger le cours complet (PDF, {pagesCours} pages) ↓</a></p>
-  )}
+  {/* Le cours complet en PDF : la page cours-complet.html ouvre la fenêtre d'impression une fois chargée. */}
+  <div class="pt-8">
+    <p class="mono-caps"><a href="/cours-complet" class="lien-mono enregistrer-pdf">Enregistrer le cours complet en PDF ↓</a></p>
+    <p class="discret aide-pdf mt-1">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
+  </div>
 
   <div class="space-y-16 pt-14">
     {parBloc.map(({ titre, liste }) => (

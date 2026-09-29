@@ -45,7 +45,9 @@ Après une modification de notebook, on rejoue sa recette sous les deux environn
 
 ### Les PDF du site
 
-`cd site && npm run pdf` (script `site/scripts/pdf.mjs`) construit le site, puis imprime avec le Chrome de la machine un PDF par leçon (`site/public/pdf/seance-00.pdf` … `seance-12.pdf`) et le cours complet (`cours-complet.pdf` : couverture, sommaire cliquable, séances 0 à 12, sans les modules optionnels). Il vérifie au passage que rien ne dépasse à droite et que chaque jeu a son corrigé, puis écrit `site/public/pdf/manifest.json` : pour chaque PDF, l'empreinte de ses sources (le MDX de la leçon et les fichiers de `src/data/` qu'il importe). Au début de chaque `npm run build`, Vercel compris, `site/scripts/garde-pdf.mjs` recalcule ces empreintes : une leçon modifiée sans PDF refait fait échouer le build (« PDF périmé : lancer npm run pdf »). Après toute modification d'une leçon ou de ses données : `npm run pdf`, puis commiter les PDF et le manifeste avec la modification.
+Aucun PDF n'est versionné : l'élève enregistre la leçon (bouton « Enregistrer la leçon en PDF ↓ », qui ouvre la fenêtre d'impression) ou le cours complet (« Enregistrer le cours complet en PDF ↓ » sur l'accueil, qui ouvre `cours-complet.html` : couverture, sommaire cliquable, séances 0 à 12, sans les modules optionnels ; la page lance l'impression une fois chargée). Tout tient dans les styles d'impression de `site/src/styles/global.css` : thème clair forcé, navigation et boutons masqués, jeux et mini-quiz imprimés en liste avec leur corrigé en fin de leçon, pied de page (titre et numéro de page) par les boîtes de marge de `@page`, que Chrome et Edge affichent.
+
+`cd site && npm run pdf:verifier` (script `site/scripts/pdf.mjs`) est un contrôle local : il construit le site, imprime chaque leçon et le cours complet avec le Chrome de la machine dans `site/.verif-pdf/` (ignoré par git), et vérifie que rien ne dépasse à droite, que chaque jeu et chaque mini-quiz a son corrigé, puis donne le nombre de pages. À lancer après une modification des styles d'impression, d'un jeu ou d'une leçon.
 
 ### Où en est le dépôt
 

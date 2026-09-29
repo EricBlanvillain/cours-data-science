@@ -1,33 +1,30 @@
 /**
- * `npm run pdf` : un PDF par leçon (public/pdf/seance-00.pdf … seance-12.pdf) et le cours complet
- * (public/pdf/cours-complet.pdf : couverture, sommaire cliquable, séances 0 à 12), imprimés par le Chrome de la machine,
- * le même que celui des audits, piloté par son protocole de débogage (WebSocket natif de Node, aucune dépendance).
+ * `npm run pdf:verifier` : contrôle local de l'impression, rien n'est versionné. Les élèves enregistrent eux-mêmes leurs
+ * PDF depuis la fenêtre d'impression du navigateur (boutons « Enregistrer … en PDF ») ; ce script imprime les mêmes pages,
+ * avec le Chrome de la machine piloté par son protocole de débogage (WebSocket natif de Node, aucune dépendance), dans
+ * site/.verif-pdf/ (ignoré par git) : une leçon par séance et le cours complet (séances 0 à 12).
  *
- * Étapes : construire le site (garde de fraîcheur désactivée) ; servir dist/ ; pour chaque page, émuler le média
- * « print » et une largeur de page A4, ouvrir les <details>, rendre les liens absolus (vers le site en ligne : un lien
- * relatif n'a aucun sens dans un PDF téléchargé), vérifier que rien ne dépasse à droite et que chaque jeu a son corrigé,
- * puis imprimer (A4, marges, pied de page avec le titre et le numéro de page, liens cliquables). Enfin : compter les pages,
- * écrire public/pdf/manifest.json (empreintes des sources, voir scripts/sources-pdf.mjs), et reconstruire le site, garde
- * active, pour que les liens de téléchargement apparaissent. Sort en code 1 à la moindre faute.
+ * Comme le navigateur de l'élève : média « print », taille de page, marges et pied de page tirés du CSS (@page et ses
+ * boîtes de marge), <details> ouverts. Contrôles : rien ne dépasse à droite (à la largeur de texte d'une page A4), chaque
+ * jeu et chaque mini-quiz imprimés ont leur corrigé avec autant de réponses que de situations, aucune interface
+ * interactive imprimée telle quelle ; puis le nombre de pages de chaque PDF. Sort en code 1 à la moindre faute.
  */
 import http from "node:http";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawn, execFileSync } from "node:child_process";
-import { SITE, empreintes } from "./sources-pdf.mjs";
+import { fileURLToPath } from "node:url";
 
+const SITE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(SITE, "dist");
-const SORTIE = path.join(SITE, "public/pdf");
+const SORTIE = path.join(SITE, ".verif-pdf");
 const CHROME = process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const EN_LIGNE = "https://cours-data-science.vercel.app";
 const PORT = 4401;
-const MM = 1 / 25.4;                                   // pouces par millimètre
-const MARGES = { marginTop: 16 * MM, marginBottom: 18 * MM, marginLeft: 15 * MM, marginRight: 15 * MM };
 const LARGEUR_UTILE = Math.round((210 - 30) * 96 / 25.4);   // 680 px : la largeur de texte d'une page A4 à 15 mm de marge
 
-console.log("1. construction du site (garde de fraîcheur désactivée)");
-execFileSync("npm", ["run", "build"], { cwd: SITE, stdio: "inherit", env: { ...process.env, PDF_EN_COURS: "1" } });
+console.log("1. construction du site");
+execFileSync("npm", ["run", "build"], { cwd: SITE, stdio: "inherit" });
 
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".woff": "font/woff", ".json": "application/json", ".pdf": "application/pdf" };
 const serveur = http.createServer((req, res) => {
@@ -63,14 +60,8 @@ await envoyer("Page.enable", {}, s);
 await envoyer("Runtime.enable", {}, s);
 
 /* Préparation et contrôles, exécutés dans la page, au média « print », à la largeur utile d'une page A4. */
-const PREPARER = (enLigne, largeur) => `(() => {
+const PREPARER = (largeur) => `(() => {
   document.querySelectorAll("details").forEach((d) => { d.open = true; });
-  document.querySelectorAll("a[href]").forEach((a) => {
-    const h = a.getAttribute("href");
-    if (/^(https?:|mailto:|#)/.test(h)) return;
-    const absolu = new URL(h, location.href);
-    a.setAttribute("href", ${JSON.stringify(enLigne)} + absolu.pathname + absolu.hash);
-  });
   const visible = (el) => { for (let n = el; n && n.nodeType === 1; n = n.parentElement) { const cs = getComputedStyle(n); if (cs.display === "none" || cs.visibility === "hidden") return false; } return true; };
   // du texte coupé à droite : un nœud de texte visible dont la boîte sort de la largeur utile
   const coupes = [];
@@ -97,50 +88,41 @@ const PREPARER = (enLigne, largeur) => `(() => {
   return JSON.stringify({ coupes, jeux, corriges, sansCorrige, ilotsVisibles });
 })()`;
 
-const echapper = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-const pied = (titre) => `<div style="font-family: Helvetica, Arial, sans-serif; font-size: 8px; color: #555; width: 100%; padding: 0 15mm; display: flex; justify-content: space-between;"><span>${echapper(titre)}</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`;
 const pages = (fichier) => (fs.readFileSync(fichier, "latin1").match(/\/Type\s*\/Page[^s]/g) || []).length;
 
-async function imprimer(url, fichier, titre) {
+async function imprimer(url, fichier) {
   await envoyer("Emulation.setEmulatedMedia", { media: "print" }, s);
   await envoyer("Emulation.setDeviceMetricsOverride", { width: LARGEUR_UTILE, height: 1100, deviceScaleFactor: 1, mobile: false }, s);
   const charge = evenement("Page.loadEventFired", s);
   await envoyer("Page.navigate", { url }, s);
   await charge;
   await new Promise((r) => setTimeout(r, 1500));      // îlots et polices
-  const { result } = await envoyer("Runtime.evaluate", { expression: PREPARER(EN_LIGNE, LARGEUR_UTILE), returnByValue: true }, s);
+  const { result } = await envoyer("Runtime.evaluate", { expression: PREPARER(LARGEUR_UTILE), returnByValue: true }, s);
   const controle = JSON.parse(result.value);
   await envoyer("Emulation.clearDeviceMetricsOverride", {}, s);
-  const { data } = await envoyer("Page.printToPDF", {
-    paperWidth: 210 * MM, paperHeight: 297 * MM, ...MARGES, printBackground: false, preferCSSPageSize: false,
-    displayHeaderFooter: true, headerTemplate: "<span></span>", footerTemplate: pied(titre), generateDocumentOutline: true,
-  }, s);
+  // comme « Enregistrer au format PDF » : la page, les marges et le pied viennent du CSS, pas d'un gabarit Chrome
+  const { data } = await envoyer("Page.printToPDF", { preferCSSPageSize: true, printBackground: false, displayHeaderFooter: false, generateDocumentOutline: true }, s);
   fs.writeFileSync(fichier, Buffer.from(data, "base64"));
   return { ...controle, pages: pages(fichier), octets: fs.statSync(fichier).size };
 }
 
+fs.rmSync(SORTIE, { recursive: true, force: true });
 fs.mkdirSync(SORTIE, { recursive: true });
-const liste = empreintes();
-const manifeste = { note: "Écrit par scripts/pdf.mjs ; vérifié par scripts/garde-pdf.mjs au début de chaque build.", pdfs: {} };
+const LECONS = path.join(SITE, "src/content/lecons");
+const liste = fs.readdirSync(LECONS).filter((f) => f.endsWith(".mdx")).map((f) => ({ slug: f.replace(/\.mdx$/, ""), numero: Number((fs.readFileSync(path.join(LECONS, f), "utf8").match(/^numero:\s*(\d+)/m) ?? [])[1]) }))
+  .filter((l) => l.numero >= 0 && l.numero <= 12).sort((a, b) => a.numero - b.numero)
+  .map((l) => ({ fichier: `seance-${String(l.numero).padStart(2, "0")}.pdf`, url: `lecons/${l.slug}.html` }));
+liste.push({ fichier: "cours-complet.pdf", url: "cours-complet.html?verifier" });   // le paramètre : pas de fenêtre d'impression automatique
 let fautes = 0;
-console.log("\n2. impression");
-for (const [fichier, e] of Object.entries(liste)) {
-  const cours = fichier === "cours-complet.pdf";
-  const url = `http://127.0.0.1:${PORT}/${cours ? "cours-complet.html" : `lecons/${e.slug}.html`}`;
-  const titre = cours ? "Data Science & IA · cours complet" : `Séance ${String(e.numero).padStart(2, "0")} · ${e.titre}`;
-  const r = await imprimer(url, path.join(SORTIE, fichier), titre);
+console.log("\n2. impression dans .verif-pdf/");
+for (const { fichier, url } of liste) {
+  const r = await imprimer(`http://127.0.0.1:${PORT}/${url}`, path.join(SORTIE, fichier));
   const problemes = [...r.coupes.map((c) => `texte coupé à droite : ${c}`), ...r.sansCorrige.map((c) => `corrigé manquant : ${c}`), ...r.ilotsVisibles.map((i) => `îlot interactif imprimé tel quel : ${i}`)];
   fautes += problemes.length;
-  manifeste.pdfs[fichier] = { pages: r.pages, empreinte: e.empreinte, sources: e.sources };
   console.log(`${problemes.length ? "✗" : "·"} ${fichier.padEnd(18)} ${String(r.pages).padStart(3)} pages · ${(r.octets / 1024).toFixed(0).padStart(5)} Ko · ${r.jeux} jeu(x) imprimé(s), ${r.corriges} corrigé(s)`);
   problemes.slice(0, 12).forEach((p) => console.log("    !! " + p));
 }
-fs.writeFileSync(path.join(SORTIE, "manifest.json"), JSON.stringify(manifeste, null, 2) + "\n");
-
 ws.close(); chrome.kill(); serveur.close();
 fs.rmSync(profil, { recursive: true, force: true });
-
-console.log("\n3. reconstruction, garde active (les liens de téléchargement apparaissent)");
-execFileSync("npm", ["run", "build"], { cwd: SITE, stdio: "inherit" });
-console.log(`\n${fautes ? "FAIL" : "PASS"} — ${Object.keys(liste).length} PDF dans public/pdf/, ${fautes} faute(s)`);
+console.log(`\n${fautes ? "FAIL" : "PASS"} — ${liste.length} PDF dans site/.verif-pdf/ (non versionnés), ${fautes} faute(s)`);
 process.exit(fautes ? 1 : 0);

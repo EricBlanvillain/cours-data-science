@@ -27,3 +27,5 @@ site/.astro/
 
 # réglages locaux de Claude Code (propres à la machine, pas au cours)
 .claude/
+# site : les PDF de contrôle de npm run pdf:verifier (jamais versionnés)
+site/.verif-pdf/

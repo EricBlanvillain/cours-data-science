@@ -2,8 +2,6 @@
 import { getCollection, render } from "astro:content";
 import CorpsLecon from "../../components/CorpsLecon.astro";
 import Base from "../../layouts/Base.astro";
-import fs from "node:fs";
-import path from "node:path";
 import { seances } from "../../data/seances";
 
 export async function getStaticPaths() {
@@ -16,9 +14,10 @@ const { headings } = await render(lecon);
 const sections = headings.filter((h) => h.depth === 2);
 const n = lecon.data.numero;
 const suivante = seances.find((s) => s.numero === n + 1);
-// Le PDF de la leçon s'annonce dans la rangée de boutons (BoutonsSeance) ; une leçon qui n'a pas cette rangée l'a ici.
-const fichierPdf = `seance-${String(n).padStart(2, "0")}.pdf`;
-const pdfIci = !(lecon.body ?? "").includes("<BoutonsSeance") && fs.existsSync(path.join(process.cwd(), "public", "pdf", fichierPdf));
+// « Enregistrer la leçon en PDF » vit dans la rangée de boutons (BoutonsSeance) ; une leçon qui n'a pas cette rangée l'a ici.
+const pdfIci = !(lecon.body ?? "").includes("<BoutonsSeance");
+// Le pied des pages imprimées (Chrome, Edge) : le titre de la leçon et le numéro de page, par les boîtes de marge de @page.
+const titrePied = `Séance ${String(n).padStart(2, "0")} · ${lecon.data.titre}`.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 ---
 
 <Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume} barre courant={n}>
@@ -48,7 +47,13 @@ const pdfIci = !(lecon.body ?? "").includes("<BoutonsSeance") && fs.existsSync(p
       </nav>
     )}
 
-    {pdfIci && <p class="mt-8 boutons-seance"><a class="bouton" href={`/pdf/${fichierPdf}`} download>Télécharger la leçon (PDF) ↓</a></p>}
+    {pdfIci && (
+      <div class="mt-8">
+        <p class="boutons-seance"><button type="button" class="bouton" onclick="window.print()">Enregistrer la leçon en PDF ↓</button></p>
+        <p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
+      </div>
+    )}
+    <style is:inline set:html={`@media print { @page { @bottom-left { content: "${titrePied}"; } } }`}></style>
 
     <CorpsLecon lecon={lecon} />
 

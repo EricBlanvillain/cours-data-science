@@ -178,7 +178,7 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
   rouge (`--etat-indisponible`), valeurs claires et sombres à 4,5:1 au moins en texte. La couleur va sur la pastille et le libellé,
   jamais sur la carte entière ; le libellé écrit reste, l'état se lit sans la couleur. L'opacité réduite d'une carte terminée
   épargne son pied, pour que le vert garde son contraste.
-- Flèches : `→` mène à une page du site, `↗` à une destination externe (Colab, GitHub), `↓` à un fichier à télécharger (les PDF). Jamais l'une pour l'autre.
+- Flèches : `→` mène à une page du site, `↗` à une destination externe (Colab, GitHub), `↓` à un fichier à enregistrer (le PDF d'une leçon ou du cours, par la fenêtre d'impression). Jamais l'une pour l'autre.
 - Deux couleurs de plus, réservées au curseur d'avis de la séance 0 : `--avis-contre` (ambre, à gauche) et `--avis-pour` (bleu,
   à droite), valeurs claires et sombres, 3:1 au moins contre le fond de la case. Ni l'une ni l'autre n'est le cuivre : il garde son
   sens et n'est jamais réutilisé pour le curseur. Le pouce mélange sa couleur au gris neutre selon l'écart au centre et grossit de
