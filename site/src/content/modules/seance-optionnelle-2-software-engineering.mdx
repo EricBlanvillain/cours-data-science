@@ -1,0 +1,100 @@
+---
+code: SO2
+type: seance
+titre: Software engineering
+niveau: ★
+duree: 1 h 30
+resume: "Pourquoi Python est lent et pourquoi ce n'est pas grave, combien pèsent tes données, où faire tourner ton projet : trois questions tranchées au chronomètre, pas à l'intuition."
+livrable: Le requirements.txt de ton propre projet, et ta fiche « où faire tourner mon projet » avec ta décision et le chiffre qui la justifie.
+prerequis:
+  - 2
+objectifs:
+  - Tu sauras chronométrer une boucle Python et sa version vectorisée, et lire le facteur d'accélération.
+  - Tu sauras mesurer le vrai poids d'un DataFrame, l'alléger avec category, ou le lire par morceaux.
+  - Tu sauras choisir entre ta machine, Colab et un serveur cloud, et rendre ton projet réinstallable ailleurs.
+aRetenir:
+  - On ne devine pas une vitesse, on la mesure, et on lance une fois pour rien avant de chronométrer.
+  - Python pilote, NumPy et pandas calculent en C, alors une boucle sur une colonne a presque toujours une version vectorisée.
+  - memory_usage(deep=True) donne le vrai poids ; category allège une colonne qui répète peu de valeurs.
+  - Un fichier plus gros que la mémoire se lit par morceaux, avec chunksize.
+  - Un requirements.txt aux versions épinglées refait le même décor sur n'importe quelle machine.
+---
+import TroisMoteurs from "../../components/schemas/TroisMoteurs.astro";
+import PoidsMemoire from "../../components/schemas/PoidsMemoire.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+import { MACHINE, compilation, facteursNumpy, SOURCES } from "../../data/logiciel";
+
+## On ne devine pas, on mesure
+
+Tout le monde dit que Python est lent. Le notebook le chronomètre : le même calcul sur 5 millions de valeurs, en boucle Python, avec NumPy, puis en C compilé.
+
+<TroisMoteurs />
+
+Ces temps viennent d'un {MACHINE.puce} (Python {MACHINE.python}, NumPy {MACHINE.numpy}), le {MACHINE.date} : NumPy y va {facteursNumpy[0]} fois plus vite que la boucle au premier passage, {facteursNumpy[1]} fois au second. Le facteur change d'une machine à l'autre : sur Colab, tu mesures le tien dans le notebook, et il sera différent.
+
+## Python pilote, le C calcule
+
+Le calcul est le même ; ce qui change, c'est qui fait la boucle. `np.sqrt(tableau)` est une ligne de Python qui déclenche une boucle écrite en C, à l'intérieur de NumPy. Pandas marche pareil. Écrire une colonne entière d'un coup, sans `for`, s'appelle vectoriser :
+
+```python
+remises = np.where(prix > 100, prix * 0.3, prix * 0.1)   # sans boucle
+```
+
+<details>
+<summary>Pourquoi on lance une fois pour rien avant de chronométrer</summary>
+
+Le notebook lance le programme C une première fois sans le mesurer. Ce premier lancement paie des frais fixes (charger le programme depuis le disque), pas le calcul. Même règle pour un premier `read_csv` ou un premier appel à un modèle : on lance une fois pour rien, puis on mesure, plusieurs fois si on peut.
+
+</details>
+
+<details>
+<summary>Alors pourquoi ne pas tout écrire en C ?</summary>
+
+Parce qu'il faut compiler : {String(compilation[0]).replace(".", ",")} s puis {String(compilation[1]).replace(".", ",")} s sur la même machine, plus de vingt fois le calcul lui-même, et à refaire à chaque ligne changée. On explore en Python ; on écrit en C ou en Rust les morceaux qui tournent des millions de fois.
+
+</details>
+
+## La mémoire se mesure
+
+Sans `deep=True`, pandas ne compte que les pointeurs des colonnes de texte, et annonce un poids bien trop bas.
+
+<PoidsMemoire />
+
+```python
+df.memory_usage(deep=True).sum() / 1e6   # le vrai poids, en Mo
+df["ville"] = df["ville"].astype("category")
+```
+
+Quand le fichier dépasse la mémoire, aucun type ne suffit. On le lit par morceaux, on garde un résumé de chacun, on jette le reste : on vide la piscine au seau.
+
+```python
+for morceau in pd.read_csv("gros_fichier.csv", chunksize=50_000):
+    somme_notes += morceau["note"].sum()
+```
+
+<details>
+<summary>Quand category ne sert à rien</summary>
+
+Sur une colonne où presque chaque valeur est unique (un identifiant, un e-mail), le dictionnaire devient aussi gros que la colonne : la conversion ne fait rien gagner.
+
+</details>
+
+## Où le faire tourner
+
+La règle du notebook, dans cet ordre : plus de 8 heures de calcul ou plus de 10 Go de données, un serveur cloud ; sinon, s'il faut un GPU, Colab ; sinon, ta machine. L'ordre compte : la version gratuite de Colab donne un GPU, mais un notebook y tourne au plus 12 heures, et sa machine est effacée après un moment d'inactivité (<a href={SOURCES.colab.url}>{SOURCES.colab.titre} ↗</a>, vérifiée le {SOURCES.colab.verifie}).
+
+Ailleurs que sur Colab, rien n'est installé. Le `requirements.txt` liste les bibliothèques et leur version exacte ; une commande refait le même décor :
+
+```bash
+pip install -r requirements.txt     # dans un terminal, sur la machine neuve
+```
+
+### À toi : ta fiche « où faire tourner mon projet »
+
+Pour ton projet à toi : son `requirements.txt`, avec seulement ce qu'il importe vraiment, puis la fiche de la dernière cellule, remplie jusqu'au ✅. La décision se justifie par un chiffre : la durée, la taille des données, ou le besoin d'un GPU.
+
+<BoutonsSeance racine="seances-optionnelles" dossier="seance-optionnelle-2-software-engineering" lecon="SO2_software_engineering.ipynb" exercices="SO2_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `SO2_exercices.ipynb` : 12 exercices, de ★ à ★★★, avec vérification automatique, indices et solutions repliées.

@@ -1,0 +1,25 @@
+---
+/**
+ * Le poids en mémoire du tableau de 300 000 lignes du notebook, avant et après le passage des colonnes de texte en
+ * category (src/data/logiciel.ts, mesuré avec memory_usage(deep=True), machine et versions dans l'en-tête).
+ */
+import { memoire, MACHINE } from "../../data/logiciel";
+const X0 = 250, L = 560, MAX = 40;
+const sx = (mo: number) => X0 + (mo / MAX) * L;
+const fr = (mo: number) => mo.toFixed(1).replace(".", ",") + " Mo";
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 190" role="img" aria-labelledby="pm-titre pm-desc">
+    <title id="pm-titre">Le même tableau, trois rangements</title>
+    <desc id="pm-desc">300 000 lignes. Les deux colonnes de texte en object : {fr(memoire[0].mo)}. La colonne ville en category : {fr(memoire[1].mo)}, moins 42 %. Les deux en category : {fr(memoire[2].mo)}, moins 86 %. Les valeurs affichées ne changent pas.</desc>
+    {memoire.map((m, i) => (
+      <g>
+        <text x="30" y={44 + i * 44} class="encre" font-size="14" font-weight={i === 2 ? "700" : "400"}>{m.etat}</text>
+        <rect x={X0} y={28 + i * 44} width={sx(m.mo) - X0} height="22" class={i === 2 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+        <text x={sx(m.mo) + 8} y={44 + i * 44} class="encre mono" font-size="12.5">{fr(m.mo)}{i > 0 ? ` · ${m.detail}` : ""}</text>
+      </g>
+    ))}
+    <text x="30" y="176" class="encre-2" font-size="11.5">Mesuré avec memory_usage(deep=True), pandas {MACHINE.pandas}, Python {MACHINE.python} ; le poids exact change avec les versions.</text>
+  </svg>
+  <figcaption>Dix villes répétées 300 000 fois : category range les dix à part et ne garde qu'un numéro par ligne.</figcaption>
+</figure>

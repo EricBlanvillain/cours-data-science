@@ -1,0 +1,31 @@
+---
+/**
+ * Le même calcul sur 5 millions de valeurs, par trois moteurs, mesuré deux fois sur la même machine (src/data/logiciel.ts,
+ * machine et date dans l'en-tête) : la boucle Python loin derrière, NumPy et le C au coude à coude, et deux passages qui
+ * ne donnent pas le même temps.
+ */
+import { temps, MACHINE } from "../../data/logiciel";
+const X0 = 190, L = 620, MAX = 0.4;
+const sx = (s: number) => X0 + (s / MAX) * L;
+const fr = (s: number) => s.toFixed(3).replace(".", ",") + " s";
+---
+<figure class="large">
+  <svg class="schema grand" viewBox="0 0 960 250" role="img" aria-labelledby="tmo-titre tmo-desc">
+    <title id="tmo-titre">Le même calcul, trois moteurs, deux passages</title>
+    <desc id="tmo-desc">Racine, fois deux, plus un, sur 5 millions de valeurs. Boucle Python : {fr(temps[0].passages[0])} puis {fr(temps[0].passages[1])}. NumPy : {fr(temps[1].passages[0])} puis {fr(temps[1].passages[1])}. C compilé : {fr(temps[2].passages[0])} puis {fr(temps[2].passages[1])}. Mesuré sur {MACHINE.puce}, Python {MACHINE.python}, NumPy {MACHINE.numpy}, le {MACHINE.date}.</desc>
+    {[0, 0.1, 0.2, 0.3, 0.4].map((g) => <g><line x1={sx(g)} x2={sx(g)} y1="14" y2="182" class="trait-fin" stroke-width="1" stroke-dasharray="2 4" /><text x={sx(g)} y="200" text-anchor="middle" class="encre-2 mono" font-size="11">{fr(g)}</text></g>)}
+    {temps.map((t, i) => (
+      <g>
+        <text x="30" y={52 + i * 56} class="encre" font-size="14" font-weight={i === 1 ? "700" : "400"}>{t.qui}</text>
+        {t.passages.map((s, j) => (
+          <g>
+            <rect x={X0} y={26 + i * 56 + j * 20} width={Math.max(sx(s) - X0, 2)} height="14" class={i === 1 ? "plein" : "fond-3 plein-trait"} stroke-width="1" />
+            <text x={sx(s) + 8} y={38 + i * 56 + j * 20} class="encre mono" font-size="12">{fr(s)}{i === 0 ? ` · passage ${j + 1}` : ""}</text>
+          </g>
+        ))}
+      </g>
+    ))}
+    <text x="30" y="236" class="encre-2" font-size="11.5">Mesuré sur {MACHINE.puce}, Python {MACHINE.python}, NumPy {MACHINE.numpy}, le {MACHINE.date}.</text>
+  </svg>
+  <figcaption>Racine, fois deux, plus un, sur 5 millions de valeurs : même résultat, pas le même temps.</figcaption>
+</figure>

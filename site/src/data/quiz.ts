@@ -346,4 +346,30 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Les invités ne connaissent pas les outils : ce qui les convainc, c'est de voir le projet marcher, et même rater une fois, avec ce que tu en as compris.",
     },
   ],
+  SO2: [
+    {
+      question: "Tu chronomètres un programme qui vient d'être compilé, et sa toute première mesure est plus lente qu'une boucle Python. Que fais-tu ?",
+      options: ["Tu conclus que le C est lent", "Tu le lances une fois pour rien, puis tu mesures, plusieurs fois si possible", "Tu recompiles sans -O2", "Tu gardes la mesure la plus lente, par prudence"],
+      bonne: 1,
+      explication: "Le premier lancement paie des frais fixes, comme charger le programme depuis le disque. Ce qu'on veut chronométrer, c'est le calcul : on lance une fois pour rien, puis on mesure.",
+    },
+    {
+      question: "Pourquoi np.sqrt(tableau) va-t-il bien plus vite qu'une boucle for sur les mêmes valeurs ?",
+      options: ["NumPy arrondit les résultats", "La boucle est faite par du code C compilé, à l'intérieur de NumPy, et non par l'interpréteur Python", "NumPy saute une valeur sur deux", "NumPy envoie le calcul sur Internet"],
+      bonne: 1,
+      explication: "Le résultat est le même. Ta ligne de Python ne fait que déclencher une boucle écrite en C : Python pilote, NumPy calcule.",
+    },
+    {
+      question: "Quelle colonne gagne le plus à passer en category ?",
+      options: ["Un identifiant client, différent sur chaque ligne", "Une colonne de ville qui répète dix valeurs sur 300 000 lignes", "Une colonne de prix en float64", "Une adresse e-mail"],
+      bonne: 1,
+      explication: "category range les valeurs différentes à part et ne garde qu'un numéro par ligne. Avec dix villes, c'est un gros gain ; avec des valeurs presque toutes uniques, le dictionnaire est aussi gros que la colonne.",
+    },
+    {
+      question: "Ton CSV fait 20 Go et ta machine n'a que 12 Go de mémoire. Tu veux la moyenne d'une colonne. Que fais-tu ?",
+      options: ["pd.read_csv, puis .mean()", "Tu le lis par morceaux avec chunksize, en gardant une somme et un compte", "Tu passes toutes les colonnes en category, puis read_csv", "Impossible sans une machine plus grosse"],
+      bonne: 1,
+      explication: "Lire tout le fichier d'un coup ne tient pas en mémoire. Par morceaux, on ne garde que le résumé de chacun, une somme et un nombre de lignes, et la moyenne se calcule à la fin.",
+    },
+  ],
 };
