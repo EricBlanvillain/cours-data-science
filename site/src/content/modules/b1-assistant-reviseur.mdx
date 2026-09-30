@@ -1,0 +1,67 @@
+---
+code: B1
+type: projet
+titre: L'assistant qui te fait réviser
+niveau: ★★★
+resume: Un assistant qui indexe tes propres notes, retrouve le bon passage et te pose des questions dessus, au lieu de te les faire relire.
+livrable: Le notebook complété avec tes notes, et sa fiche projet (le taux de bonnes réponses de ton interro, une question réussie, une ratée).
+prerequis:
+  - 9
+  - 10
+  - 11
+objectifs:
+  - Tu sauras découper un cours en passages et retrouver le bon passage pour une question.
+  - Tu sauras faire écrire des questions de révision, chacune avec sa réponse attendue et son passage source.
+  - Tu sauras corriger une réponse, et refuser une question à laquelle tes notes ne répondent pas.
+---
+import CircuitProjet from "../../components/schemas/CircuitProjet.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Ce que tu construis
+
+Relire ses notes, c'est passif : on croit connaître parce qu'on reconnaît le texte. Cet assistant retourne la révision : il t'interroge sur ton propre cours, et te montre le passage à relire quand tu te trompes.
+
+<CircuitProjet
+  titre="Le circuit de l'assistant réviseur"
+  cle={2}
+  etapes={[
+    { mot: "tes notes", ligne: "MES_NOTES", sous: "≥ 10 paragraphes" },
+    { mot: "découper", ligne: "un paragraphe", sous: "= un chunk" },
+    { mot: "chercher", ligne: "index TF-IDF", sous: "et un seuil" },
+    { mot: "questionner", ligne: "question, réponse", sous: "et passage source" },
+    { mot: "corriger", ligne: "ta réponse", sous: "contre le passage" },
+    { mot: "évaluer", ligne: "8 questions", sous: "dont hors sujet" },
+  ]}
+  legende="Tes notes deviennent une interro corrigée : chaque question garde le passage d'où elle vient."
+/>
+
+Rien à installer, aucune clé : avec `USE_MODEL = False`, un faux modèle répond hors ligne, et c'est ton code qui est vérifié (découpage, recherche, correction).
+
+## Le déroulé
+
+- **0-10 min** · la préparation, la question du projet, le choix du cours à réviser ;
+- **10-20 min** · coller tes notes dans `MES_NOTES`, au moins 10 paragraphes (un cours d'exemple est fourni) ;
+- **20-35 min** · découper en chunks et construire l'index TF-IDF (exercices 1 et 2) ;
+- **35-50 min** · la recherche et son seuil « je ne sais pas » (exercices 3 et 4) ;
+- **50-70 min** · générer les questions, puis le mode interro (exercices 5 à 7) ;
+- **70-85 min** · l'évaluation : 8 questions de contrôle, taux de bonnes réponses, questions hors sujet (exercice 8) ;
+- **85-90 min** · la fiche projet, une question réussie et une ratée.
+
+Si le temps manque, arrête-toi après le mode interro : l'évaluation se fait très bien au créneau suivant.
+
+## Le livrable
+
+`B1_assistant_reviseur.ipynb`, exécutable de haut en bas avec **tes** notes, et sa fiche projet : le cours indexé, le nombre de chunks, le taux de bonnes réponses, une question bien posée, une ratée et pourquoi.
+
+## La grille d'évaluation
+
+| Critère | En route | Atteint | Dépassé |
+|---|---|---|---|
+| Le corpus | encore le cours d'exemple | ton cours, 10 chunks au moins, sa source dite | deux matières comparées, ou un découpage par taille |
+| La recherche | des passages au hasard | le bon passage dans le top 3, pour 5 questions à toi | `k` et seuil réglés chiffres à l'appui |
+| Les questions | vides ou hors sujet | 5 au moins, avec réponse attendue et passage source | tout le cours couvert, définitions et « pourquoi » |
+| La correction | pas de correction | un score justifié par le passage source | un contre-exemple où le barème se trompe |
+| L'honnêteté | il invente hors sujet | sous le seuil, il dit ne pas trouver | le seuil mesuré, cours contre hors sujet |
+| Ça tourne | des cellules plantent | tout passe, faux modèle et vrai modèle | la fiche remplie, une question ratée expliquée |
+
+<BoutonsSeance dossier="B1-assistant-reviseur" racine="projets-optionnels/projet-optionnel-avance-ia-agentique" lecon="B1_assistant_reviseur.ipynb" libelle="Ouvrir le notebook dans Colab" />
