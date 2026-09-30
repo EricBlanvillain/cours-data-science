@@ -268,7 +268,7 @@ const ETATS = [
   // La page « Enregistrer en PDF » : le choix des séances (écran), une seule séance cochée.
   { page: "enregistrer-pdf.html", id: "export-pdf-une-seance", pilote: `
   var t = document.querySelector("[data-tout]"); t.checked = false; t.dispatchEvent(new Event("change"));
-  var c = document.querySelector("input[data-n='5']"); c.checked = true; c.dispatchEvent(new Event("change"));
+  var c = document.querySelector("input[data-cle='s5']"); c.checked = true; c.dispatchEvent(new Event("change"));
   if (document.querySelectorAll(".lecon-imprimee:not([hidden])").length !== 1) throw new Error("la sélection d'une séance n'en montre pas une seule");` },
   // L'impression (et les PDF) : règles @media print activées à l'écran, <details> ouverts ; le thème clair est forcé,
   // fond blanc attendu même dans la passe sombre.
@@ -470,6 +470,9 @@ const coppers = [palette.copper.DEFAULT, palette.copper.ink, palette.copper.ligh
 const lights = [palette.cream.DEFAULT, palette.cream.sunk, "#ffffff"].map((c) => c.toLowerCase());   // blanc : le papier, à l'impression
 const darks = [palette.ink.DEFAULT, palette.ink.raised, palette.ink.soft].map((c) => c.toLowerCase());
 
+// une carte de module par page de la collection modules
+const DOSSIER_MODULES = path.join(ROOT, "src/content/modules");
+const NB_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).length : 0;
 const P = portee();
 const RETENUS = ETATS.filter((e) => P.vise(e.page) && (!P.impression || e.fond === "impression"));
 if (!RETENUS.length) { console.error(`Portée vide (${P.libelle}) : aucun état ne correspond. Pages : ${[...new Set(ETATS.map((e) => e.page))].join(", ")}`); process.exit(2); }
@@ -510,7 +513,7 @@ for (const etat of RETENUS) {
     }
     if (!(res.seances || []).length && /^(accueil|barre-quatre)/.test(etat.id)) nonAtteints.push(`${ou} : aucune séance trouvée pour la règle du cuivre`);
     if (/^accueil/.test(etat.id)) {
-      if ((res.modules || []).length !== 3) nonAtteints.push(`${ou} : ${(res.modules || []).length} carte(s) de module optionnel au lieu de 3`);
+      if ((res.modules || []).length !== NB_MODULES) nonAtteints.push(`${ou} : ${(res.modules || []).length} carte(s) de module optionnel au lieu de ${NB_MODULES} (une par page de src/content/modules)`);
       for (const m of res.modules || []) {
         if (m.pastille || m.seance) cuivreFautes.push({ where: ou, text: `module « ${m.titre} »`, regle: "un module optionnel n'a ni pastille ni data-seance : il est hors de la progression" });
         const etats = m.couleurs.filter((c) => cuivres.has(c) || c === j.fait || c === j.indisponible);

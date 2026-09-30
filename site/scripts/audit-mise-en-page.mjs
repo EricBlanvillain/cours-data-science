@@ -2,7 +2,7 @@
  * Audit de mise en page sur les pages construites, dans le Chrome de la machine (headless, sans dépendance).
  *
  * Trois choses que le typage et le build ne voient pas :
- *  1. les grilles de cartes (.grille-cartes, dont celle des modules optionnels de l'accueil, 3 cartes) : dans chaque rangée, la bande n démarre à la même hauteur d'une carte à
+ *  1. les grilles de cartes (.grille-cartes, dont celles des modules optionnels de l'accueil, une carte par page de module) : dans chaque rangée, la bande n démarre à la même hauteur d'une carte à
  *     l'autre, les cartes ont la même hauteur, le pied (.bande-pied) colle au bas, chaque carte a exactement --bandes enfants ;
  *  2. l'en-tête : le bord gauche du logo et le bord droit du dernier lien de navigation sont AU PIXEL PRÈS à la même place sur
  *     l'accueil, le glossaire, la séance 0 et la séance 1 ; le pied de page aussi. Le conteneur est le même partout (1360 px) ;
@@ -62,6 +62,9 @@ const PAGES = [
 ];
 // L'impression (et les PDF) : chaque leçon et le cours complet, règles @media print activées, <details> ouverts, à la
 // largeur de texte d'une page A4 (180 mm = 680 px, simulée comme le téléphone) : rien ne dépasse à droite.
+// une carte de module par page de la collection modules
+const DOSSIER_MODULES = path.join(ROOT, "src/content/modules");
+const NB_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).length : 0;
 const LARGEUR_A4 = 680;
 const PILOTE_IMPRESSION = `
   var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
@@ -238,8 +241,12 @@ for (const largeur of PAGES_R.length ? LARGEURS : []) {
     if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
     if (res.erreur) { lignes.push(`${ou} : pilote en échec, ${res.erreur}`); fautes++; }
     for (const g of res.grilles) { if (g.fautes.length) { fautes += g.fautes.length; lignes.push(`${ou} · grille ${g.grille} (${g.cartes} cartes, ${g.bandes} bandes) :\n   !! ${g.fautes.join("\n   !! ")}`); } }
-    // l'accueil porte une grille « Modules optionnels » de 3 cartes, alignée comme les autres (vérifiée ci-dessus)
-    if (etat.id === "accueil" && !res.grilles.some((g) => g.modules === 3 && g.cartes === 3)) { fautes++; lignes.push(`${ou} · grille des modules optionnels absente ou incomplète (3 cartes attendues)`); }
+    // l'accueil porte une carte par page de module (collection modules), dans des grilles qui ne mêlent pas séances et modules
+    if (etat.id === "accueil") {
+      const cartesModules = res.grilles.reduce((n, g) => n + g.modules, 0);
+      if (cartesModules !== NB_MODULES) { fautes++; lignes.push(`${ou} · ${cartesModules} carte(s) de module au lieu de ${NB_MODULES}`); }
+      for (const g of res.grilles) if (g.modules && g.modules !== g.cartes) { fautes++; lignes.push(`${ou} · grille ${g.grille} : cartes de séance et de module mêlées`); }
+    }
     for (const d of res.proseDebords) { fautes++; lignes.push(`${ou} · prose au-delà du plafond : ${d.quoi} fait ${d.largeur}px pour ${d.plafond}px`); }
     if (PAGES_EN_TETE.includes(etat.id)) enTetes[etat.id] = { ...res.enTete, piedGauche: res.pied && res.pied.gauche, piedLargeur: res.pied && res.pied.largeur };
     lignes.push(`${ou.padEnd(34)} grilles ${res.grilles.length}, cartes ${res.grilles.reduce((n, g) => n + g.cartes, 0)}, en-tête logo ${res.enTete ? res.enTete.logoGauche : "?"} → dernier lien ${res.enTete ? res.enTete.dernierLienDroite : "?"}`);

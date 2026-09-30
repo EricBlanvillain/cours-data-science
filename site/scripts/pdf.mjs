@@ -3,7 +3,7 @@
  * PDF depuis la fenêtre d'impression du navigateur (boutons « Enregistrer … en PDF ») ; ce script imprime les mêmes pages,
  * avec le Chrome de la machine piloté par son protocole de débogage (WebSocket natif de Node, aucune dépendance), dans
  * site/.verif-pdf/ (ignoré par git), en passant par la page d'export (enregistrer-pdf.html) comme l'élève : le cours
- * complet (séances 0 à 12), une séance seule (la 05) et la séance 0 seule.
+ * complet (séances 0 à 12), une séance seule (la 05), la séance 0 seule, la séance optionnelle SO1 seule et le projet B2 seul.
  *
  * Comme le navigateur de l'élève : média « print », taille de page, marges et pied de page tirés du CSS (@page et ses
  * boîtes de marge), <details> ouverts. Contrôles : rien ne dépasse à droite (à la largeur de texte d'une page A4), chaque
@@ -129,18 +129,21 @@ async function imprimer(url, fichier) {
 
 fs.rmSync(SORTIE, { recursive: true, force: true });
 fs.mkdirSync(SORTIE, { recursive: true });
-// Le vérificateur passe par la page d'export, comme l'élève : le cours complet, puis une séance seule (la 05), puis la
-// séance 0 seule. Avec --pages : seance-XX imprime cette séance seule, enregistrer-pdf (ou cours-complet) le cours complet.
+// Le vérificateur passe par la page d'export, comme l'élève : le cours complet, une séance seule (la 05), la séance 0
+// seule, la séance optionnelle SO1 seule (son quiz a un corrigé) et le projet B2 seul. Avec --pages : seance-XX imprime
+// cette séance seule, un code de module (SO1, B2…) ce module seul, enregistrer-pdf (ou cours-complet) le cours complet.
 const P = portee();
 const seule = (n) => ({ fichier: `seance-${String(n).padStart(2, "0")}-seule.pdf`, url: `enregistrer-pdf.html?seances=${n}` });
+const moduleSeul = (code) => ({ fichier: `module-${code}-seul.pdf`, url: `enregistrer-pdf.html?modules=${code}` });
 const complet = { fichier: "cours-complet.pdf", url: "enregistrer-pdf.html" };
-const retenus = !P.pages.length ? [complet, seule(5), seule(0)] : P.pages.flatMap((t) => {
+const retenus = !P.pages.length ? [complet, seule(5), seule(0), moduleSeul("SO1"), moduleSeul("B2")] : P.pages.flatMap((t) => {
   const m = t.match(/^seance-(\d{2})$/);
   if (m) return [seule(Number(m[1]))];
+  if (/^(SO[12]|B[1-4])$/i.test(t)) return [moduleSeul(t.toUpperCase())];
   if (t === "enregistrer-pdf" || t === "cours-complet") return [complet];
   return [];
 });
-if (!retenus.length) { console.error(`Portée vide (${P.libelle}) : --pages attend seance-XX (deux chiffres) ou enregistrer-pdf`); process.exit(2); }
+if (!retenus.length) { console.error(`Portée vide (${P.libelle}) : --pages attend seance-XX (deux chiffres), un code de module (SO1, B2…) ou enregistrer-pdf`); process.exit(2); }
 let fautes = 0;
 console.log(`\n2. impression dans .verif-pdf/ par la page d'export (portée : ${P.libelle}, ${retenus.length} PDF)`);
 for (const { fichier, url } of retenus) {

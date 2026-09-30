@@ -1,6 +1,6 @@
 ---
 /**
- * Le corps d'une leçon, commun à sa page et au cours complet imprimé : objectifs (frontmatter), article (MDX), mini-quiz,
+ * Le corps d'une leçon ou d'un module optionnel, commun à sa page et à la page d'export : objectifs (frontmatter), article (MDX), mini-quiz,
  * « à retenir », et le corrigé des jeux et du quiz, qui n'apparaît qu'à l'impression (les jeux, eux, s'impriment à leur
  * place sous forme de liste : voir ImpressionJeu et src/data/impression.ts).
  */
@@ -9,13 +9,16 @@ import { render } from "astro:content";
 import Quiz from "./islands/Quiz";
 import { quiz } from "../data/quiz";
 import { jeuxImprimes, quizImprime, jeuxDeLaLecon } from "../data/impression";
+import { objectifsModule } from "../data/modules";
 
 interface Props {
-  lecon: CollectionEntry<"lecons">;
+  lecon: CollectionEntry<"lecons"> | CollectionEntry<"modules">;
 }
 const { lecon } = Astro.props;
 const { Content } = await render(lecon);
-const n = lecon.data.numero;
+// la clé du quiz et des identifiants : le numéro de la séance, ou le code du module (SO1, B2…)
+const n = lecon.collection === "modules" ? lecon.data.code : lecon.data.numero;
+const libelleObjectifs = lecon.collection === "modules" ? objectifsModule(lecon.data) : "À la fin de la séance";
 const objectifs = lecon.data.objectifs ?? [];
 const aRetenir = lecon.data.aRetenir ?? [];
 const aUnQuiz = (quiz[n] ?? []).length > 0;
@@ -25,7 +28,7 @@ const corrige = [...jeuxDeLaLecon(lecon.body ?? "").map((j) => jeuxImprimes[j]),
 {/* Le cadre de la leçon : objectifs en tête (frontmatter), « à retenir » et mini-quiz en pied, avant la navigation. */}
 {objectifs.length > 0 && (
   <section class="mt-10 objectifs" style="max-width: 46rem;" aria-labelledby={`objectifs-titre-${n}`}>
-    <p id={`objectifs-titre-${n}`} class="mono-caps" style="color: var(--encre-2);">À la fin de la séance</p>
+    <p id={`objectifs-titre-${n}`} class="mono-caps" style="color: var(--encre-2);">{libelleObjectifs}</p>
     <ul class="mt-2" style="padding-left: 1.3em;">
       {objectifs.map((o) => <li>{o}</li>)}
     </ul>
@@ -40,7 +43,7 @@ const corrige = [...jeuxDeLaLecon(lecon.body ?? "").map((j) => jeuxImprimes[j]),
   <section class="mt-20" style="max-width: 46rem;" aria-labelledby={`quiz-titre-${n}`}>
     <h2 id={`quiz-titre-${n}`}>Mini-quiz</h2>
     <p class="discret mt-2 ecran-seul">Quatre questions sur ce que tu viens de lire. Une à la fois, l'explication vient après chaque réponse.</p>
-    <div class="mt-5"><Quiz client:load seance={n} /></div>
+    <div class="mt-5"><Quiz client:load cle={n} /></div>
   </section>
 )}
 

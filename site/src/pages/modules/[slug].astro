@@ -1,0 +1,60 @@
+---
+/**
+ * La page d'un module optionnel (séance optionnelle SO1, SO2 ou projet B1 à B4) : la même ouverture et le même corps
+ * qu'une leçon (CorpsLecon), mais hors du parcours : pas de data-seance, pas de bandeau « pas encore faite », pas de
+ * bouton « terminée », compté nulle part. En pied : « ← Toutes les séances », et « Projet suivant → » de B1 à B3.
+ */
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import CorpsLecon from "../../components/CorpsLecon.astro";
+import { libelleModule, titreModule, lienPrerequis, trierModules } from "../../data/modules";
+
+export async function getStaticPaths() {
+  const modules = await getCollection("modules");
+  return modules.map((m) => ({ params: { slug: m.id }, props: { module: m, modules } }));
+}
+
+const { module: m, modules } = Astro.props;
+const d = m.data;
+const { headings } = await render(m);
+const sections = headings.filter((h) => h.depth === 2);
+const prerequis = (d.prerequis ?? []).map((p) => lienPrerequis(p, modules)).filter((p) => p !== null);
+const projets = trierModules(modules).filter((x) => x.data.type === "projet");
+const i = projets.findIndex((x) => x.id === m.id);
+const suivant = d.type === "projet" && i >= 0 && i < projets.length - 1 ? projets[i + 1] : null;
+const titrePied = titreModule(d).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+---
+
+<Base titre={titreModule(d)} description={d.resume} barre courantModule={d.code}>
+  <section slot="hero" class="sombre hero hero-lecon">
+    <div class="conteneur">
+      <p class="etiquette">{libelleModule(d)} · {d.niveau} · {d.duree}</p>
+      <h1 class="hero-titre">{d.titre}</h1>
+      <p class="hero-texte">{d.resume}</p>
+      {prerequis.length > 0 && (
+        <p class="hero-ligne"><span class="mono-caps">Prérequis</span> · {prerequis.map((p, k) => <>{k > 0 && ", "}<a href={p.href}>{p.libelle} →</a></>)}{d.prerequisNote && <> · {d.prerequisNote}</>}</p>
+      )}
+      <p class="hero-ligne"><span class="mono-caps">On repart avec</span> · {d.livrable}</p>
+    </div>
+  </section>
+
+  <div>
+    {sections.length > 1 && (
+      <nav aria-label="Sommaire" class="mt-10" style="max-width: 46rem;">
+        <ol class="flex flex-wrap gap-x-6 gap-y-2 mono-caps" style="list-style: none; padding: 0;">
+          {sections.map((s, i) => (
+            <li><a href={`#${s.slug}`} class="no-underline" style="color: var(--encre-2);"><span style="color: var(--encre);">{String(i + 1).padStart(2, "0")}</span> {s.text}</a></li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <CorpsLecon lecon={m} />
+    <style is:inline set:html={`@media print { @page { @bottom-left { content: "${titrePied}"; } } }`}></style>
+
+    <p class="mt-12 mono-caps retour-seances flex flex-wrap gap-x-8 gap-y-2">
+      <a href="/" class="no-underline" style="color: var(--encre-2);">← Toutes les séances</a>
+      {suivant && <a href={`/modules/${suivant.id}`} class="no-underline" style="color: var(--encre-2);">Projet suivant · {suivant.data.code} →</a>}
+    </p>
+  </div>
+</Base>

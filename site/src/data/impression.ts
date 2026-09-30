@@ -128,8 +128,8 @@ export const jeuxImprimes: Record<string, JeuImprime> = {
 };
 
 /** Le mini-quiz d'une séance, dans la même forme : l'énoncé porte les options, le corrigé la bonne. */
-export const quizImprime = (seance: number): JeuImprime | null => {
-  const qs = quiz[seance] ?? [];
+export const quizImprime = (cle: number | string): JeuImprime | null => {
+  const qs = quiz[cle] ?? [];
   if (!qs.length) return null;
   const lettre = (i: number) => "ABCD"[i] ?? String(i + 1);
   return {

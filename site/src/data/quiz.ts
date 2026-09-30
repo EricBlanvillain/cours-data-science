@@ -1,5 +1,6 @@
 /**
- * Le mini-quiz de fin de leçon, une entrée par séance. Quatre questions, écrites depuis le contenu réel de la page.
+ * Le mini-quiz de fin de leçon, une entrée par séance (clé : son numéro) ou par séance optionnelle (clé : SO1, SO2) ;
+ * les projets B1 à B4 n'en ont pas (le lint le refuse). Quatre questions, écrites depuis le contenu réel de la page.
  * Ton : question courte, options plausibles, explication qui apprend quelque chose au lieu de dire « bravo ».
  * `bonne` est l'index de la bonne option. Une séance sans entrée n'a pas de quiz (la séance 0 se termine sur son notebook).
  * Réserve pour les séances 2 à 12 : les 20 questions de l'ancien site (introductioniagen/site/src/content/quiz.ts),
@@ -12,7 +13,7 @@ export type QuestionQuiz = {
   explication: string;
 };
 
-export const quiz: Record<number, QuestionQuiz[]> = {
+export const quiz: Record<number | string, QuestionQuiz[]> = {
   1: [
     {
       question: "Sur la frise, pourquoi 2012 est-elle la vraie rupture, plutôt que 1957 ou 2022 ?",

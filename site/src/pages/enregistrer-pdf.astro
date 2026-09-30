@@ -1,32 +1,48 @@
 ---
 /**
  * Enregistrer en PDF : la seule entrée d'export du site (bouton « Enregistrer en PDF ↓ » de l'accueil). En haut, masqué à
- * l'impression, le choix : « Cours complet » et une case par séance (0 à 12, sans les modules optionnels). Seules les
- * séances cochées s'impriment ; la couverture et le sommaire ne listent qu'elles ; le pied de page porte le titre de la
- * leçon quand une seule est cochée, « Data Science & IA » sinon. Chaque leçon a le même corps que sa page (CorpsLecon).
- * `?seances=0,5` précoche une sélection (npm run pdf:verifier s'en sert). Non indexée.
+ * l'impression, le choix : « Cours complet » (les séances 0 à 12) et une case par séance, puis une case par module
+ * optionnel, décochée par défaut. Seul ce qui est coché s'imprime ; la couverture et le sommaire ne listent que cela
+ * (les modules après les séances) ; le pied de page et le nom de fichier proposé portent le titre de la page quand un
+ * seul élément est coché, « Data Science & IA » sinon. Chaque page a le même corps que sa page du site (CorpsLecon).
+ * `?seances=0,5` et `?modules=SO1,B2` précochent une sélection (npm run pdf:verifier s'en sert). Non indexée.
  */
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import CorpsLecon from "../components/CorpsLecon.astro";
+import { libelleModule, titreModule, trierModules } from "../data/modules";
 
 const lecons = (await getCollection("lecons")).filter((l) => l.data.numero <= 12).sort((a, b) => a.data.numero - b.data.numero);
+const modules = trierModules(await getCollection("modules"));
 const nn = (n: number) => String(n).padStart(2, "0");
-const titres = Object.fromEntries(lecons.map((l) => [l.data.numero, `Séance ${nn(l.data.numero)} · ${l.data.titre}`]));
+const titres = {
+  ...Object.fromEntries(lecons.map((l) => [`s${l.data.numero}`, `Séance ${nn(l.data.numero)} · ${l.data.titre}`])),
+  ...Object.fromEntries(modules.map((m) => [`m${m.data.code}`, titreModule(m.data)])),
+};
 ---
 
-<Base titre="Enregistrer en PDF" description="Choisir les séances du cours Data Science & IA à enregistrer en PDF." noindex>
+<Base titre="Enregistrer en PDF" description="Choisir les séances et les modules du cours Data Science & IA à enregistrer en PDF." noindex>
   <form class="ecran-seul choix-pdf pt-10" data-choix-pdf>
     <h1 class="hero-titre" style="font-size: 2.2rem;">Enregistrer en PDF</h1>
     <fieldset class="mt-6" style="border: 0; padding: 0;">
       <legend class="mono-caps" style="color: var(--encre-2);">Ce que tu veux enregistrer</legend>
-      <label class="choix-pdf-ligne choix-pdf-tout"><input type="checkbox" data-tout checked /> <b>Cours complet</b></label>
+      <label class="choix-pdf-ligne choix-pdf-tout"><input type="checkbox" data-tout checked /> <b>Cours complet</b> <span class="discret">· séances 0 à 12</span></label>
       <ul class="choix-pdf-liste">
         {lecons.map((l) => (
-          <li><label class="choix-pdf-ligne"><input type="checkbox" data-n={l.data.numero} checked /> <span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</label></li>
+          <li><label class="choix-pdf-ligne"><input type="checkbox" data-cle={`s${l.data.numero}`} data-seance-pdf checked /> <span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</label></li>
         ))}
       </ul>
     </fieldset>
+    {modules.length > 0 && (
+      <fieldset class="mt-6" style="border: 0; padding: 0;">
+        <legend class="mono-caps" style="color: var(--encre-2);">Modules optionnels</legend>
+        <ul class="choix-pdf-liste">
+          {modules.map((m) => (
+            <li><label class="choix-pdf-ligne"><input type="checkbox" data-cle={`m${m.data.code}`} /> <span class="mono-caps">{m.data.code}</span> · {libelleModule(m.data)} · {m.data.titre}</label></li>
+          ))}
+        </ul>
+      </fieldset>
+    )}
     <p class="boutons-pdf mt-6"><button type="button" class="bouton principal" data-imprimer>Enregistrer la sélection en PDF</button></p>
     <p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
   </form>
@@ -42,13 +58,16 @@ const titres = Object.fromEntries(lecons.map((l) => [l.data.numero, `Séance ${n
     <h2>Sommaire</h2>
     <ol class="mt-4" style="list-style: none; padding: 0;">
       {lecons.map((l) => (
-        <li class="mt-2" data-n={l.data.numero}><a href={`#seance-${nn(l.data.numero)}`}><span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</a></li>
+        <li class="mt-2" data-cle={`s${l.data.numero}`}><a href={`#seance-${nn(l.data.numero)}`}><span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</a></li>
+      ))}
+      {modules.map((m) => (
+        <li class="mt-2" data-cle={`m${m.data.code}`} hidden><a href={`#module-${m.data.code}`}><span class="mono-caps">{libelleModule(m.data)}</span> · {m.data.titre}</a></li>
       ))}
     </ol>
   </nav>
 
   {lecons.map((l) => (
-    <section class="lecon-imprimee mt-16" id={`seance-${nn(l.data.numero)}`} data-n={l.data.numero}>
+    <section class="lecon-imprimee mt-16" id={`seance-${nn(l.data.numero)}`} data-cle={`s${l.data.numero}`}>
       <header class="lecon-entete">
         <p class="mono-caps" style="color: var(--encre-2);">Séance {nn(l.data.numero)} · {l.data.niveau} · {l.data.duree}</p>
         <h1 class="hero-titre mt-2">{l.data.titre}</h1>
@@ -57,39 +76,62 @@ const titres = Object.fromEntries(lecons.map((l) => [l.data.numero, `Séance ${n
       <CorpsLecon lecon={l} />
     </section>
   ))}
+  {modules.map((m) => (
+    <section class="lecon-imprimee mt-16" id={`module-${m.data.code}`} data-cle={`m${m.data.code}`} hidden>
+      <header class="lecon-entete">
+        <p class="mono-caps" style="color: var(--encre-2);">{libelleModule(m.data)} · {m.data.niveau} · {m.data.duree}</p>
+        <h1 class="hero-titre mt-2">{m.data.titre}</h1>
+        <p class="mt-3" style="max-width: 46rem;">{m.data.resume}</p>
+      </header>
+      <CorpsLecon lecon={m} />
+    </section>
+  ))}
 
   <style is:inline data-pied-pdf>@media print { @page { @bottom-left { content: "Data Science & IA"; } } }</style>
   <script is:inline define:vars={{ titres }}>
     (function () {
       var form = document.querySelector("[data-choix-pdf]");
       var tout = form.querySelector("[data-tout]");
-      var cases = [].slice.call(form.querySelectorAll("input[data-n]"));
+      var seances = [].slice.call(form.querySelectorAll("input[data-seance-pdf]"));
+      var cases = [].slice.call(form.querySelectorAll("input[data-cle]"));
       var pied = document.querySelector("style[data-pied-pdf]");
       var guillemets = function (t) { return '"' + t.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; };
+      var cochees = function () { return cases.filter(function (c) { return c.checked; }).map(function (c) { return c.getAttribute("data-cle"); }); };
+      var pluriel = function (n, mot) { return n + " " + mot + (n > 1 ? "s" : ""); };
       function appliquer() {
-        var choisies = cases.filter(function (c) { return c.checked; }).map(function (c) { return c.getAttribute("data-n"); });
-        tout.checked = choisies.length === cases.length;
-        document.querySelectorAll("[data-n]:not(input)").forEach(function (el) { el.hidden = choisies.indexOf(el.getAttribute("data-n")) < 0; });
-        document.querySelector("[data-nombre]").textContent = choisies.length + (choisies.length > 1 ? " séances" : " séance");
-        pied.textContent = "@media print { @page { @bottom-left { content: " + guillemets(choisies.length === 1 ? titres[choisies[0]] : "Data Science & IA") + "; } } }";
-        form.querySelector("[data-imprimer]").disabled = choisies.length === 0;
+        var cles = cochees();
+        var s = cles.filter(function (k) { return k[0] === "s"; }), m = cles.filter(function (k) { return k[0] === "m"; });
+        tout.checked = s.length === seances.length;
+        document.querySelectorAll("[data-cle]:not(input)").forEach(function (el) { el.hidden = cles.indexOf(el.getAttribute("data-cle")) < 0; });
+        document.querySelector("[data-nombre]").textContent = [s.length ? pluriel(s.length, "séance") : null, m.length ? pluriel(m.length, "module") : null].filter(Boolean).join(" · ") || "0 séance";
+        pied.textContent = "@media print { @page { @bottom-left { content: " + guillemets(cles.length === 1 ? titres[cles[0]] : "Data Science & IA") + "; } } }";
+        form.querySelector("[data-imprimer]").disabled = cles.length === 0;
       }
       // Chrome propose document.title comme nom du fichier PDF : on le pose d'après la sélection juste avant d'imprimer
       // (bouton ou Ctrl+P), et on rend le titre de la page ensuite.
       var titrePage = document.title;
       window.titrePdf = function () {
-        var choisies = cases.filter(function (c) { return c.checked; }).map(function (c) { return c.getAttribute("data-n"); });
-        if (choisies.length === cases.length) return "Cours Data Science & IA";
-        if (choisies.length === 1) return titres[choisies[0]];
-        return "Data Science & IA · séances " + choisies.map(function (n) { return ("0" + n).slice(-2); }).join(", ");
+        var cles = cochees();
+        var s = cles.filter(function (k) { return k[0] === "s"; }), m = cles.filter(function (k) { return k[0] === "m"; });
+        if (s.length === seances.length && !m.length) return "Cours Data Science & IA";
+        if (cles.length === 1) return titres[cles[0]];
+        var morceaux = ["Data Science & IA"];
+        if (s.length) morceaux.push("séances " + (s.length === seances.length ? "00 à 12" : s.map(function (k) { return ("0" + k.slice(1)).slice(-2); }).join(", ")));
+        if (m.length) morceaux.push("modules " + m.map(function (k) { return k.slice(1); }).join(", "));
+        return morceaux.join(" · ");
       };
       window.addEventListener("beforeprint", function () { document.title = window.titrePdf(); });
       window.addEventListener("afterprint", function () { document.title = titrePage; });
       form.querySelector("[data-imprimer]").onclick = function () { document.title = window.titrePdf(); window.print(); };
-      tout.addEventListener("change", function () { cases.forEach(function (c) { c.checked = tout.checked; }); appliquer(); });
+      tout.addEventListener("change", function () { seances.forEach(function (c) { c.checked = tout.checked; }); appliquer(); });
       cases.forEach(function (c) { c.addEventListener("change", appliquer); });
-      var demande = new URLSearchParams(location.search).get("seances");
-      if (demande !== null) { var liste = demande.split(",").map(function (x) { return String(Number(x)); }); cases.forEach(function (c) { c.checked = liste.indexOf(c.getAttribute("data-n")) >= 0; }); }
+      // ?seances=0,5 et ?modules=SO1,B2 : précocher une sélection ; si l'un des deux est donné, l'autre part vide
+      var q = new URLSearchParams(location.search), qs = q.get("seances"), qm = q.get("modules");
+      if (qs !== null || qm !== null) {
+        var voulues = (qs || "").split(",").filter(Boolean).map(function (x) { return "s" + Number(x); })
+          .concat((qm || "").split(",").filter(Boolean).map(function (x) { return "m" + x.trim().toUpperCase(); }));
+        cases.forEach(function (c) { c.checked = voulues.indexOf(c.getAttribute("data-cle")) >= 0; });
+      }
       appliquer();
     })();
   </script>

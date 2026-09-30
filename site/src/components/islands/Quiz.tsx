@@ -11,8 +11,8 @@ import { quizImprime } from "../../data/impression";
  * Cuivre : sur la question en cours tant qu'elle n'est pas validée, plus après. Juste et faux se distinguent par la
  * forme et le libellé (✓ plein / ✗ barré), jamais par la couleur seule.
  */
-export default function Quiz({ seance }: { seance: number }) {
-  const questions = quiz[seance] ?? [];
+export default function Quiz({ cle }: { cle: number | string }) {
+  const questions = quiz[cle] ?? [];
   const [i, setI] = useState(0);
   const [choix, setChoix] = useState<number | null>(null);
   const [valide, setValide] = useState(false);
@@ -106,7 +106,7 @@ export default function Quiz({ seance }: { seance: number }) {
         </div>
       )}
     </div>
-      <ImpressionJeu jeu={quizImprime(seance)} />
+      <ImpressionJeu jeu={quizImprime(cle)} />
     </>
   );
 }

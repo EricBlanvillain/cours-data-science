@@ -12,10 +12,12 @@ interface Props {
   barre?: boolean;
   /** numéro de la séance de la page, pour la mettre en avant dans la barre */
   courant?: number;
+  /** code du module optionnel de la page (SO1, B2…), pour le mettre en avant dans la barre */
+  courantModule?: string;
   /** page fabriquée pour l'impression (le cours complet) : pas d'indexation */
   noindex?: boolean;
 }
-const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture", barre = false, courant, noindex = false } = Astro.props;
+const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture", barre = false, courant, courantModule, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -153,7 +155,7 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
           <button type="button" class="lien-mono" data-bascule-barre aria-controls="laterale" aria-expanded="true" onclick="window.barre.basculer()">← Masquer les séances</button>
         </p>
       )}
-      {barre && <Laterale courant={courant} />}
+      {barre && <Laterale courant={courant} courantModule={courantModule} />}
       <div class="contenu">
         <slot />
       </div>

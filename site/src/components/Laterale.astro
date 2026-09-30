@@ -7,13 +7,20 @@
  *   en cours            pastille pleine cuivre, texte appuyé   ← cuivre : pas encore résolu, comme sur la carte
  *   pas encore faite    pastille vide cerclée de cuivre, texte neutre
  *   leçon en préparation  titre en retrait, sans lien, même libellé que sur la carte, en rouge ; la pastille suit la progression
- * L'état est posé par le script de progression (data-etat sur chaque [data-seance]). `courant` = la séance de la page.
+ * Après le bloc 4, le groupe « Modules optionnels » (collection `modules`) : pastille invisible, comme les pages
+ * transverses, et le code (SO1, B2…) dans la colonne des numéros. Pas de data-seance : hors de la progression et du
+ * compteur « Séances terminées ».
+ * L'état est posé par le script de progression (data-etat sur chaque [data-seance]). `courant` = la séance de la page,
+ * `courantModule` = le code du module de la page.
  * Repliable (window.barre, état gardé dans le navigateur) ; remplacée par un menu en haut sous 900 px.
  */
+import { getCollection } from "astro:content";
 import { seances, blocs } from "../data/seances";
+import { trierModules } from "../data/modules";
 
-interface Props { courant?: number }
-const { courant } = Astro.props;
+interface Props { courant?: number; courantModule?: string }
+const { courant, courantModule } = Astro.props;
+const modules = trierModules(await getCollection("modules"));
 const chemin = Astro.url.pathname;
 
 const parBloc = [0, 1, 2, 3, 4].map((b) => ({
@@ -52,6 +59,22 @@ const total = seances.length;
         </ol>
       </>
     ))}
+    {modules.length > 0 && (
+      <>
+        <p class="etiquette">Modules optionnels</p>
+        <ol>
+          {modules.map((m) => (
+            <li class="module-optionnel" aria-current={m.data.code === courantModule ? "page" : undefined}>
+              <a href={`/modules/${m.id}`}>
+                <span class="pastille invisible" aria-hidden="true"></span>
+                <span class="num">{m.data.code}</span>
+                <span class="titre">{m.data.titre}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </>
+    )}
     <hr />
     <ol>
       {transverses.map((t) => (

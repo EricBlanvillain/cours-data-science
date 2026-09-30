@@ -70,6 +70,26 @@ puis du Markdown. Un composant s'importe en tête du fichier et se pose dans le 
 (`<TroisCercles />`, ou `<Frise client:load />` pour un composant React). Ajoute ensuite le `slug`
 dans `src/data/seances.ts` pour que la carte de la page d'accueil devienne cliquable.
 
+## Écrire une page de module
+
+Un module optionnel = un fichier `src/content/modules/<dossier-en-minuscules>.mdx` (le nom du dossier du dépôt, en
+minuscules), publié à `/modules/<slug>` par `src/pages/modules/[slug].astro`. Frontmatter (schéma dans
+`src/content.config.ts`) : `code` (SO1, SO2, B1 à B4), `type` (`seance` ou `projet`), `titre`, `niveau` (★), `resume`,
+`duree` (« 1 h 30 » par défaut), `livrable`, `prerequis` (une liste de numéros de séance ou de codes de module, dont la page
+fait des liens et que le lint vérifie), `prerequisNote` (la précision, par exemple « l'un des deux suffit »), `objectifs`
+(3 au plus), `aRetenir` (5 au plus). Même ouverture et même corps qu'une leçon (`CorpsLecon`) ; libellé « Séance optionnelle 1
+· ★ · 1 h 30 » ou « Projet B2 · ★★★ · 1 h 30 », objectifs « À la fin de la séance » ou « À la fin du projet ».
+
+- **Séance optionnelle** (`type: seance`) : une leçon, avec les mêmes règles que les séances 2 à 12 (vocabulaire des blocs,
+  625 mots visibles, un quiz de 4 questions dans `src/data/quiz.ts` à la clé SO1 ou SO2, un jeu seulement si un îlot existant
+  convient, la relecture ci-dessous, la règle 5 s'appliquant à ses notebooks).
+- **Projet** (`type: projet`) : une page de projet, pas une leçon (l'enseignement est dans les séances 9 à 12). Ce qu'on
+  construit (un schéma SVG du circuit), les prérequis, le déroulé en courte liste avec les durées exactes du README, le
+  livrable, la grille d'évaluation (4 colonnes au plus) et la rangée `BoutonsSeance` (Colab et dossier GitHub). Ni quiz ni
+  jeu : le lint refuse un quiz pour un projet. 625 mots visibles ; relecture, points 2 à 5.
+- Les deux règles du bloc 4 (sorties de modèle, faits sur des modèles ou des entreprises réels) valent pour les six pages. Un
+  facteur de vitesse n'apparaît que mesuré par un passage, avec la machine et la date dans l'en-tête des données.
+
 ## Blocs d'une leçon
 
 Le vocabulaire est fermé : une leçon n'utilise que ces blocs, et `npm run lint:lecons` (lancé en tête de `npm run build`, donc par
@@ -195,12 +215,13 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
   3. **action** : vide si pas encore faite (le déblocage sert à ne pas commencer la suivante par accident, on n'annonce pas la
      porte ; le titre reste cliquable) ; « Ouvrir la leçon → » ou « Ouvrir les notebooks ↗ » si en cours ; « Relire la leçon → »
      ou « Revoir les notebooks ↗ » si terminée. La bande garde la hauteur d'un bouton même vide.
-- Après le bloc 4, la section **Modules optionnels** (les deux séances optionnelles et le module B1 à B4, `modulesOptionnels`
-  dans `src/data/seances.ts`) reprend la même grille et la même carte. Pied neutre, « Notebooks · module optionnel », sans
-  pastille ni rouge : ces modules n'ont pas de leçon par choix, ce ne sont pas des leçons à écrire. Actions : « Ouvrir dans
-  Colab ↗ » pour le notebook principal quand il y en a un, « Ouvrir sur GitHub ↗ » pour le dossier. Pas de `data-seance` :
-  hors de la progression, du compteur « séances restantes » et de la barre latérale. Les projets de réserve (A1 à A6) n'y
-  figurent pas.
+- Après le bloc 4, la section **Modules optionnels** se construit depuis la collection `modules` (la seule liste des
+  modules), en deux groupes : « Séances optionnelles » (SO1, SO2) et « Projets d'IA agentique » (B1 à B4, avec la ligne
+  « Prérequis conseillés : les séances 9 à 12. B4 se fait après B1 ou B2. »). Même grille, même carte : titre lié à la page,
+  pied neutre sans pastille (« Leçon en ligne · module optionnel » ou « Projet en ligne · module optionnel »), action « Ouvrir
+  la leçon → » ou « Ouvrir le projet → ». Une carte n'apparaît qu'avec sa page ; sans page, pas de section. Pas de
+  `data-seance` : hors de la progression et du compteur « séances restantes ». Les projets de réserve (A1 à A6) n'y figurent
+  pas.
 - Trois registres IBM Plex : le serif parle (titres), le sans explique (corps), le mono mesure (labels `.etiquette`, chiffres
   `.chiffre`, boutons). Interlettrage : label 0,14 em, wide 0,2 em, field 0,06 em. Transitions : `cubic-bezier(0.23, 1, 0.32, 1)`.
 - Les états de survol sont limités aux appareils qui survolent (`@media (hover: hover)`, et Tailwind v4 fait de même pour `hover:`).
@@ -225,7 +246,7 @@ colonne de prose garde son plafond de 46 rem quelle que soit la page : dans le t
 - **Mini-quiz** : `Tab` jusqu'au quiz, `1` à `4` pour choisir, `Entrée` pour valider puis passer à la suivante.
 - **Terminer une séance** : bouton en bas de la leçon ; `?ouvrir=N` dans l'URL pour ouvrir une séance à la main.
 
-## La barre latérale (leçons et pages transverses)
+## La barre latérale (leçons, modules et pages transverses)
 
 `src/components/Laterale.astro`, posée par `Base.astro` quand une page passe `barre` (et `courant={n}` pour mettre la séance
 de la page en avant). Elle montre les blocs en sur-titre, les séances numérotées avec une pastille, un séparateur, les pages
@@ -234,7 +255,9 @@ transverses **qui existent** (aujourd'hui : Glossaire ; pas d'entrée grisée po
 neutre ; en cours = pastille pleine cuivre, texte appuyé ; pas encore faite = pastille vide cerclée de cuivre, texte neutre ; leçon
 en préparation = titre en retrait sans lien, libellé « Notebooks seuls · leçon à écrire » en rouge, la pastille suit la progression. Repliable (bouton en
 tête du contenu, état gardé dans le navigateur, clé `cours-data-science-barre`) ; sous 900 px, c'est un menu en haut, fermé par
-défaut. Sans JavaScript, dépliée sur grand écran.
+défaut. Sans JavaScript, dépliée sur grand écran. Après le bloc 4, le groupe « Modules optionnels » (collection `modules`,
+`courantModule` pour mettre en avant le module de la page) : pastille invisible, comme les pages transverses, et le code du
+module (SO1, B2…) dans la colonne des numéros ; ni progression ni compteur.
 
 ## Le thème
 
@@ -255,4 +278,6 @@ Trois états par séance, gardés dans le navigateur (localStorage, clé `cours-
 ouvre la N+1. Rien n'est bloqué : une séance pas encore faite s'affiche avec un bandeau cuivre. Pour ouvrir une séance à la main : `?ouvrir=3` dans l'URL. Pour un nouveau
 groupe : le lien « Réinitialiser » du pied de page, ou `?reinitialiser=1`. L'état est propre à l'appareil : une autre machine
 repart de zéro, et c'est voulu. Le script vit dans `src/layouts/Base.astro` (classique, en ligne : il tourne aussi depuis le disque)
-et expose `window.progression` (`etat`, `terminer`, `annuler`, `ouvrir`, `reinitialiser`, `restantes`).
+et expose `window.progression` (`etat`, `terminer`, `annuler`, `ouvrir`, `reinitialiser`, `restantes`). Les modules optionnels
+n'entrent pas dans la progression : pas de `data-seance`, pas de bandeau « pas encore faite », pas de bouton « terminée »,
+comptés nulle part.
