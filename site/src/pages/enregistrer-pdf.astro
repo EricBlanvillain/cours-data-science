@@ -27,13 +27,13 @@ const titres = Object.fromEntries(lecons.map((l) => [l.data.numero, `Séance ${n
         ))}
       </ul>
     </fieldset>
-    <p class="boutons-pdf mt-6"><button type="button" class="bouton principal" data-imprimer onclick="window.print()">Enregistrer la sélection en PDF</button></p>
+    <p class="boutons-pdf mt-6"><button type="button" class="bouton principal" data-imprimer>Enregistrer la sélection en PDF</button></p>
     <p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
   </form>
 
   <section class="couverture" style="padding-top: 6rem;">
     <p class="mono-caps" style="color: var(--encre-2);">Cours · notebooks et exercices sur GitHub</p>
-    <h1 class="hero-titre" style="margin-top: 1rem;">Data Science &amp; IA · <span data-nombre>{lecons.length} séances</span></h1>
+    <h1 class="hero-titre" style="margin-top: 1rem;"><span style="white-space: nowrap;">Data Science &amp; IA</span><span data-nombre style="display: block;">{lecons.length} séances</span></h1>
     <p style="max-width: 40rem; margin-top: 2rem;">Comprendre les données et l'IA, en construisant. Python, données, machine learning, puis l'IA générative.</p>
     <p class="discret" style="margin-top: 1.5rem;">https://cours-data-science.vercel.app</p>
   </section>
@@ -74,6 +74,18 @@ const titres = Object.fromEntries(lecons.map((l) => [l.data.numero, `Séance ${n
         pied.textContent = "@media print { @page { @bottom-left { content: " + guillemets(choisies.length === 1 ? titres[choisies[0]] : "Data Science & IA") + "; } } }";
         form.querySelector("[data-imprimer]").disabled = choisies.length === 0;
       }
+      // Chrome propose document.title comme nom du fichier PDF : on le pose d'après la sélection juste avant d'imprimer
+      // (bouton ou Ctrl+P), et on rend le titre de la page ensuite.
+      var titrePage = document.title;
+      window.titrePdf = function () {
+        var choisies = cases.filter(function (c) { return c.checked; }).map(function (c) { return c.getAttribute("data-n"); });
+        if (choisies.length === cases.length) return "Cours Data Science & IA";
+        if (choisies.length === 1) return titres[choisies[0]];
+        return "Data Science & IA · séances " + choisies.map(function (n) { return ("0" + n).slice(-2); }).join(", ");
+      };
+      window.addEventListener("beforeprint", function () { document.title = window.titrePdf(); });
+      window.addEventListener("afterprint", function () { document.title = titrePage; });
+      form.querySelector("[data-imprimer]").onclick = function () { document.title = window.titrePdf(); window.print(); };
       tout.addEventListener("change", function () { cases.forEach(function (c) { c.checked = tout.checked; }); appliquer(); });
       cases.forEach(function (c) { c.addEventListener("change", appliquer); });
       var demande = new URLSearchParams(location.search).get("seances");

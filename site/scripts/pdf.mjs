@@ -93,6 +93,18 @@ const PREPARER = (largeur) => `(() => {
   return JSON.stringify({ coupes, jeux, corriges, sansCorrige, ilotsVisibles });
 })()`;
 
+// Relire un PDF avec PDFKit (macOS, via swift) : son titre (le nom de fichier que Chrome propose) et le texte de la bande
+// du haut de la page 2, où l'en-tête de Chrome s'imprimerait. Sans swift, ce contrôle est signalé comme non fait.
+const LIRE = path.join(os.tmpdir(), "lire-pdf.swift");
+fs.writeFileSync(LIRE, `import PDFKit
+let d = PDFDocument(url: URL(fileURLWithPath: CommandLine.arguments[1]))!
+let titre = (d.documentAttributes?[PDFDocumentAttribute.titleAttribute] as? String) ?? ""
+var haut = ""
+if d.pageCount > 1, let p = d.page(at: 1) { let b = p.bounds(for: .mediaBox); haut = p.selection(for: CGRect(x: 0, y: b.height - 45, width: b.width, height: 45))?.string ?? "" }
+let o = try! JSONSerialization.data(withJSONObject: ["titre": titre, "haut": haut.trimmingCharacters(in: .whitespacesAndNewlines)])
+print(String(data: o, encoding: .utf8)!)
+`);
+const lire = (fichier) => { try { return JSON.parse(execFileSync("swift", [LIRE, fichier], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })); } catch { return null; } };
 const pages = (fichier) => (fs.readFileSync(fichier, "latin1").match(/\/Type\s*\/Page[^s]/g) || []).length;
 
 async function imprimer(url, fichier) {
@@ -103,10 +115,14 @@ async function imprimer(url, fichier) {
   await charge;
   await new Promise((r) => setTimeout(r, 1500));      // îlots et polices
   const { result } = await envoyer("Runtime.evaluate", { expression: PREPARER(LARGEUR_UTILE), returnByValue: true }, s);
+  // comme le bouton « Enregistrer la sélection en PDF » : le titre du document devient le nom de fichier proposé
+  await envoyer("Runtime.evaluate", { expression: "if (window.titrePdf) document.title = window.titrePdf();" }, s);
   const controle = JSON.parse(result.value);
   await envoyer("Emulation.clearDeviceMetricsOverride", {}, s);
   // comme « Enregistrer au format PDF » : la page, les marges et le pied viennent du CSS, pas d'un gabarit Chrome
-  const { data } = await envoyer("Page.printToPDF", { preferCSSPageSize: true, printBackground: false, displayHeaderFooter: false, generateDocumentOutline: true }, s);
+  // En-têtes et pieds de page de Chrome ACTIVÉS (gabarits par défaut : date et titre en haut), comme chez un élève qui a
+  // laissé l'option cochée : les boîtes de marge de @page doivent les remplacer.
+  const { data } = await envoyer("Page.printToPDF", { preferCSSPageSize: true, printBackground: false, displayHeaderFooter: true, generateDocumentOutline: true }, s);
   fs.writeFileSync(fichier, Buffer.from(data, "base64"));
   return { ...controle, pages: pages(fichier), octets: fs.statSync(fichier).size };
 }
@@ -130,8 +146,10 @@ console.log(`\n2. impression dans .verif-pdf/ par la page d'export (portée : ${
 for (const { fichier, url } of retenus) {
   const r = await imprimer(`http://127.0.0.1:${PORT}/${url}`, path.join(SORTIE, fichier));
   const problemes = [...r.coupes.map((c) => `texte coupé à droite : ${c}`), ...r.sansCorrige.map((c) => `corrigé manquant : ${c}`), ...r.ilotsVisibles.map((i) => `îlot interactif imprimé tel quel : ${i}`)];
+  const lu = lire(path.join(SORTIE, fichier));
+  if (lu && lu.haut) problemes.push(`en-tête imprimé en haut de page : « ${lu.haut.slice(0, 80)} »`);
   fautes += problemes.length;
-  console.log(`${problemes.length ? "✗" : "·"} ${fichier.padEnd(18)} ${String(r.pages).padStart(3)} pages · ${(r.octets / 1024).toFixed(0).padStart(5)} Ko · ${r.jeux} jeu(x) imprimé(s), ${r.corriges} corrigé(s)`);
+  console.log(`${problemes.length ? "✗" : "·"} ${fichier.padEnd(18)} ${String(r.pages).padStart(3)} pages · ${(r.octets / 1024).toFixed(0).padStart(5)} Ko · ${r.jeux} jeu(x) imprimé(s), ${r.corriges} corrigé(s) · ${lu ? `haut de page vide : ${lu.haut ? "non" : "oui"} · nom proposé : « ${lu.titre}.pdf »` : "PDFKit indisponible : en-tête et nom non vérifiés"}`);
   problemes.slice(0, 12).forEach((p) => console.log("    !! " + p));
 }
 ws.close(); serveur.close();

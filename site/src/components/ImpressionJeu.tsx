@@ -20,7 +20,12 @@ export default function ImpressionJeu({ jeu }: { jeu: JeuImprime | null }) {
         {jeu.items.map((it, i) => (
           <li key={i}>
             {it.enonce}
-            {it.options && <ul className="jeu-imprime-options">{it.options.map((o) => <li key={o}>{o}</li>)}</ul>}
+            {/* une case à cocher par choix : les options propres à la situation (quiz, duels), sinon les choix du jeu */}
+            {it.options ? (
+              <ul className="jeu-imprime-options">{it.options.map((o) => <li key={o}><span className="case" aria-hidden="true" />{o}</li>)}</ul>
+            ) : jeu.etiquettes.length > 0 && (
+              <span className="jeu-imprime-cases">{jeu.etiquettes.map((e) => <span key={e}><span className="case" aria-hidden="true" />{e}</span>)}</span>
+            )}
           </li>
         ))}
       </ol>
