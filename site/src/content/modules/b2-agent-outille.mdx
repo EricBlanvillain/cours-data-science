@@ -1,0 +1,65 @@
+---
+code: B2
+type: projet
+titre: Un agent qui sait choisir son outil
+niveau: ★★★
+resume: Une boucle d'agent écrite à la main, avec une boîte à outils Python ; l'agent choisit le bon outil, lit son résultat, et se rattrape quand un outil échoue.
+livrable: Le notebook complété (quatre outils au moins, dont un à toi, la boucle bornée, les tests), et sa fiche projet.
+prerequis:
+  - 10
+  - 12
+objectifs:
+  - Tu sauras écrire des outils Python sûrs et les tester sans agent.
+  - Tu sauras écrire la boucle qui repère l'appel d'outil, l'exécute et renvoie le résultat au modèle.
+  - Tu sauras renvoyer chaque erreur au modèle en texte, et borner le nombre de tours.
+---
+import CircuitProjet from "../../components/schemas/CircuitProjet.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Ce que tu construis
+
+Un modèle de langage seul calcule mal, ne connaît pas tes fichiers et ne sait pas quel temps il fait : il répond quand même, et il invente. Ton agent a une boîte à outils, et une réponse qu'on peut vérifier.
+
+<CircuitProjet
+  titre="La boucle de l'agent outillé"
+  cle={2}
+  etapes={[
+    { mot: "question", ligne: "en français", sous: "calcul, donnée, météo" },
+    { mot: "le modèle", ligne: "lit le prompt", sous: "qui décrit les outils" },
+    { mot: "l'appel", ligne: "OUTIL: nom(args)", sous: "repéré par regex" },
+    { mot: "Python", ligne: "exécute l'outil", sous: "ou renvoie l'erreur" },
+    { mot: "le résultat", ligne: "repart au modèle", sous: "tour suivant" },
+    { mot: "la réponse", ligne: "vérifiable", sous: "au plus max_tours" },
+  ]}
+  legende="L'agent tourne en boucle : le modèle demande un outil, Python l'exécute, le résultat repart au modèle."
+/>
+
+Pas de framework : la boucle est la tienne. La météo est simulée, pour que l'agent tourne partout, même sans réseau ; avec `USE_MODEL = False`, un faux modèle suit le protocole, et c'est ta boucle qui est testée.
+
+## Le déroulé
+
+- **0-10 min** · la préparation, et le schéma « question → modèle → outil → Python → résultat → réponse » ;
+- **10-30 min** · écrire les outils un par un et les tester sans agent : `calculer` (avec `ast`, pas `eval`), `chercher_ligne`, `meteo`, `aujourdhui` (exercices 1 à 3) ;
+- **30-50 min** · la boucle : le prompt système qui décrit les outils, l'extraction de l'appel, la trace (exercices 4 à 6) ;
+- **50-65 min** · le choix du bon outil sur 6 questions de types différents ;
+- **65-80 min** · ce qui rate : outil inconnu, arguments invalides, division par zéro, ville inconnue, boucle sans fin ;
+- **80-90 min** · ajouter **ton** outil (exercice 7), refaire tourner les tests, remplir la fiche projet.
+
+Si le temps manque, arrête-toi après le choix de l'outil : les erreurs font une très bonne reprise au créneau suivant.
+
+## Le livrable
+
+`B2_agent_outille.ipynb` : au moins 4 outils, dont un écrit par toi, la boucle bornée, le tableau des 6 questions de test avec l'outil choisi, les cas d'échec traités, et la fiche projet (ce que l'agent choisit bien, ce qu'il choisit mal, ce que tu ajouterais).
+
+## La grille d'évaluation
+
+| Critère | En route | Atteint | Dépassé |
+|---|---|---|---|
+| Les outils | un seul, ou qui plantent | 4 outils testés seuls, chacun documenté | un 5e outil à toi, décrit dans le prompt |
+| La calculatrice | `eval()` sur le texte du modèle | `calculer("import os")` refuse proprement | cas limites testés, message lisible par le modèle |
+| La boucle | l'outil jamais exécuté | appel extrait, exécuté, renvoyé, boucle bornée | chaque tour tracé, arrêt propre à la borne |
+| Le choix | toujours le même outil | 5 bons choix sur 6, notés dans un tableau | erreurs de choix corrigées dans le prompt |
+| Les ratés | une erreur fait planter | chaque erreur revient au modèle en message | l'agent se rattrape, trace à l'appui |
+| Ça tourne | des cellules plantent | tout passe, faux modèle et vrai modèle | la fiche remplie, un échec expliqué |
+
+<BoutonsSeance dossier="B2-agent-outille" racine="projets-optionnels/projet-optionnel-avance-ia-agentique" lecon="B2_agent_outille.ipynb" libelle="Ouvrir le notebook dans Colab" />
