@@ -1,0 +1,66 @@
+---
+code: B3
+type: projet
+titre: L'analyste automatique (avec un humain dans la boucle)
+niveau: ★★★
+resume: Un agent qui explore seul un fichier CSV, écrit un mini-rapport et propose trois graphiques, mais ne fait rien sans ton accord.
+livrable: Le notebook complété sur un CSV de ton choix (le rapport, les graphiques acceptés, le journal des décisions), et sa fiche projet.
+prerequis:
+  - 4
+  - 5
+  - 12
+objectifs:
+  - Tu sauras décrire n'importe quel tableau par un dictionnaire de faits, sans nom de colonne écrit en dur.
+  - Tu sauras faire rédiger un rapport par un modèle, et vérifier qu'il n'invente aucun chiffre.
+  - Tu sauras faire valider chaque étape par un humain, et respecter un refus.
+---
+import CircuitProjet from "../../components/schemas/CircuitProjet.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Ce que tu construis
+
+Devant un CSV inconnu, on refait toujours les mêmes gestes : regarder les colonnes, compter les manquants, sortir des statistiques, choisir quoi tracer. Ton agent les fait seul ; toi, tu valides ou tu refuses chaque proposition.
+
+<CircuitProjet
+  titre="Le circuit de l'analyste automatique"
+  cle={1}
+  etapes={[
+    { mot: "le CSV", ligne: "le tien", sous: "ou celui d'exemple" },
+    { mot: "décrire", ligne: "decrire(df)", sous: "un dictionnaire de faits" },
+    { mot: "statistiques", ligne: "selon le type", sous: "et alertes" },
+    { mot: "le rapport", ligne: "mis en phrases", sous: "aucun chiffre inventé" },
+    { mot: "graphiques", ligne: "3 proposés", sous: "une règle de choix" },
+    { mot: "l'humain", ligne: "DECISIONS", sous: "oui, non, ou consigne" },
+  ]}
+  legende="L'agent propose, l'humain dispose : chaque étape passe par ta liste de décisions."
+/>
+
+Pas d'`input()` : la validation se fait en éditant la liste `DECISIONS` dans une cellule, pour que le notebook se relance de haut en bas. Avec `USE_MODEL = False`, le faux modèle rédige à partir des chiffres que ton code a calculés : l'analyse est vraie, seule la rédaction est factice.
+
+## Le déroulé
+
+- **0-10 min** · la préparation, le principe « l'agent propose, l'humain dispose », le plan en 4 étapes ;
+- **10-25 min** · charger le CSV et écrire `decrire(df)` : forme, types, manquants, cardinalité (exercices 1 et 2) ;
+- **25-45 min** · les statistiques selon le type de colonne, et les alertes automatiques (exercices 3 et 4) ;
+- **45-60 min** · le mini-rapport rédigé à partir des faits, puis une question posée en français et sa liste blanche (exercices 5 et 6) ;
+- **60-80 min** · les 3 graphiques proposés, la validation `DECISIONS`, le tracé de ceux que tu acceptes (exercice 7) ;
+- **80-90 min** · le journal des décisions et la fiche projet.
+
+Si le temps manque, arrête-toi après le rapport : les graphiques et la validation font une reprise idéale au créneau suivant.
+
+## Le livrable
+
+`B3_analyste_automatique.ipynb`, complété sur **un CSV de ton choix** : le rapport automatique, les 3 graphiques proposés dont au moins 2 acceptés et tracés, le journal des décisions, et la fiche projet (ce que l'agent a bien vu, ce qu'il a raté, ce qu'un humain apporte encore).
+
+## La grille d'évaluation
+
+| Critère | En route | Atteint | Dépassé |
+|---|---|---|---|
+| L'exploration | un `df.head()` seul | `decrire(df)` marche sur n'importe quel CSV | alertes : quasi-constante, identifiant, doublons |
+| Les statistiques | un `describe()` recopié | choisies selon le type, lues en une phrase | valeurs aberrantes quantifiées et discutées |
+| Le rapport | du texte générique | 10 lignes, chaque chiffre vient de ton code | un chiffre inventé repéré et montré |
+| Les graphiques | trois au hasard | trois types justifiés, titres et axes nommés | le refusé remplacé, la règle expliquée |
+| L'humain | l'agent fait tout seul | chaque étape passe par `DECISIONS` | un refus argumenté qui change le résultat |
+| Ça tourne | un seul fichier | le CSV d'exemple et un second, sans rien changer | un troisième fichier difficile passe |
+
+<BoutonsSeance dossier="B3-analyste-automatique" racine="projets-optionnels/projet-optionnel-avance-ia-agentique" lecon="B3_analyste_automatique.ipynb" libelle="Ouvrir le notebook dans Colab" />
