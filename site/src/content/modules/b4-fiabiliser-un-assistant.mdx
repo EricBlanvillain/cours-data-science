@@ -1,0 +1,66 @@
+---
+code: B4
+type: projet
+titre: "Fiabiliser un assistant : banc de test, hallucinations, garde-fous"
+niveau: ★★★
+resume: Mesurer un assistant sur un banc de 15 questions, repérer ses hallucinations, poser trois garde-fous, puis remesurer pour prouver que ça va mieux.
+livrable: Le notebook complété (le banc, le tableau avant / après, le graphique, les trois garde-fous), et sa fiche projet avec ses quatre chiffres.
+prerequis:
+  - B1
+  - B2
+prerequisNote: l'un des deux suffit
+objectifs:
+  - Tu sauras écrire un banc de test et mesurer un taux de bonnes réponses reproductible.
+  - Tu sauras définir une hallucination de façon mesurable et la compter.
+  - Tu sauras poser un garde-fou, mesurer son effet et dire ce qu'il coûte.
+---
+import CircuitProjet from "../../components/schemas/CircuitProjet.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Ce que tu construis
+
+« Ça marche » n'est pas un résultat : un assistant qui répond juste six fois sur dix et invente le reste du temps a l'air parfaitement convaincant. Ici, on mesure d'abord, on corrige ensuite, et on remesure sur les mêmes questions.
+
+<CircuitProjet
+  titre="Le circuit de la fiabilisation"
+  cle={1}
+  etapes={[
+    { mot: "l'assistant", ligne: "celui de B1", sous: "tel quel" },
+    { mot: "le banc", ligne: "15 questions", sous: "4 familles" },
+    { mot: "mesurer", ligne: "bonnes réponses", sous: "et refus" },
+    { mot: "hallucinations", ligne: "sans appui", sous: "dans le contexte" },
+    { mot: "garde-fous", ligne: "3, activables", sous: "un par un" },
+    { mot: "remesurer", ligne: "avant / après", sous: "et ce que ça coûte" },
+  ]}
+  legende="On ne corrige que ce qu'on a mesuré : le même banc passe avant et après les garde-fous."
+/>
+
+Toute l'évaluation tourne en `USE_MODEL = False` : le faux modèle est ici plus pratique, parce qu'il est déterministe. Deux mesures doivent donner deux fois le même chiffre, sinon on ne compare rien.
+
+## Le déroulé
+
+- **0-10 min** · recopier l'assistant à fiabiliser (celui de B1 dans le notebook ; tes propres notes si tu en as), le faire tourner tel quel ;
+- **10-30 min** · compléter le banc de test : 8 questions sont fournies, tu écris les 7 autres, 3 pièges, 3 hors sujet et 1 ambiguë (exercice 1) ;
+- **30-45 min** · la mesure automatique : reconnaître un refus, compter une bonne réponse, passer tout le banc (exercices 2 à 4) ;
+- **45-60 min** · la détection d'hallucination : une réponse affirmative sans appui dans le contexte, son taux, les pires exemples (exercices 5 et 6) ;
+- **60-75 min** · les garde-fous : un seuil de similarité, une consigne de refus renforcée, une vérification après coup (exercice 7) ;
+- **75-90 min** · l'avant / après sur les mêmes 15 questions, le graphique, le coût des garde-fous, la fiche projet.
+
+Si le temps manque, arrête-toi après les hallucinations : tu as le chiffre de départ, le plus dur. Les garde-fous font une reprise nette au créneau suivant.
+
+## Le livrable
+
+`B4_fiabiliser_un_assistant.ipynb` : le banc de 15 questions, le tableau des résultats avant et après, le graphique de comparaison, les 3 garde-fous codés, et la fiche projet : taux de bonnes réponses avant → après, taux d'hallucinations avant → après, ce que les garde-fous ont coûté.
+
+## La grille d'évaluation
+
+| Critère | En route | Atteint | Dépassé |
+|---|---|---|---|
+| Le banc | moins de 15 questions | 15 questions, réponse et comportement attendus | écrites avant de voir les réponses, rangées dans un fichier |
+| La mesure | jugée à l'œil | un taux reproductible d'une exécution à l'autre | un cas où la mesure se trompe, montré |
+| Les hallucinations | le mot sans définition | une définition mesurable et un taux | classées par cause |
+| Les garde-fous | un seul, ou sans effet mesuré | 3, activables séparément, effet de chacun | le seuil réglé sur des données |
+| L'avant / après | un seul chiffre | le même banc deux fois, écart commenté | le coût assumé : bonnes réponses perdues contre hallucinations évitées |
+| Le bilan | « ça marche mieux », sans chiffre | les 4 chiffres et une faiblesse nommée | une piste testable pour cette faiblesse |
+
+<BoutonsSeance dossier="B4-fiabiliser-un-assistant" racine="projets-optionnels/projet-optionnel-avance-ia-agentique" lecon="B4_fiabiliser_un_assistant.ipynb" libelle="Ouvrir le notebook dans Colab" />
