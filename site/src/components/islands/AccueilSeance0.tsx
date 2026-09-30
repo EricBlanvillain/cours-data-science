@@ -1,25 +1,16 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Affirmation, { type Avis } from "./Affirmation";
+import { QUIZ_IA } from "../../data/accueil";
+import { affirmations, ACTIVE } from "../../data/affirmations";
+import ImpressionJeu from "../ImpressionJeu";
+import { jeuxImprimes } from "../../data/impression";
 
 /**
  * Les cinq écrans de la séance 0, portés depuis seances/seance-00-faire-connaissance/accueil.html.
  * Même contenu, même logique : tout ce qui est saisi vit dans l'état React, rien n'est stocké ailleurs.
  */
 
-const QUIZ = [
-  { id: "correcteur", titre: "Le correcteur orthographique du téléphone", ia: "oui",
-    pourquoi: "Oui. Il a appris sur des millions de textes ce que tu vas probablement taper. C'est du machine learning, le même mécanisme que ChatGPT, en tout petit." },
-  { id: "youtube", titre: "Les recommandations YouTube", ia: "oui",
-    pourquoi: "Oui. Personne n'a écrit la règle « après cette vidéo, propose celle-là ». Un modèle l'a apprise sur ce que regardent des centaines de millions de personnes." },
-  { id: "chatgpt", titre: "ChatGPT", ia: "oui",
-    pourquoi: "Oui, dans sa version la plus récente : le deep learning. Il prédit le mot suivant, appris sur une bonne partie d'Internet. On le construit en miniature à la séance 9." },
-  { id: "gps", titre: "Le GPS qui calcule l'itinéraire le plus rapide", ia: "oui",
-    pourquoi: "Oui, mais rien n'est appris : un algorithme des années 1950, écrit à la main, cherche le plus court chemin. C'est de l'IA « classique », un raisonnement fait de règles." },
-  { id: "snapchat", titre: "Un filtre Snapchat", ia: "oui",
-    pourquoi: "Oui. Pour poser des oreilles de chat au bon endroit, il faut trouver le visage trente fois par seconde : c'est un réseau de neurones entraîné sur des millions de visages." },
-  { id: "calculatrice", titre: "La calculatrice", ia: "non",
-    pourquoi: "Non. Elle applique des règles fixes, et personne ne dit qu'une calculatrice « réfléchit ». C'est de l'informatique, très utile, mais pas de l'IA. Un tableur non plus." },
-] as const;
+const QUIZ = QUIZ_IA;
 
 const LANGAGES = ["Scratch", "Python", "JavaScript", "Mods de jeu", "HTML", "Rien pour l'instant"];
 const OUTILS = ["ChatGPT", "Claude", "Gemini", "Midjourney", "Aucun"];
@@ -137,7 +128,12 @@ export default function AccueilSeance0() {
     return () => document.body.classList.remove("avec-barre-basse");
   }, []);
 
+  const affirmation = affirmations[ACTIVE];
+  const lignes = (n: number) => <div className="lignes-a-ecrire" aria-hidden="true">{Array.from({ length: n }, (_, i) => <span key={i} />)}</div>;
+  const cases = (valeurs: readonly string[]) => <ul className="cases-a-cocher">{valeurs.map((v) => <li key={v}><span className="case" aria-hidden="true" />{v}</li>)}</ul>;
+
   return (
+    <>
     <div ref={racine}>
       {/* les cinq étapes, en repère ; la jauge et les commandes sont dans la barre épinglée en bas */}
       <ol className="mono etapes-ecrans">
@@ -330,5 +326,54 @@ export default function AccueilSeance0() {
         </div>
       </nav>
     </div>
+
+    {/* À l'impression : les six écrans à la suite, en contenu fixe, avec des lignes et des cases à remplir à la main.
+        Les réponses du quiz « Est-ce de l'IA ? » sont dans le corrigé, en fin de leçon (src/data/impression.ts). */}
+    <div className="imprime-seul accueil-imprime">
+      <section>
+        <p className="mono-caps">Séance 0 · Faire connaissance</p>
+        <h3>Data Science &amp; IA en 12 séances</h3>
+        <p>Python, données, machine learning, puis l'IA générative. Tout dans le navigateur, rien à installer.</p>
+        <ol>
+          <li>À la fin, vous aurez un <b>portfolio sur GitHub</b> : quatre projets faits de vos mains, visibles par n'importe qui avec un lien.</li>
+          <li>Un <b>modèle de prédiction</b> avec un vrai score dans un <b>classement mondial</b> (la compétition Kaggle Titanic).</li>
+          <li>Un <b>assistant IA</b> construit par vous, qui répond à des questions sur <b>vos propres cours</b>.</li>
+        </ol>
+        <p className="mono-caps">Qui je suis</p>
+        <dl className="lignes">{QUI.map(([libelle, ligne]) => <div key={libelle}><dt className="mono-caps">{libelle}</dt><dd>{ligne}</dd></div>)}</dl>
+      </section>
+      <section>
+        <h3>Une affirmation, deux avis</h3>
+        <p>Mon objectif : que vous compreniez les fondamentaux de l'IA, ce que ça change concrètement dans votre quotidien comme dans votre futur métier, et comment l'utiliser tous les jours.</p>
+        <p className="accueil-affirmation">« {affirmation.texte} »</p>
+        <p><b>Pas d'accord.</b> {affirmation.contre}</p>
+        <p><b>D'accord.</b> {affirmation.pour}</p>
+        <p className="discret">{affirmation.cloture}</p>
+      </section>
+      <section>
+        <h3>C'est quoi l'IA, pour toi ?</h3>
+        <p>Pas de bonne réponse. Écris ce qui te vient, en une phrase ou en trois mots. On en reparle à la fin.</p>
+        {lignes(4)}
+      </section>
+      <section>
+        <ImpressionJeu jeu={jeuxImprimes.AccueilSeance0} />
+      </section>
+      <section>
+        <h3>Ce que tu as déjà fait</h3>
+        <p>Coche tout ce qui te concerne. « Rien pour l'instant » est le point de départ de tout le monde.</p>
+        <p className="mono-caps">Langages déjà touchés</p>
+        {cases(LANGAGES)}
+        <p className="mono-caps">Outils d'IA déjà utilisés</p>
+        {cases(OUTILS)}
+        <p><b>La question qui compte.</b> Si tu pouvais construire un outil qui te simplifie la vie, ce serait quoi ?</p>
+        {lignes(3)}
+      </section>
+      <section>
+        <h3>Le parcours, en quatre blocs</h3>
+        <p>Une séance de 1 h 30 à la fois. La leçon se fait toujours ensemble ; seul le carnet d'exercices se fait entre deux séances.</p>
+        <ul className="accueil-blocs">{BLOCS.map((b) => <li key={b.n}><b>{b.n}</b> · {b.s} · {b.quoi} <b>{b.gain}</b></li>)}</ul>
+      </section>
+    </div>
+    </>
   );
 }

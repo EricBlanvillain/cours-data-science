@@ -1,0 +1,84 @@
+---
+/**
+ * Enregistrer en PDF : la seule entrée d'export du site (bouton « Enregistrer en PDF ↓ » de l'accueil). En haut, masqué à
+ * l'impression, le choix : « Cours complet » et une case par séance (0 à 12, sans les modules optionnels). Seules les
+ * séances cochées s'impriment ; la couverture et le sommaire ne listent qu'elles ; le pied de page porte le titre de la
+ * leçon quand une seule est cochée, « Data Science & IA » sinon. Chaque leçon a le même corps que sa page (CorpsLecon).
+ * `?seances=0,5` précoche une sélection (npm run pdf:verifier s'en sert). Non indexée.
+ */
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import CorpsLecon from "../components/CorpsLecon.astro";
+
+const lecons = (await getCollection("lecons")).filter((l) => l.data.numero <= 12).sort((a, b) => a.data.numero - b.data.numero);
+const nn = (n: number) => String(n).padStart(2, "0");
+const titres = Object.fromEntries(lecons.map((l) => [l.data.numero, `Séance ${nn(l.data.numero)} · ${l.data.titre}`]));
+---
+
+<Base titre="Enregistrer en PDF" description="Choisir les séances du cours Data Science & IA à enregistrer en PDF." noindex>
+  <form class="ecran-seul choix-pdf pt-10" data-choix-pdf>
+    <h1 class="hero-titre" style="font-size: 2.2rem;">Enregistrer en PDF</h1>
+    <fieldset class="mt-6" style="border: 0; padding: 0;">
+      <legend class="mono-caps" style="color: var(--encre-2);">Ce que tu veux enregistrer</legend>
+      <label class="choix-pdf-ligne choix-pdf-tout"><input type="checkbox" data-tout checked /> <b>Cours complet</b></label>
+      <ul class="choix-pdf-liste">
+        {lecons.map((l) => (
+          <li><label class="choix-pdf-ligne"><input type="checkbox" data-n={l.data.numero} checked /> <span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</label></li>
+        ))}
+      </ul>
+    </fieldset>
+    <p class="boutons-pdf mt-6"><button type="button" class="bouton principal" data-imprimer onclick="window.print()">Enregistrer la sélection en PDF</button></p>
+    <p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
+  </form>
+
+  <section class="couverture" style="padding-top: 6rem;">
+    <p class="mono-caps" style="color: var(--encre-2);">Cours · notebooks et exercices sur GitHub</p>
+    <h1 class="hero-titre" style="margin-top: 1rem;">Data Science &amp; IA · <span data-nombre>{lecons.length} séances</span></h1>
+    <p style="max-width: 40rem; margin-top: 2rem;">Comprendre les données et l'IA, en construisant. Python, données, machine learning, puis l'IA générative.</p>
+    <p class="discret" style="margin-top: 1.5rem;">https://cours-data-science.vercel.app</p>
+  </section>
+
+  <nav class="sommaire-cours mt-10" aria-label="Sommaire">
+    <h2>Sommaire</h2>
+    <ol class="mt-4" style="list-style: none; padding: 0;">
+      {lecons.map((l) => (
+        <li class="mt-2" data-n={l.data.numero}><a href={`#seance-${nn(l.data.numero)}`}><span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</a></li>
+      ))}
+    </ol>
+  </nav>
+
+  {lecons.map((l) => (
+    <section class="lecon-imprimee mt-16" id={`seance-${nn(l.data.numero)}`} data-n={l.data.numero}>
+      <header class="lecon-entete">
+        <p class="mono-caps" style="color: var(--encre-2);">Séance {nn(l.data.numero)} · {l.data.niveau} · {l.data.duree}</p>
+        <h1 class="hero-titre mt-2">{l.data.titre}</h1>
+        <p class="mt-3" style="max-width: 46rem;">{l.data.resume}</p>
+      </header>
+      <CorpsLecon lecon={l} />
+    </section>
+  ))}
+
+  <style is:inline data-pied-pdf>@media print { @page { @bottom-left { content: "Data Science & IA"; } } }</style>
+  <script is:inline define:vars={{ titres }}>
+    (function () {
+      var form = document.querySelector("[data-choix-pdf]");
+      var tout = form.querySelector("[data-tout]");
+      var cases = [].slice.call(form.querySelectorAll("input[data-n]"));
+      var pied = document.querySelector("style[data-pied-pdf]");
+      var guillemets = function (t) { return '"' + t.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; };
+      function appliquer() {
+        var choisies = cases.filter(function (c) { return c.checked; }).map(function (c) { return c.getAttribute("data-n"); });
+        tout.checked = choisies.length === cases.length;
+        document.querySelectorAll("[data-n]:not(input)").forEach(function (el) { el.hidden = choisies.indexOf(el.getAttribute("data-n")) < 0; });
+        document.querySelector("[data-nombre]").textContent = choisies.length + (choisies.length > 1 ? " séances" : " séance");
+        pied.textContent = "@media print { @page { @bottom-left { content: " + guillemets(choisies.length === 1 ? titres[choisies[0]] : "Data Science & IA") + "; } } }";
+        form.querySelector("[data-imprimer]").disabled = choisies.length === 0;
+      }
+      tout.addEventListener("change", function () { cases.forEach(function (c) { c.checked = tout.checked; }); appliquer(); });
+      cases.forEach(function (c) { c.addEventListener("change", appliquer); });
+      var demande = new URLSearchParams(location.search).get("seances");
+      if (demande !== null) { var liste = demande.split(",").map(function (x) { return String(Number(x)); }); cases.forEach(function (c) { c.checked = liste.indexOf(c.getAttribute("data-n")) >= 0; }); }
+      appliquer();
+    })();
+  </script>
+</Base>

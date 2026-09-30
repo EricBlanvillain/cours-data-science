@@ -145,7 +145,8 @@ const ETATS = [
   { page: "lecons/seance-03-sql-et-git.html", id: "s3-initiale", pilote: "" },
   { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-ouvert", pilote: `
       const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300);
-      if (!g.textContent.includes("quelle commande ?")) throw new Error("le cuivre « situation ouverte » manque");` },
+      // la typographie pose une espace fine avant « ? » : on la ramène à une espace pour comparer
+      if (!g.textContent.replace(/\u202F/g, " ").includes("quelle commande ?")) throw new Error("le cuivre « situation ouverte » manque");` },
   { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-juste", pilote: `
       const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
@@ -264,6 +265,11 @@ const ETATS = [
       if (!z.textContent.includes("✓ juste")) throw new Error("clavier : 2 puis Entrée devrait valider la bonne réponse");
       touche("Enter"); await w(200);
       if (!z.textContent.includes("Question 2 / 4")) throw new Error("clavier : Entrée devrait passer à la question suivante");` },
+  // La page « Enregistrer en PDF » : le choix des séances (écran), une seule séance cochée.
+  { page: "enregistrer-pdf.html", id: "export-pdf-une-seance", pilote: `
+  var t = document.querySelector("[data-tout]"); t.checked = false; t.dispatchEvent(new Event("change"));
+  var c = document.querySelector("input[data-n='5']"); c.checked = true; c.dispatchEvent(new Event("change"));
+  if (document.querySelectorAll(".lecon-imprimee:not([hidden])").length !== 1) throw new Error("la sélection d'une séance n'en montre pas une seule");` },
   // L'impression (et les PDF) : règles @media print activées à l'écran, <details> ouverts ; le thème clair est forcé,
   // fond blanc attendu même dans la passe sombre.
   { page: "lecons/seance-00-faire-connaissance.html", id: "impression-seance-00", fond: "impression", pilote: `

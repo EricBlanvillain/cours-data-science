@@ -29,11 +29,8 @@ const total = seances.length;
     </div>
   </section>
 
-  {/* Le cours complet en PDF : la page cours-complet.html ouvre la fenêtre d'impression une fois chargée. */}
-  <div class="pt-8">
-    <p class="mono-caps"><a href="/cours-complet" class="lien-mono enregistrer-pdf">Enregistrer le cours complet en PDF ↓</a></p>
-    <p class="discret aide-pdf mt-1">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
-  </div>
+  {/* La seule entrée d'export : la page « Enregistrer en PDF » laisse choisir le cours complet ou des séances. */}
+  <p class="pt-8"><a href="/enregistrer-pdf" class="bouton no-underline">Enregistrer en PDF ↓</a></p>
 
   <div class="space-y-16 pt-14">
     {parBloc.map(({ titre, liste }) => (
@@ -51,7 +48,7 @@ const total = seances.length;
             <li class="carte carte-seance" data-seance={s.numero}>
               <div class="flex items-baseline justify-between gap-3 mono-caps">
                 <span>Séance {String(s.numero).padStart(2, "0")}</span>
-                <span aria-label={`niveau ${s.niveau}`}>{s.niveau.replace(/⭐/g, "★")}</span>
+                <span aria-label={`niveau ${s.niveau}`}>{s.niveau}</span>
               </div>
               <h3>
                 {lecon ? <a href={lecon} class="no-underline" style="color: var(--encre);">{s.titre}</a> : s.titre}
@@ -101,7 +98,7 @@ const total = seances.length;
           <li class="carte carte-module">
             <div class="flex items-baseline justify-between gap-3 mono-caps">
               <span>{m.surtitre}</span>
-              <span aria-label={`niveau ${m.niveau}`}>{m.niveau.replace(/⭐/g, "★")}</span>
+              <span aria-label={`niveau ${m.niveau}`}>{m.niveau}</span>
             </div>
             <h3>{m.titre}</h3>
             <p class="discret" style="font-size: 0.95rem;">{m.resume}</p>

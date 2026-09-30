@@ -16,6 +16,8 @@ npm run audit        # après un build : audit de contraste et règle du cuivre 
 npm run lint:lecons          # les règles des leçons (aussi en tête de npm run build)
 npm run compte:prose         # après un build : mots visibles de chaque leçon sur la page construite, plafond 625 (aussi dans npm run build)
 npm run audit:mise-en-page   # après un build : bandes des grilles de cartes alignées, en-tête au pixel près sur quatre pages, prose sous 46 rem
+npm run pdf:verifier         # contrôle local de l'impression par la page d'export (site/.verif-pdf/, non versionné)
+# portée : npm run audit -- --pages seance-03,index · --impression (voir CLAUDE.md, « Audits ciblés »)
 ```
 
 ## Secours hors ligne (le wifi lâche pendant une séance)
@@ -42,6 +44,7 @@ src/components/islands/         les composants React (frise, quiz, écrans de la
 src/pages/                      accueil et page de leçon générique (la séance 0 est une leçon MDX qui pose l'îlot des cinq écrans)
 src/styles/global.css           thème clair / sombre, registres typographiques, classes partagées
 src/styles/palette.mjs          la palette, source unique pour l'audit
+scripts/typographie.mjs         post-build : espace fine insécable après « et avant », et avant ; : ! ? (pages et chaînes des bundles des îlots)
 scripts/relativize.mjs          post-build : chemins relatifs (pages, polices) + vérification des cibles et de l'absence de ressource externe
 scripts/lint-lecons.mjs         les règles des leçons : vocabulaire des blocs, replis, titres, flèches, annonces de figure, quiz
 scripts/compte-prose.mjs        post-build : mots visibles de l'article de prose de chaque leçon (titres, tableaux, code compris ; d'un repli, son seul résumé ; ni îlots ni SVG), plafond 625

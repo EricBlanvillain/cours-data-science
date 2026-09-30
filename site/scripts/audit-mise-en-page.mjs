@@ -58,6 +58,7 @@ const PAGES = [
   { page: "lecons/seance-11-rag.html", id: "seance-11-rag-juste", pilote: `const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "1 · La recherche").click(); await w(300);` },
   { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12", pilote: "" },
   { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12-agent-juste", pilote: `const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);` },
+  { page: "enregistrer-pdf.html", id: "enregistrer-pdf", pilote: "" },
 ];
 // L'impression (et les PDF) : chaque leçon et le cours complet, règles @media print activées, <details> ouverts, à la
 // largeur de texte d'une page A4 (180 mm = 680 px, simulée comme le téléphone) : rien ne dépasse à droite.
@@ -67,9 +68,9 @@ const PILOTE_IMPRESSION = `
   if (!css) throw new Error("aucune règle @media print trouvée");
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
   document.querySelectorAll("details").forEach(function (d) { d.open = true; });`;
-const IMPRESSION = [...PAGES.filter((e) => /^seance-\d+$/.test(e.id)), { page: "cours-complet.html", id: "cours-complet" }]
+const IMPRESSION = [...PAGES.filter((e) => /^seance-\d+$/.test(e.id)), { page: "enregistrer-pdf.html", id: "enregistrer-pdf" }]
   .map((e) => ({ page: e.page, id: "impression-" + e.id, pilote: PILOTE_IMPRESSION }));
-const PAGES_EN_TETE = ["accueil", "glossaire", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11", "seance-12"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "enregistrer-pdf", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11", "seance-12"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.

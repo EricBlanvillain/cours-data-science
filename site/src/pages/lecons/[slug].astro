@@ -14,8 +14,6 @@ const { headings } = await render(lecon);
 const sections = headings.filter((h) => h.depth === 2);
 const n = lecon.data.numero;
 const suivante = seances.find((s) => s.numero === n + 1);
-// « Enregistrer la leçon en PDF » vit dans la rangée de boutons (BoutonsSeance) ; une leçon qui n'a pas cette rangée l'a ici.
-const pdfIci = !(lecon.body ?? "").includes("<BoutonsSeance");
 // Le pied des pages imprimées (Chrome, Edge) : le titre de la leçon et le numéro de page, par les boîtes de marge de @page.
 const titrePied = `Séance ${String(n).padStart(2, "0")} · ${lecon.data.titre}`.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 ---
@@ -23,7 +21,7 @@ const titrePied = `Séance ${String(n).padStart(2, "0")} · ${lecon.data.titre}`
 <Base titre={`Séance ${n} · ${lecon.data.titre}`} description={lecon.data.resume} barre courant={n}>
   <section slot="hero" class="sombre hero hero-lecon">
     <div class="conteneur">
-      <p class="etiquette">Séance {String(n).padStart(2, "0")} · {lecon.data.niveau.replace(/⭐/g, "★")} · {lecon.data.duree}</p>
+      <p class="etiquette">Séance {String(n).padStart(2, "0")} · {lecon.data.niveau} · {lecon.data.duree}</p>
       <h1 class="hero-titre">{lecon.data.titre}</h1>
       <p class="hero-texte">{lecon.data.resume}</p>
       {lecon.data.livrable && <p class="hero-ligne"><span class="mono-caps">On repart avec</span> · {lecon.data.livrable}</p>}
@@ -47,12 +45,6 @@ const titrePied = `Séance ${String(n).padStart(2, "0")} · ${lecon.data.titre}`
       </nav>
     )}
 
-    {pdfIci && (
-      <div class="mt-8">
-        <p class="boutons-seance"><button type="button" class="bouton" onclick="window.print()">Enregistrer la leçon en PDF ↓</button></p>
-        <p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>
-      </div>
-    )}
     <style is:inline set:html={`@media print { @page { @bottom-left { content: "${titrePied}"; } } }`}></style>
 
     <CorpsLecon lecon={lecon} />

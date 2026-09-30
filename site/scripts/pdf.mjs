@@ -2,13 +2,14 @@
  * `npm run pdf:verifier` : contrôle local de l'impression, rien n'est versionné. Les élèves enregistrent eux-mêmes leurs
  * PDF depuis la fenêtre d'impression du navigateur (boutons « Enregistrer … en PDF ») ; ce script imprime les mêmes pages,
  * avec le Chrome de la machine piloté par son protocole de débogage (WebSocket natif de Node, aucune dépendance), dans
- * site/.verif-pdf/ (ignoré par git) : une leçon par séance et le cours complet (séances 0 à 12).
+ * site/.verif-pdf/ (ignoré par git), en passant par la page d'export (enregistrer-pdf.html) comme l'élève : le cours
+ * complet (séances 0 à 12), une séance seule (la 05) et la séance 0 seule.
  *
  * Comme le navigateur de l'élève : média « print », taille de page, marges et pied de page tirés du CSS (@page et ses
  * boîtes de marge), <details> ouverts. Contrôles : rien ne dépasse à droite (à la largeur de texte d'une page A4), chaque
  * jeu et chaque mini-quiz imprimés ont leur corrigé avec autant de réponses que de situations, aucune interface
  * interactive imprimée telle quelle ; puis le nombre de pages de chaque PDF. Sort en code 1 à la moindre faute.
- * Portée : npm run pdf:verifier -- --pages seance-03,cours-complet (scripts/portee.mjs) ; --impression ne change rien
+ * Portée : npm run pdf:verifier -- --pages seance-03,enregistrer-pdf (scripts/portee.mjs) ; --impression ne change rien
  * ici, tous ses contrôles sont des contrôles d'impression.
  */
 import http from "node:http";
@@ -83,7 +84,8 @@ const PREPARER = (largeur) => `(() => {
     const cs = [...b.querySelectorAll(".corrige-jeu")].filter(visible).map((c) => ({ titre: c.dataset.jeu, n: c.querySelectorAll("ol > li").length }));
     jeux += js.length; corriges += cs.length;
     const prefixe = b.id ? b.id + " : " : "";
-    js.forEach((j, i) => { const c = cs[i]; if (!c || c.titre !== j.titre || c.n !== j.n) sansCorrige.push(prefixe + j.titre + " (" + j.n + " situations, corrigé : " + (c ? c.titre + ", " + c.n + " réponses" : "aucun") + ")"); });
+    const meme = (x, y) => x.replace(/[\u202F\u00A0]/g, " ") === y.replace(/[\u202F\u00A0]/g, " ");   // la typographie a pu poser une espace fine dans l'un
+    js.forEach((j, i) => { const c = cs[i]; if (!c || !meme(c.titre, j.titre) || c.n !== j.n) sansCorrige.push(prefixe + j.titre + " (" + j.n + " situations, corrigé : " + (c ? c.titre + ", " + c.n + " réponses" : "aucun") + ")"); });
     if (cs.length > js.length) sansCorrige.push(prefixe + (cs.length - js.length) + " corrigé(s) sans jeu imprimé");
   }
   // un îlot interactif dont l'interface s'imprimerait : un enfant visible autre que sa version papier
@@ -111,16 +113,20 @@ async function imprimer(url, fichier) {
 
 fs.rmSync(SORTIE, { recursive: true, force: true });
 fs.mkdirSync(SORTIE, { recursive: true });
-const LECONS = path.join(SITE, "src/content/lecons");
-const liste = fs.readdirSync(LECONS).filter((f) => f.endsWith(".mdx")).map((f) => ({ slug: f.replace(/\.mdx$/, ""), numero: Number((fs.readFileSync(path.join(LECONS, f), "utf8").match(/^numero:\s*(\d+)/m) ?? [])[1]) }))
-  .filter((l) => l.numero >= 0 && l.numero <= 12).sort((a, b) => a.numero - b.numero)
-  .map((l) => ({ fichier: `seance-${String(l.numero).padStart(2, "0")}.pdf`, url: `lecons/${l.slug}.html` }));
-liste.push({ fichier: "cours-complet.pdf", url: "cours-complet.html?verifier" });   // le paramètre : pas de fenêtre d'impression automatique
+// Le vérificateur passe par la page d'export, comme l'élève : le cours complet, puis une séance seule (la 05), puis la
+// séance 0 seule. Avec --pages : seance-XX imprime cette séance seule, enregistrer-pdf (ou cours-complet) le cours complet.
 const P = portee();
-const retenus = liste.filter((l) => P.vise(l.url));
-if (!retenus.length) { console.error(`Portée vide (${P.libelle}) : ${liste.map((l) => l.url).join(", ")}`); process.exit(2); }
+const seule = (n) => ({ fichier: `seance-${String(n).padStart(2, "0")}-seule.pdf`, url: `enregistrer-pdf.html?seances=${n}` });
+const complet = { fichier: "cours-complet.pdf", url: "enregistrer-pdf.html" };
+const retenus = !P.pages.length ? [complet, seule(5), seule(0)] : P.pages.flatMap((t) => {
+  const m = t.match(/^seance-(\d{2})$/);
+  if (m) return [seule(Number(m[1]))];
+  if (t === "enregistrer-pdf" || t === "cours-complet") return [complet];
+  return [];
+});
+if (!retenus.length) { console.error(`Portée vide (${P.libelle}) : --pages attend seance-XX (deux chiffres) ou enregistrer-pdf`); process.exit(2); }
 let fautes = 0;
-console.log(`\n2. impression dans .verif-pdf/ (portée : ${P.libelle}, ${retenus.length} PDF sur ${liste.length})`);
+console.log(`\n2. impression dans .verif-pdf/ par la page d'export (portée : ${P.libelle}, ${retenus.length} PDF)`);
 for (const { fichier, url } of retenus) {
   const r = await imprimer(`http://127.0.0.1:${PORT}/${url}`, path.join(SORTIE, fichier));
   const problemes = [...r.coupes.map((c) => `texte coupé à droite : ${c}`), ...r.sansCorrige.map((c) => `corrigé manquant : ${c}`), ...r.ilotsVisibles.map((i) => `îlot interactif imprimé tel quel : ${i}`)];
@@ -128,7 +134,8 @@ for (const { fichier, url } of retenus) {
   console.log(`${problemes.length ? "✗" : "·"} ${fichier.padEnd(18)} ${String(r.pages).padStart(3)} pages · ${(r.octets / 1024).toFixed(0).padStart(5)} Ko · ${r.jeux} jeu(x) imprimé(s), ${r.corriges} corrigé(s)`);
   problemes.slice(0, 12).forEach((p) => console.log("    !! " + p));
 }
-ws.close(); chrome.kill(); serveur.close();
-fs.rmSync(profil, { recursive: true, force: true });
+ws.close(); serveur.close();
+await new Promise((r) => { chrome.once("exit", r); chrome.kill(); });   // Chrome écrit dans son profil jusqu'à sa sortie
+fs.rmSync(profil, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 console.log(`\n${fautes ? "FAIL" : "PASS"} — portée : ${P.libelle} · ${retenus.length} PDF dans site/.verif-pdf/ (non versionnés), ${fautes} faute(s)`);
 process.exit(fautes ? 1 : 0);

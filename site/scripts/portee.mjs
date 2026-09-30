@@ -1,7 +1,7 @@
 /**
  * La portée d'un audit ou du vérificateur de PDF, lue sur la ligne de commande (voir CLAUDE.md, « Audits ciblés ») :
  *   --pages seance-03,index   seulement ces pages : « index » (ou « accueil ») pour l'accueil, sinon un morceau du chemin
- *                             de la page (seance-03, glossaire, cours-complet) ; les numéros de séance ont deux chiffres
+ *                             de la page (seance-03, glossaire, enregistrer-pdf) ; les numéros de séance ont deux chiffres
  *   --impression              seulement les contrôles d'impression
  * Sans option : tout, comme avant. Avec npm : `npm run audit -- --pages seance-03`.
  */

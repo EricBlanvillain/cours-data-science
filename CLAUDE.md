@@ -45,19 +45,21 @@ Après une modification de notebook, on rejoue sa recette sous les deux environn
 
 ### Les PDF du site
 
-Aucun PDF n'est versionné : l'élève enregistre la leçon (bouton « Enregistrer la leçon en PDF ↓ », qui ouvre la fenêtre d'impression) ou le cours complet (« Enregistrer le cours complet en PDF ↓ » sur l'accueil, qui ouvre `cours-complet.html` : couverture, sommaire cliquable, séances 0 à 12, sans les modules optionnels ; la page lance l'impression une fois chargée). Tout tient dans les styles d'impression de `site/src/styles/global.css` : thème clair forcé, navigation et boutons masqués, jeux et mini-quiz imprimés en liste avec leur corrigé en fin de leçon, pied de page (titre et numéro de page) par les boîtes de marge de `@page`, que Chrome et Edge affichent.
+Aucun PDF n'est versionné : l'élève les enregistre depuis son navigateur. Une seule entrée, le bouton « Enregistrer en PDF ↓ » de l'accueil, qui ouvre `enregistrer-pdf.html` : en haut (masqué à l'impression), « Cours complet » et une case par séance (0 à 12, sans les modules optionnels), puis « Enregistrer la sélection en PDF », qui ouvre la fenêtre d'impression. Seules les séances cochées s'impriment, la couverture et le sommaire ne listent qu'elles, et le pied de page porte le titre de la leçon quand une seule est cochée, « Data Science & IA » sinon (boîtes de marge de `@page`, que Chrome et Edge affichent). `?seances=0,5` précoche une sélection. Tout le reste tient dans les styles d'impression de `site/src/styles/global.css` : thème clair forcé, navigation masquée, boutons Colab et GitHub imprimés en liens avec leur adresse courte, jeux et mini-quiz imprimés en liste avec leur corrigé en fin de leçon, les six écrans de la séance 0 imprimés à la suite.
 
-`cd site && npm run pdf:verifier` (script `site/scripts/pdf.mjs`) est un contrôle local : il construit le site, imprime chaque leçon et le cours complet avec le Chrome de la machine dans `site/.verif-pdf/` (ignoré par git), et vérifie que rien ne dépasse à droite, que chaque jeu et chaque mini-quiz a son corrigé, puis donne le nombre de pages. À lancer après une modification des styles d'impression, d'un jeu ou d'une leçon.
+`cd site && npm run pdf:verifier` (script `site/scripts/pdf.mjs`) est un contrôle local : il construit le site, passe par la page d'export comme l'élève (le cours complet, la séance 05 seule, la séance 00 seule ; `--pages seance-03` pour une autre), imprime dans `site/.verif-pdf/` (ignoré par git), et vérifie que rien ne dépasse à droite et que chaque jeu et chaque mini-quiz a son corrigé, puis donne le nombre de pages.
+
+La typographie française (espace fine insécable après « et avant », et avant ; : ! ?) est posée au build par `site/scripts/typographie.mjs`, sur les pages et dans les chaînes des bundles des îlots : ne jamais la taper à la main dans les sources.
 
 ### Audits ciblés
 
-Les audits complets du site durent environ 25 minutes. Les deux audits et le vérificateur de PDF acceptent une portée (`site/scripts/portee.mjs`) : `--pages seance-03,index` (l'accueil s'écrit `index`, une séance avec ses deux chiffres, sinon `glossaire`, `cours-complet`) ne mesure que ces pages ; `--impression` ne lance que les contrôles d'impression ; sans option, tout tourne.
+Les audits complets du site durent environ 25 minutes. Les deux audits et le vérificateur de PDF acceptent une portée (`site/scripts/portee.mjs`) : `--pages seance-03,index` (l'accueil s'écrit `index`, une séance avec ses deux chiffres, sinon `glossaire`, `enregistrer-pdf`) ne mesure que ces pages ; `--impression` ne lance que les contrôles d'impression ; sans option, tout tourne.
 
 ```bash
 cd site && npm run build                                   # lint des leçons et plafond de prose compris
 npm run audit -- --pages seance-03                         # contraste
 npm run audit:mise-en-page -- --pages seance-03 --impression
-npm run pdf:verifier -- --pages seance-03,cours-complet
+npm run pdf:verifier -- --pages seance-03,enregistrer-pdf
 ```
 
 La règle :

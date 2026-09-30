@@ -18,6 +18,7 @@ import { PIEGES, situationsPieges } from "./analyse";
 import { duels } from "./titanic";
 import { CHOIX, situationsVides } from "./nettoyage";
 import { quiz } from "./quiz";
+import { QUIZ_IA } from "./accueil";
 
 export type ItemImprime = { enonce: string; options?: string[]; reponse: string; pourquoi: string };
 export type JeuImprime = { titre: string; consigne: string; choix: string[]; items: ItemImprime[] };
@@ -25,6 +26,12 @@ export type JeuImprime = { titre: string; consigne: string; choix: string[]; ite
 const choixDe = (r: Record<string, { nom: string; definition: string }>) => Object.values(r).map((v) => `${v.nom} : ${v.definition}`);
 
 export const jeuxImprimes: Record<string, JeuImprime> = {
+  AccueilSeance0: {
+    titre: "Est-ce de l'IA ?",
+    consigne: "Pour chaque exemple, réponds à l'instinct : oui ou non ?",
+    choix: ["Oui : c'est de l'IA", "Non : ce n'est pas de l'IA"],
+    items: QUIZ_IA.map((q) => ({ enonce: q.titre, reponse: q.ia === "oui" ? "Oui, c'est de l'IA" : "Non, ce n'est pas de l'IA", pourquoi: q.pourquoi })),
+  },
   ClassifOuRegression: {
     titre: "Classification ou régression ?",
     consigne: "Pour chaque question, dis si elle demande une catégorie (classification) ou un nombre (régression).",

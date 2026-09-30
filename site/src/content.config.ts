@@ -8,7 +8,7 @@ const lecons = defineCollection({
   schema: z.object({
     numero: z.number().int().min(0).max(12),
     titre: z.string(),
-    niveau: z.enum(["⭐", "⭐⭐", "⭐⭐⭐"]),
+    niveau: z.enum(["★", "★★", "★★★"]),
     resume: z.string(),
     duree: z.string().default("1 h 30"),
     /** Ce qu'on repart avec à la fin de la séance */

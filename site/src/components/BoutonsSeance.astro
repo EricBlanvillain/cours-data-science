@@ -2,9 +2,8 @@
 /**
  * La rangée de boutons d'une séance : la leçon dans Colab, le carnet d'exercices dans Colab, le dossier sur GitHub.
  * Trois destinations externes, donc ↗ (convention du site). Les URL se construisent depuis le dépôt et le dossier de la
- * séance : un seul endroit à corriger si le dépôt bouge. Même composant sur toutes les leçons. S'y ajoute « Enregistrer la
- * leçon en PDF » (un fichier, donc ↓) : la fenêtre d'impression du navigateur, qui imprime la leçon avec ses styles
- * d'impression et son corrigé.
+ * séance : un seul endroit à corriger si le dépôt bouge. Même composant sur toutes les leçons. À l'impression, les trois
+ * boutons deviennent des liens cliquables, suivis de leur adresse courte (data-adresse).
  */
 import { DEPOT } from "../data/seances";
 
@@ -19,11 +18,11 @@ interface Props {
 }
 const { dossier, lecon, exercices, nbExercices = 12 } = Astro.props;
 const colab = (fichier: string) => `https://colab.research.google.com/github/EricBlanvillain/cours-data-science/blob/main/seances/${dossier}/${fichier}`;
+const courtColab = (fichier: string) => `colab.research.google.com/…/${fichier}`;
+const courtGithub = `github.com/EricBlanvillain/cours-data-science/…/${dossier}`;
 ---
 <p class="large boutons-seance">
-  <a class="bouton principal" href={colab(lecon)} target="_blank" rel="noopener">Ouvrir la leçon dans Colab ↗</a>
-  <a class="bouton" href={colab(exercices)} target="_blank" rel="noopener">Les {nbExercices} exercices ↗</a>
-  <button type="button" class="bouton" onclick="window.print()">Enregistrer la leçon en PDF ↓</button>
-  <a class="bouton" href={`${DEPOT}/tree/main/seances/${dossier}`} target="_blank" rel="noopener">Le dossier sur GitHub ↗</a>
+  <a class="bouton principal" href={colab(lecon)} data-adresse={courtColab(lecon)} target="_blank" rel="noopener">Ouvrir la leçon dans Colab ↗</a>
+  <a class="bouton" href={colab(exercices)} data-adresse={courtColab(exercices)} target="_blank" rel="noopener">Les {nbExercices} exercices ↗</a>
+  <a class="bouton" href={`${DEPOT}/tree/main/seances/${dossier}`} data-adresse={courtGithub} target="_blank" rel="noopener">Le dossier sur GitHub ↗</a>
 </p>
-<p class="discret aide-pdf">Dans la fenêtre d'impression, choisis « Enregistrer au format PDF ».</p>

@@ -427,6 +427,12 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
   html[data-menu="ouvert"] .laterale { display: block; }
 }
 
+/* La page « Enregistrer en PDF » : une case par séance, « Cours complet » les coche toutes. */
+.choix-pdf-liste { list-style: none; padding: 0; margin: 0.4rem 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr)); gap: 0.1rem 2rem; }
+.choix-pdf-ligne { display: flex; gap: 0.6rem; align-items: baseline; padding: 0.3rem 0; cursor: pointer; }
+.choix-pdf-ligne input { width: 1.05rem; height: 1.05rem; accent-color: var(--encre); flex: none; position: relative; top: 0.12rem; }
+.choix-pdf-tout { margin-top: 0.6rem; border-bottom: 1px solid var(--trait); padding-bottom: 0.6rem; }
+
 /* ------------------------------------------------------------------
    Impression (et PDF, que l'élève enregistre depuis la fenêtre d'impression) : le thème clair est forcé, quel que soit le
    réglage ; la navigation et les boutons disparaissent ; les jeux et le mini-quiz s'impriment en liste (.imprime-seul,
@@ -461,8 +467,14 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
 
   /* ce qui ne sert qu'à l'écran */
   .entete, .laterale, .barre-bascule, .barre-ecrans, .choix-theme, button, .bouton, .enregistrer-pdf, .aide-pdf,
-  .fin-de-seance, .bandeau-a-venir, .pied, .ecran-seul, .retour-seances, .boutons-seance { display: none !important; }
+  .fin-de-seance, .bandeau-a-venir, .pied, .ecran-seul, .retour-seances { display: none !important; }
   .avec-laterale { display: block !important; }
+
+  /* les boutons Colab, exercices et GitHub d'une leçon : des liens cliquables, suivis de leur adresse courte */
+  .boutons-seance { display: block !important; }
+  .boutons-seance a.bouton { display: block !important; border: 0; padding: 0; margin: 0.2rem 0; background: none; color: var(--encre);
+    font: inherit; font-size: 0.95rem; text-transform: none; letter-spacing: normal; text-decoration: underline; text-underline-offset: 0.2em; }
+  .boutons-seance a.bouton::after { content: " · " attr(data-adresse); color: var(--encre-2); text-decoration: none; }
 
   /* les jeux : l'interface disparaît, la liste papier prend sa place ; un îlot sans version papier (l'accueil de la
      séance 0) disparaît tout entier */
@@ -477,6 +489,19 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
   .jeu-imprime-items, .corrige-jeu ol, .a-retenir ol { list-style: decimal !important; padding-left: 1.6em !important; }
   .jeu-imprime-choix, .jeu-imprime-options { list-style: none !important; }
   .frise-imprimee > div + div { margin-top: 1rem; }
+  /* la séance 0 imprimée : ses six écrans à la suite, des lignes pour écrire, des cases à cocher à la main */
+  .accueil-imprime > section { margin-top: 1.4rem; break-inside: avoid; }
+  .accueil-imprime > section + section { border-top: 1px solid var(--trait); padding-top: 1rem; }
+  .accueil-imprime h3 { margin: 0.2rem 0 0.4rem; }
+  .accueil-imprime p { margin-top: 0.45rem; }
+  .accueil-imprime ol { list-style: decimal !important; padding-left: 1.6em !important; }
+  .accueil-affirmation { font-family: var(--font-serif); font-size: 1.2rem; }
+  .lignes-a-ecrire span { display: block; height: 2rem; border-bottom: 1px solid var(--trait-fort); }
+  .cases-a-cocher { list-style: none !important; padding: 0 !important; display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; }
+  .cases-a-cocher li { margin: 0 !important; }
+  .cases-a-cocher .case { display: inline-block; width: 0.9em; height: 0.9em; border: 1px solid var(--encre); margin-right: 0.45em; vertical-align: -0.1em; }
+  .accueil-blocs { padding-left: 1.2em !important; }
+  .accueil-blocs li + li { margin-top: 0.4rem; }
   .corrige { break-before: page; margin-top: 0; }
   .corrige-jeu { margin-top: 1.2rem; }
   .corrige-jeu li { margin-top: 0.35rem; }
