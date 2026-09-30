@@ -346,6 +346,32 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Les invités ne connaissent pas les outils : ce qui les convainc, c'est de voir le projet marcher, et même rater une fois, avec ce que tu en as compris.",
     },
   ],
+  SO1: [
+    {
+      question: "Rust va bien plus vite que Python. Pourquoi la data se fait-elle quand même en Python ?",
+      options: ["Python est en fait plus rapide", "Pour son écosystème : les bibliothèques déjà écrites font en trois lignes ce qu'il faudrait des mois pour réécrire", "Rust ne sait pas lire un CSV", "Parce que Python est plus récent"],
+      bonne: 1,
+      explication: "Un langage seul ne fait rien. pandas, scikit-learn ou matplotlib t'épargnent des dizaines de milliers de lignes : ton temps coûte plus cher que le temps de calcul.",
+    },
+    {
+      question: "Une biostatisticienne rédige un article sur un essai clinique. Quel outil lui conseilles-tu ?",
+      options: ["JavaScript, pour les graphiques", "R : son livrable est une analyse, et c'est le terrain où R gagne", "C, pour la vitesse", "SQL, parce que les données sont dans un tableau"],
+      bonne: 1,
+      explication: "Analyse, article, étude : R est un excellent choix, parfois le meilleur. Ce serait Python si le livrable était un système qui tourne tout seul.",
+    },
+    {
+      question: "En C, tu oublies le free d'un tableau pris dans une boucle. Que se passe-t-il ?",
+      options: ["Le ramasse-miettes le rend à ta place", "Une fuite : le programme grossit jusqu'à saturer la machine", "Le compilateur refuse le programme", "Rien, la mémoire est infinie"],
+      bonne: 1,
+      explication: "Le C n'a pas de ramasse-miettes, et son compilateur ne vérifie pas qui possède quoi. C'est Rust qui refuserait le programme, et Python qui rendrait la mémoire tout seul.",
+    },
+    {
+      question: "Avant de lancer ton modèle sur 10 000 documents, comment connaître le coût du projet ?",
+      options: ["On lance tout et on regarde la facture", "On le fait tourner sur 100 documents, puis une règle de trois", "On prend toujours le plus grand modèle, par sécurité", "On compte les mots à la main"],
+      bonne: 1,
+      explication: "L'essai sur 100 coûte quelques centimes, trouve les erreurs en quelques secondes, et donne le vrai coût par document : multiplié par 100, c'est le coût du projet.",
+    },
+  ],
   SO2: [
     {
       question: "Tu chronomètres un programme qui vient d'être compilé, et sa toute première mesure est plus lente qu'une boucle Python. Que fais-tu ?",

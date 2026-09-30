@@ -1,0 +1,74 @@
+---
+code: SO1
+type: seance
+titre: Les métiers de la data science
+niveau: ★
+duree: 1 h 30
+resume: "Quel langage pour quel usage, R pris au sérieux, qui gère la mémoire dans chaque langage, et combien coûte un modèle appelé par API : le calcul en euros, avant de lancer."
+livrable: Ta fiche « choisir ses outils » — ton langage et la contrainte qui le justifie, ton modèle, le coût de ton projet en euros.
+objectifs:
+  - Tu sauras dire quel langage sert à quoi, et pourquoi on le choisit pour son écosystème plutôt que pour sa vitesse.
+  - Tu sauras dire qui gère la mémoire en Python, en C et en Rust, et ce que chaque choix coûte au programmeur.
+  - Tu sauras chiffrer en euros un projet qui appelle un modèle, par un essai sur 100 documents et une règle de trois.
+aRetenir:
+  - On choisit un langage pour son écosystème, pas pour sa vitesse.
+  - Si le livrable est une analyse, R est un excellent choix ; si c'est un système, Python.
+  - La mémoire se paie en performance (ramasse-miettes), en attention (C) ou en patience (Rust).
+  - Un modèle se paie au token, entrée et sortie à des tarifs différents ; une heure de GPU se paie même quand tu dors.
+  - On lance d'abord sur 100 documents, puis une règle de trois donne le coût du projet.
+---
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+import { SOURCES, DOLLARS_PAR_EURO, modeles, CAS, coutEuros, enEuros, euros, gpu, projetsPypi } from "../../data/couts";
+
+## Un langage pour son écosystème
+
+Les métiers de la data se distinguent d'abord par leurs outils : le statisticien dans R, l'ingénieur données dans SQL, le data scientist dans Python, et le C ou le Rust sous les moteurs que Python appelle.
+
+| Langage | Là où il gagne | Sa limite | Qui gère la mémoire |
+|---|---|---|---|
+| Python | tout le chemin, du fichier au modèle | lent en boucles écrites à la main | un ramasse-miettes |
+| R | statistiques, graphiques (`ggplot2`) | pénible à industrialiser | un ramasse-miettes |
+| SQL | interroger une base, même énorme | ne sait faire que ça | le moteur de la base |
+| C / C++ | aller très vite | un oubli de mémoire, un plantage | toi, à la main |
+| Rust | aussi vite que le C, sans ses accidents | un compilateur sévère | le compilateur |
+| JavaScript | faire vivre une page web | écosystème data pauvre | un ramasse-miettes |
+
+Un langage seul ne fait rien : ce qui compte, ce sont les bibliothèques déjà écrites. PyPI, le dépôt des paquets Python, compte {projetsPypi.toLocaleString("fr-FR")} projets (<a href={SOURCES.pypi.url}>{SOURCES.pypi.titre} ↗</a>, le {SOURCES.pypi.verifie}). Ton temps coûte plus cher que le temps de calcul.
+
+## R, sérieusement
+
+Sur son terrain, R gagne : modèles statistiques en une ligne, `ggplot2` et sa grammaire des graphiques, beaucoup de méthodes de biostatistique et de recherche publiées en R. Là où il coince : le mettre en production, dans un système que des ingénieurs font tourner. La règle : si ton livrable est une analyse, R ; si c'est un système, Python.
+
+## Qui gère la mémoire
+
+Un programme prend de la mémoire, il faut la rendre. Trois réponses, trois factures :
+
+- **le ramasse-miettes** (Python, R, JavaScript) rend tout seul ce que plus personne n'utilise : tu paies en performance ;
+- **à la main** (C) : `malloc` pour prendre, `free` pour rendre ; un oubli fait une fuite, un double `free` un plantage : tu paies en attention ;
+- **le compilateur** (Rust) refuse tout programme où il doute : tu paies en patience, avant l'exécution.
+
+## Combien coûte un modèle
+
+Un modèle appelé par API se paie au token, deux fois : ce que tu envoies, et ce qu'il écrit. Sur la page de tarifs, la sortie coûte cinq fois l'entrée, pour chaque modèle. Le cas du notebook : {CAS.documents.toLocaleString("fr-FR")} documents, {CAS.entree} tokens en entrée et {CAS.sortie} en sortie chacun.
+
+| Modèle | Entrée, par million de tokens | Sortie, par million de tokens | {CAS.documents.toLocaleString("fr-FR")} documents |
+|---|---|---|---|
+| {modeles[0].nom} | {modeles[0].entree} $ ({euros(enEuros(modeles[0].entree))}) | {modeles[0].sortie} $ ({euros(enEuros(modeles[0].sortie))}) | {euros(coutEuros(modeles[0], CAS.documents))} |
+| {modeles[1].nom} | {modeles[1].entree} $ ({euros(enEuros(modeles[1].entree))}) | {modeles[1].sortie} $ ({euros(enEuros(modeles[1].sortie))}) | {euros(coutEuros(modeles[1], CAS.documents))} |
+| {modeles[2].nom} | {modeles[2].entree} $ ({euros(enEuros(modeles[2].entree))}) | {modeles[2].sortie} $ ({euros(enEuros(modeles[2].sortie))}) | {euros(coutEuros(modeles[2], CAS.documents))} |
+
+Prix de la page (<a href={SOURCES.claude.url}>{SOURCES.claude.titre} ↗</a>), euros au taux de la BCE (1 € = {String(DOLLARS_PAR_EURO).replace(".", ",")} $, <a href={SOURCES.bce.url}>{SOURCES.bce.titre} ↗</a>), vérifiés le {SOURCES.claude.verifie}. Ces prix bougent, et les noms de modèles avec : le notebook a sa grille, datée, et la méthode compte plus que les nombres.
+
+Entraîner soi-même se paie à l'heure : un GPU {gpu.nom} se loue {String(gpu.dollarsHeure).replace(".", ",")} $ de l'heure chez Runpod (<a href={SOURCES.runpod.url}>{SOURCES.runpod.titre} ↗</a>, le {SOURCES.runpod.verifie}), soit {euros(enEuros(gpu.dollarsHeure) * 72, 0)} pour trois jours, y compris pendant que tu dors.
+
+D'où la règle : le pipeline complet tourne d'abord sur {CAS.echantillon} documents. Avec {modeles[1].nom}, l'essai coûte {euros(coutEuros(modeles[1], CAS.echantillon))} ; une règle de trois donne le coût du projet.
+
+### À toi : ta fiche « choisir ses outils »
+
+La dernière cellule du notebook : ton projet, ton langage, la bibliothèque qui justifie ce choix, ton modèle. Le coût de l'essai et le coût total se calculent tout seuls ; remplis jusqu'au ✅, puis recopie la fiche dans `docs/fiche-choisir-ses-outils.md`.
+
+<BoutonsSeance racine="seances-optionnelles" dossier="seance-optionnelle-1-metiers-data-science" lecon="SO1_metiers_data_science.ipynb" exercices="SO1_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `SO1_exercices.ipynb` : 12 exercices, de ★ à ★★★, avec vérification automatique, indices et solutions repliées.
