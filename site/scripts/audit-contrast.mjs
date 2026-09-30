@@ -31,6 +31,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = path.join(ROOT, "dist");
 const CHROME = process.env.CHROME || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const PORT = 4399;
+// une carte de module par page de la collection modules
+const DOSSIER_MODULES = path.join(ROOT, "src/content/modules");
+const NB_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).length : 0;
 
 /* ------------------------------------------------------------------------------------------------
    Les états. Chaque pilote est du JavaScript exécuté dans la page, après hydratation, avant la mesure.
@@ -265,6 +268,22 @@ const ETATS = [
       if (!z.textContent.includes("✓ juste")) throw new Error("clavier : 2 puis Entrée devrait valider la bonne réponse");
       touche("Enter"); await w(200);
       if (!z.textContent.includes("Question 2 / 4")) throw new Error("clavier : Entrée devrait passer à la question suivante");` },
+  // Les modules optionnels : une séance optionnelle avec son quiz, une page de projet, le groupe de la barre latérale.
+  { page: "modules/seance-optionnelle-1-metiers-data-science.html", id: "module-so1-initiale", pilote: "" },
+  { page: "modules/seance-optionnelle-1-metiers-data-science.html", id: "module-so1-quiz-juste", pilote: `
+      const z = ile("Quiz"); z.scrollIntoView(); z.querySelectorAll(".quiz-option")[1].click(); await w(100); btn(z, "Valider").click(); await w(300);
+      if (!z.textContent.includes("✓ juste")) throw new Error("quiz du module : réponse juste non reconnue");` },
+  { page: "modules/b2-agent-outille.html", id: "module-b2-projet", pilote: `
+      if (document.querySelector("astro-island[component-url*='Quiz']")) throw new Error("une page de projet n'a pas de quiz");
+      if (!document.querySelector("figure svg.schema")) throw new Error("le schéma du circuit manque");` },
+  { page: "modules/seance-optionnelle-1-metiers-data-science.html", id: "barre-groupe-modules", pilote: `
+      const b = document.getElementById("laterale"); if (!b || b.offsetParent === null) throw new Error("barre absente ou repliée");
+      const li = [...b.querySelectorAll("li.module-optionnel")]; if (li.length !== ${NB_MODULES}) throw new Error(li.length + " modules dans la barre, ${NB_MODULES} attendus");
+      if (!b.querySelector("li.module-optionnel [aria-current='page']") && !b.querySelector("li.module-optionnel[aria-current='page']")) throw new Error("le module de la page n'est pas mis en avant");` },
+  { page: "modules/seance-optionnelle-1-metiers-data-science.html", id: "barre-modules-menu-mobile", largeur: 420, pilote: `
+      document.querySelector("[data-bascule-barre]").click(); await w(200);
+      if (document.getElementById("laterale").offsetParent === null) throw new Error("le menu devrait être ouvert");
+      document.querySelector("#laterale li.module-optionnel").scrollIntoView(); await w(100);` },
   // La page « Enregistrer en PDF » : le choix des séances (écran), une seule séance cochée.
   { page: "enregistrer-pdf.html", id: "export-pdf-une-seance", pilote: `
   var t = document.querySelector("[data-tout]"); t.checked = false; t.dispatchEvent(new Event("change"));
@@ -295,7 +314,7 @@ const NON_COUVERTS = [
   "boutons désactivés (Précédent au premier écran, Suivant au dernier) : mesurés mais exclus du verdict, WCAG les exempte",
   "transitions et animations : désactivées pendant la mesure, chaque état est mesuré à son terme",
   "sélection de texte (::selection) et zoom navigateur : non simulés",
-  "largeurs mobiles : une seule largeur mesurée, 1280 px, sauf l'état barre-menu-mobile-ouvert (420 px)",
+  "largeurs mobiles : une seule largeur mesurée, 1280 px, sauf les états barre-menu-mobile-ouvert et barre-modules-menu-mobile (420 px)",
 ];
 
 const hexOk = (v) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v);
@@ -470,9 +489,6 @@ const coppers = [palette.copper.DEFAULT, palette.copper.ink, palette.copper.ligh
 const lights = [palette.cream.DEFAULT, palette.cream.sunk, "#ffffff"].map((c) => c.toLowerCase());   // blanc : le papier, à l'impression
 const darks = [palette.ink.DEFAULT, palette.ink.raised, palette.ink.soft].map((c) => c.toLowerCase());
 
-// une carte de module par page de la collection modules
-const DOSSIER_MODULES = path.join(ROOT, "src/content/modules");
-const NB_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).length : 0;
 const P = portee();
 const RETENUS = ETATS.filter((e) => P.vise(e.page) && (!P.impression || e.fond === "impression"));
 if (!RETENUS.length) { console.error(`Portée vide (${P.libelle}) : aucun état ne correspond. Pages : ${[...new Set(ETATS.map((e) => e.page))].join(", ")}`); process.exit(2); }

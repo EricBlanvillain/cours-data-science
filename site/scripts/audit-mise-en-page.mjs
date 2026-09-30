@@ -7,6 +7,8 @@
  *  2. l'en-tête : le bord gauche du logo et le bord droit du dernier lien de navigation sont AU PIXEL PRÈS à la même place sur
  *     l'accueil, le glossaire, la séance 0 et la séance 1 ; le pied de page aussi. Le conteneur est le même partout (1360 px) ;
  *  3. la prose : aucun bloc de texte direct de .prose, ni hero-texte, ne dépasse son plafond (46 rem, 36 rem pour le hero) ;
+ *  5. la barre latérale : les titres alignés sur un même bord, numéro de séance ou code de module devant (bureau, et menu
+ *     ouvert au téléphone sur une page de module) ; les pages de module sont mesurées au téléphone, aux trois largeurs et à l'impression ;
  *  4. les écrans de la séance 0 : chacun, atteint aux flèches du clavier, se termine au-dessus de la barre épinglée dans une
  *     fenêtre de 1440 × 900 (zone visible), l'affirmation dépliée comprise (curseur à un bout, arguments visibles). 1280 × 720 est mesuré et rapporté, sans faire échouer.
  *
@@ -27,6 +29,11 @@ const CHROME = process.env.CHROME || "/Applications/Google Chrome.app/Contents/M
 const PORT = 4398;
 const LARGEURS = [1280, 1470, 1920];
 const LARGEUR_TELEPHONE = 390;   // simulée par html{width:390px} : le headless ne descend pas sous 500 px
+
+// une carte de module par page de la collection modules
+const DOSSIER_MODULES = path.join(ROOT, "src/content/modules");
+const NB_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).length : 0;
+const SLUGS_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).map((f) => f.slice(0, -4)).sort() : [];
 
 /* Les pages, et pour les leçons les états atteints par clic qui changent une grille. */
 const PAGES = [
@@ -59,19 +66,19 @@ const PAGES = [
   { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12", pilote: "" },
   { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12-agent-juste", pilote: `const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);` },
   { page: "enregistrer-pdf.html", id: "enregistrer-pdf", pilote: "" },
+  // les pages de module, puis le menu du téléphone ouvert sur l'une d'elles (la colonne des numéros, codes compris)
+  ...SLUGS_MODULES.map((slug) => ({ page: `modules/${slug}.html`, id: `module-${slug}`, pilote: "" })),
+  ...SLUGS_MODULES.slice(0, 1).map((slug) => ({ page: `modules/${slug}.html`, id: "module-menu-ouvert", pilote: `document.querySelector("[data-bascule-barre]").click(); await w(250);` })),
 ];
 // L'impression (et les PDF) : chaque leçon et le cours complet, règles @media print activées, <details> ouverts, à la
 // largeur de texte d'une page A4 (180 mm = 680 px, simulée comme le téléphone) : rien ne dépasse à droite.
-// une carte de module par page de la collection modules
-const DOSSIER_MODULES = path.join(ROOT, "src/content/modules");
-const NB_MODULES = fs.existsSync(DOSSIER_MODULES) ? fs.readdirSync(DOSSIER_MODULES).filter((f) => f.endsWith(".mdx")).length : 0;
 const LARGEUR_A4 = 680;
 const PILOTE_IMPRESSION = `
   var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
   if (!css) throw new Error("aucune règle @media print trouvée");
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
   document.querySelectorAll("details").forEach(function (d) { d.open = true; });`;
-const IMPRESSION = [...PAGES.filter((e) => /^seance-\d+$/.test(e.id)), { page: "enregistrer-pdf.html", id: "enregistrer-pdf" }]
+const IMPRESSION = [...PAGES.filter((e) => /^seance-\d+$/.test(e.id) || (/^module-/.test(e.id) && e.id !== "module-menu-ouvert")), { page: "enregistrer-pdf.html", id: "enregistrer-pdf" }]
   .map((e) => ({ page: e.page, id: "impression-" + e.id, pilote: PILOTE_IMPRESSION }));
 const PAGES_EN_TETE = ["accueil", "glossaire", "enregistrer-pdf", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11", "seance-12"];
 
@@ -179,6 +186,21 @@ const MESURE = (pilote) => `
   });
   document.querySelectorAll('.hero-texte').forEach(function (el) { var wdt = el.getBoundingClientRect().width; if (wdt > 36 * rem + 1) out.proseDebords.push({ quoi: 'hero-texte', largeur: Math.round(wdt), plafond: Math.round(36 * rem) }); });
 
+  // 5. la barre latérale, quand elle est visible : tous les titres partent du même bord, qu'il y ait devant « 00 » ou « SO2 »,
+  //    et aucun numéro ne mord sur son titre (dépliée au bureau, menu ouvert au téléphone)
+  var lat = document.getElementById('laterale');
+  if (lat && lat.offsetParent !== null) {
+    var lignesB = Array.prototype.map.call(lat.querySelectorAll('li'), function (li) { return { n: li.querySelector('.num'), t: li.querySelector('.titre') }; })
+      .filter(function (x) { return x.n && x.t && x.t.getBoundingClientRect().width > 0; });
+    var gauches = lignesB.map(function (x) { return x.t.getBoundingClientRect().left; });
+    out.barre = { lignes: lignesB.length, modules: lat.querySelectorAll('li.module-optionnel').length, fautes: [] };
+    var ref = Math.min.apply(null, gauches);
+    lignesB.forEach(function (x, k) {
+      if (gauches[k] - ref > 0.5) out.barre.fautes.push('titre « ' + x.t.textContent.trim().slice(0, 30) + ' » décalé de ' + (gauches[k] - ref).toFixed(1) + ' px');
+      if (x.n.getBoundingClientRect().right > gauches[k] + 0.5) out.barre.fautes.push('numéro « ' + x.n.textContent.trim() + ' » mord sur son titre');
+    });
+  }
+
   var pre = document.createElement('pre'); pre.id = '__mep'; pre.textContent = JSON.stringify(out); document.body.appendChild(pre);
   if (window.__ecrans) { var pe = document.createElement('pre'); pe.id = '__ecrans'; pe.textContent = JSON.stringify(window.__ecrans); document.body.appendChild(pe); }
 })();
@@ -221,6 +243,9 @@ for (const etat of PAGES_R) {
   const ou = `${etat.id} @${LARGEUR_TELEPHONE} (simulé)`;
   if (!res) { lignes.push(`${ou} : NON MESURÉ`); fautes++; continue; }
   if (res.libelles && res.libelles.length) { fautes += res.libelles.length; lignes.push(`${ou} · libellés :\n   !! ${res.libelles.join("\n   !! ")}`); }
+  if (res.erreur && etat.id === "module-menu-ouvert") { lignes.push(`${ou} : pilote en échec, ${res.erreur}`); fautes++; }
+  if (res.barre && res.barre.fautes.length) { fautes += res.barre.fautes.length; lignes.push(`${ou} · barre latérale :\n   !! ${res.barre.fautes.join("\n   !! ")}`); }
+  if (etat.id === "module-menu-ouvert") { if (!res.barre) { fautes++; lignes.push(`${ou} · le menu ouvert n'a pas été mesuré`); } else if (!res.barre.fautes.length) lignes.push(`${ou} · menu : ${res.barre.lignes} titres alignés, dont ${res.barre.modules} modules`); }
   if (res.debordsHorizontaux.length) { fautes += res.debordsHorizontaux.length; lignes.push(`${ou} · déborde à droite :\n   !! ${res.debordsHorizontaux.map((d) => d.quoi + " jusqu'à " + d.droite + "px pour " + d.page).join("\n   !! ")}`); }
   else lignes.push(`${ou.padEnd(40)} rien ne déborde à droite`);
 }
@@ -247,9 +272,10 @@ for (const largeur of PAGES_R.length ? LARGEURS : []) {
       if (cartesModules !== NB_MODULES) { fautes++; lignes.push(`${ou} · ${cartesModules} carte(s) de module au lieu de ${NB_MODULES}`); }
       for (const g of res.grilles) if (g.modules && g.modules !== g.cartes) { fautes++; lignes.push(`${ou} · grille ${g.grille} : cartes de séance et de module mêlées`); }
     }
+    if (res.barre && res.barre.fautes.length) { fautes += res.barre.fautes.length; lignes.push(`${ou} · barre latérale :\n   !! ${res.barre.fautes.join("\n   !! ")}`); }
     for (const d of res.proseDebords) { fautes++; lignes.push(`${ou} · prose au-delà du plafond : ${d.quoi} fait ${d.largeur}px pour ${d.plafond}px`); }
     if (PAGES_EN_TETE.includes(etat.id)) enTetes[etat.id] = { ...res.enTete, piedGauche: res.pied && res.pied.gauche, piedLargeur: res.pied && res.pied.largeur };
-    lignes.push(`${ou.padEnd(34)} grilles ${res.grilles.length}, cartes ${res.grilles.reduce((n, g) => n + g.cartes, 0)}, en-tête logo ${res.enTete ? res.enTete.logoGauche : "?"} → dernier lien ${res.enTete ? res.enTete.dernierLienDroite : "?"}`);
+    lignes.push(`${ou.padEnd(34)} grilles ${res.grilles.length}, cartes ${res.grilles.reduce((n, g) => n + g.cartes, 0)}, en-tête logo ${res.enTete ? res.enTete.logoGauche : "?"} → dernier lien ${res.enTete ? res.enTete.dernierLienDroite : "?"}${res.barre ? `, barre ${res.barre.lignes} titres alignés` : ""}`);
   }
   // l'en-tête doit être identique au pixel sur les quatre pages
   const ids = Object.keys(enTetes); if (ids.length === PAGES_EN_TETE.length) {
