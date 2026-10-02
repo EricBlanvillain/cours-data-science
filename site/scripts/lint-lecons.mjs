@@ -10,9 +10,7 @@
  *  2. imports : seulement le vocabulaire des blocs (README, « Blocs d'une leçon ») ;
  *  3. chaque <details> a un <summary> ;
  *  4. titres en ## ou ### seulement ;
- *  5. un libellé de lien qui finit par → pointe dans le site, par ↗ hors du site, et tout lien qui sort du site (http ou https
- *     hors de cours-data-science.vercel.app, ou href={…} tiré de src/data/) finit par ↗ ; les trois liens de
- *     BoutonsSeance.astro aussi ;
+ *  5. (les flèches des liens se vérifient sur les pages construites : scripts/fleches.mjs, après astro build) ;
  *  6. aucune phrase n'annonce une figure (« ci-dessous », « ci-dessus », « le schéma suivant », « la figure suivante »,
  *     « voici un schéma ») : une figure remplace son explication, elle n'est jamais introduite par elle ;
  *  7. pour une leçon de numero ≥ 1 et une séance optionnelle (type seance), une entrée de 4 questions existe dans
@@ -27,11 +25,6 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DOSSIER = path.join(ROOT, "src/content/lecons");
 const QUIZ = path.join(ROOT, "src/data/quiz.ts");
 const MODULES = path.join(ROOT, "src/content/modules");
-/* Un lien sort du site s'il commence par http(s) hors du domaine du cours ; un href={…} (une URL tirée d'un fichier de
-   src/data/, les sources) compte comme externe : un lien interne s'écrit en chemin littéral. */
-const DOMAINE = "cours-data-science.vercel.app";
-const externe = (u) => u.startsWith("{") || (/^https?:\/\//.test(u) && new URL(u).hostname !== DOMAINE);
-const BOUTONS = path.join(ROOT, "src/components/BoutonsSeance.astro");
 
 /* Le vocabulaire des blocs : ce qu'une leçon a le droit d'importer. */
 const VOCABULAIRE = [
@@ -102,15 +95,6 @@ for (const { dossier, f, module } of lots) {
   // 4. titres
   const sansCode = corps.replace(/```[\s\S]*?```/g, "");
   for (const m of sansCode.matchAll(/^(#{1,6})\s/gm)) if (m[1].length < 2 || m[1].length > 3) fautes.push(`titre en ${m[1]} : seuls ## et ### sont permis`);
-  // 5. flèches des liens : → dans le site, ↗ dehors, et tout lien qui sort du site finit par ↗
-  const fleches = (lab, url) => {
-    const dehors = externe(url);
-    if (lab.endsWith("→") && dehors) fautes.push(`lien « ${lab} » : → mais destination externe`);
-    if (lab.endsWith("↗") && !dehors) fautes.push(`lien « ${lab} » : ↗ mais destination interne`);
-    if (dehors && !lab.endsWith("↗")) fautes.push(`lien « ${lab} » : sort du site (${url}), il finit par ↗`);
-  };
-  for (const m of sansCode.matchAll(/\[([^\]]*)\]\(([^)\s]+)\)/g)) fleches(m[1].trim(), m[2]);
-  for (const m of sansCode.matchAll(/<a\s[^>]*href=("[^"]+"|\{[^}]+\})[^>]*>([\s\S]*?)<\/a>/g)) fleches(m[2].replace(/<[^>]+>/g, "").trim(), m[1].replace(/^"|"$/g, ""));
   // 6. annonces de figure
   const texte = sansCode.toLowerCase();
   for (const a of ANNONCES) if (texte.includes(a)) fautes.push(`annonce de figure : « ${a} » (une figure remplace son explication)`);
@@ -123,11 +107,6 @@ for (const { dossier, f, module } of lots) {
 
   total += fautes.length;
   console.log(`${f}${fautes.length ? "\n   !! " + fautes.join("\n   !! ") : "  ✓"}`);
-}
-// 5 bis. la rangée BoutonsSeance : chacun de ses liens sort du site, chacun finit par ↗
-for (const m of fs.readFileSync(BOUTONS, "utf8").matchAll(/<a\s[^>]*>([\s\S]*?)<\/a>/g)) {
-  const lab = m[1].replace(/\{[^{}]*\}/g, (x) => (/↗/.test(x) ? "↗" : "x")).replace(/<[^>]+>/g, "").trim();
-  if (!lab.endsWith("↗")) { total++; console.log(`BoutonsSeance.astro\n   !! lien « ${lab} » : sort du site, il finit par ↗`); }
 }
 console.log(total ? `\nLINT — ${total} faute(s) dans ${fichiers.length} page(s)` : `\nLINT — ${fichiers.length} page(s) (leçons et modules), aucune faute`);
 process.exit(total ? 1 : 0);

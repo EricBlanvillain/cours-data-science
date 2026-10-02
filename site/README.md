@@ -46,8 +46,9 @@ src/styles/global.css           thème clair / sombre, registres typographiques,
 src/styles/palette.mjs          la palette, source unique pour l'audit
 scripts/typographie.mjs         post-build : espace fine insécable après « et avant », et avant ; : ! ? (pages et chaînes des bundles des îlots)
 scripts/relativize.mjs          post-build : chemins relatifs (pages, polices) + vérification des cibles et de l'absence de ressource externe
-scripts/lint-lecons.mjs         les règles des leçons : vocabulaire des blocs, replis, titres, flèches, annonces de figure, quiz
+scripts/lint-lecons.mjs         les règles des leçons : vocabulaire des blocs, replis, titres, annonces de figure, quiz, rangée BoutonsSeance
 scripts/compte-prose.mjs        post-build : mots visibles de l'article de prose de chaque leçon (titres, tableaux, code compris ; d'un repli, son seul résumé ; ni îlots ni SVG), plafond 625
+scripts/fleches.mjs             post-build : chaque lien qui sort du site finit par ↗, aucun lien interne n'en a (toutes les pages)
 scripts/audit-contrast.mjs      mesure chaque texte contre son fond composité dans Chrome headless, sans dépendance
 scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose, écrans de la séance 0 dans 1440 × 900
 ```
@@ -93,10 +94,12 @@ fait des liens et que le lint vérifie), `prerequisNote` (la précision, par exe
 ## Blocs d'une leçon
 
 Le vocabulaire est fermé : une leçon n'utilise que ces blocs, et `npm run lint:lecons` (lancé en tête de `npm run build`, donc par
-Vercel) refuse tout import qui n'en fait pas partie, un `<details>` sans `<summary>`, un titre hors `##`/`###`, une flèche qui
-ment, un lien qui sort du site sans ↗ (BoutonsSeance compris), une phrase qui annonce une figure, un frontmatter incomplet, un quiz absent, ou une page sans sa rangée `BoutonsSeance` (une et une seule par leçon et par page de module). Le plafond de 625 mots se mesure sur la
+Vercel) refuse tout import qui n'en fait pas partie, un `<details>` sans `<summary>`, un titre hors `##`/`###`, une phrase qui annonce une figure, un frontmatter incomplet, un quiz absent, ou une page sans sa rangée `BoutonsSeance` (une et une seule par leçon et par page de module). Le plafond de 625 mots se mesure sur la
 page construite, là où l'élève lit (`scripts/compte-prose.mjs`, après `astro build`) : titres, tableaux et code comptent, d'un
 repli seul le résumé compte, les îlots et les SVG ne comptent pas.
+Les flèches des liens se vérifient aussi sur les pages construites (`scripts/fleches.mjs`, après `compte-prose`), sur toutes
+les pages, composants compris : un lien qui sort du site (http ou https, hors du domaine du cours) finit par ↗, un lien interne
+jamais. Seul ce qu'un îlot n'affiche qu'après un clic lui échappe.
 
 | Bloc | Quand | Exemple |
 |---|---|---|

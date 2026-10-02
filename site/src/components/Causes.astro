@@ -28,7 +28,7 @@ import Courbe from "./schemas/Courbe.astro";
               <span>
                 <br />aussi :{" "}
                 {c.sourcesComplementaires.map((s, k) => (
-                  <span>{k > 0 && " · "}<a href={s.url} target="_blank" rel="noopener">{s.titre}</a></span>
+                  <span>{k > 0 && " · "}<a href={s.url} target="_blank" rel="noopener">{s.titre} ↗</a></span>
                 ))}
               </span>
             ) : null}

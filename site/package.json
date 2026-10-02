@@ -6,7 +6,7 @@
   "description": "Site du cours Data Science & IA : leçons en MDX, îlots React, sortie statique",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/lint-lecons.mjs && astro build && node scripts/typographie.mjs && node scripts/compte-prose.mjs && node scripts/relativize.mjs",
+    "build": "node scripts/lint-lecons.mjs && astro build && node scripts/typographie.mjs && node scripts/compte-prose.mjs && node scripts/fleches.mjs && node scripts/relativize.mjs",
     "pdf:verifier": "node scripts/pdf.mjs",
     "preview": "astro preview",
     "audit": "node scripts/audit-contrast.mjs",
