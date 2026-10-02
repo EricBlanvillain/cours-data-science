@@ -14,7 +14,8 @@
  *  6. aucune phrase n'annonce une figure (« ci-dessous », « ci-dessus », « le schéma suivant », « la figure suivante »,
  *     « voici un schéma ») : une figure remplace son explication, elle n'est jamais introduite par elle ;
  *  7. pour une leçon de numero ≥ 1 et une séance optionnelle (type seance), une entrée de 4 questions existe dans
- *     src/data/quiz.ts (clé : le numéro, ou le code SO1, SO2) ; un projet (type projet) n'en a aucune.
+ *     src/data/quiz.ts (clé : le numéro, ou le code SO1, SO2) ; un projet (type projet) n'en a aucune ;
+ *  8. chaque leçon et chaque page de module pose une rangée <BoutonsSeance /> et une seule (Colab et dossier GitHub).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -104,6 +105,9 @@ for (const { dossier, f, module } of lots) {
   // 7. quiz : 4 questions pour une séance (leçon ou séance optionnelle), aucune pour un projet
   if (seance) { const q = quiz[cle] || 0; if (q !== 4) fautes.push(`quiz : ${q} question(s) pour ${cle} dans src/data/quiz.ts, il en faut 4`); }
   if (module && !seance && quiz[cle]) fautes.push(`quiz : un projet n'a pas de quiz, retirer l'entrée ${cle} de src/data/quiz.ts`);
+  // 8. la rangée Colab / GitHub
+  const rangees = (sansCode.match(/<BoutonsSeance\b/g) || []).length;
+  if (rangees !== 1) fautes.push(`${rangees} rangée(s) <BoutonsSeance />, il en faut une (liens Colab et dossier GitHub)`);
 
   total += fautes.length;
   console.log(`${f}${fautes.length ? "\n   !! " + fautes.join("\n   !! ") : "  ✓"}`);

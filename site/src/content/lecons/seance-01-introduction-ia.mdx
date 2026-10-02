@@ -24,6 +24,7 @@ import CarteML from "../../components/schemas/CarteML.astro";
 import ClassifOuRegression from "../../components/islands/ClassifOuRegression";
 import ReseauNeurones from "../../components/schemas/ReseauNeurones.astro";
 import CartesNumerotees from "../../components/CartesNumerotees.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
 import { bilanFrise, conditions } from "../../data/conditions";
 
 ## Une frise, de 1950 à aujourd'hui
@@ -104,3 +105,16 @@ Reprenons la pomme et le melon du notebook.
 ### À toi : le Playground
 
 Ouvre le [TensorFlow Playground](https://playground.tensorflow.org/) (il faut le réseau). Choisis le jeu de données en spirale, garde une couche cachée à deux neurones, lance : le réseau n'y arrive pas. Ajoute des couches et des neurones avec les boutons **+**, relance, et regarde la frontière épouser la spirale. C'est ça, *deep* : la profondeur apprend des formes compliquées.
+
+## Ensuite, le notebook
+
+- **Section 3** · un seuil qui apprend sur 20 fruits, piégé par une pomme géante (15 min) ;
+- **Section 4** · Teachable Machine : ton modèle de gestes à la webcam (20 min) ;
+- **Section 5** · les outils du moment, leurs forces et leurs faiblesses (10 min) ;
+- **Section 6** · les 5 règles d'un bon prompt, et le concours (15 min).
+
+<BoutonsSeance dossier="seance-01-introduction-ia" lecon="01_introduction_ia.ipynb" exercices="01_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `01_exercices.ipynb` : 12 exercices, de ★ à ★★★, avec vérification automatique, indices et solutions repliées. Il s'ouvre par un quiz de quatre questions, celles qu'on se pose à voix haute au début de la séance suivante.

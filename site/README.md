@@ -94,7 +94,7 @@ fait des liens et que le lint vérifie), `prerequisNote` (la précision, par exe
 
 Le vocabulaire est fermé : une leçon n'utilise que ces blocs, et `npm run lint:lecons` (lancé en tête de `npm run build`, donc par
 Vercel) refuse tout import qui n'en fait pas partie, un `<details>` sans `<summary>`, un titre hors `##`/`###`, une flèche qui
-ment, une phrase qui annonce une figure, un frontmatter incomplet ou un quiz absent. Le plafond de 625 mots se mesure sur la
+ment, une phrase qui annonce une figure, un frontmatter incomplet, un quiz absent, ou une page sans sa rangée `BoutonsSeance` (une et une seule par leçon et par page de module). Le plafond de 625 mots se mesure sur la
 page construite, là où l'élève lit (`scripts/compte-prose.mjs`, après `astro build`) : titres, tableaux et code comptent, d'un
 repli seul le résumé compte, les îlots et les SVG ne comptent pas.
 
