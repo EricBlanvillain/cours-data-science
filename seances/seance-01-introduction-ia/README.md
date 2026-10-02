@@ -22,7 +22,7 @@ Si le temps manque : on s'arrête à la fin de Teachable Machine (section 4) ; l
 
 Notes d'animation (formateur)
 - Quiz d'ouverture (2 min) : 4 questions en tête de `01_exercices.ipynb`, à poser à voix haute avant de commencer
-- Quiz « IA ou pas ? » (section 1) : « Poser les six cas à main levée. Le GPS fait débat : c'est de l'IA (un algorithme qui imite une capacité) mais pas du machine learning. C'est le bon moment pour introduire la différence. »
+- Quiz « IA ou pas ? » (section 1) : « Poser les dix cas à main levée. Le GPS fait débat : c'est de l'IA (un algorithme qui imite une capacité) mais pas du machine learning. C'est le bon moment pour introduire la différence. »
 - Les trois cercles (section 2 ou schéma du site) : « Dessiner les cercles au tableau plutôt que projeter, en demandant où placer chaque exemple du quiz. ChatGPT va dans le plus petit cercle, le GPS dans le plus grand seulement. »
 - La frise (site) : « Ne pas réciter les dates. Une question : pourquoi 2012 est-il la vraie rupture ? Réponse : la puissance de calcul des cartes graphiques et les grandes bases d'images. »
 - Section 3, comment une machine apprend : « Insister sur « un tout petit peu » et « des millions de fois ». C'est ce qui rend l'entraînement long et cher, et ce qu'ils vont ressentir avec Teachable Machine. »
