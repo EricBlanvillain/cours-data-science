@@ -514,6 +514,10 @@ kbd { font-size: 0.85em; border: 1px solid var(--trait-fort); border-bottom-widt
   /* ne pas couper une figure, une carte, un tableau ou un bloc de code ; ne rien laisser dépasser à droite */
   figure, .carte, table, pre, svg, .schema, .encart, .jeu-imprime li, .corrige-jeu li { break-inside: avoid; }
   h2, h3 { break-after: avoid; }
+  /* un jeu ou le mini-quiz imprimé : son titre et sa consigne restent avec la première question */
+  .jeu-imprime > p:not(.discret), .jeu-imprime-choix { break-after: avoid; }
+  .jeu-imprime-choix { break-inside: avoid; }
+  .jeu-imprime-items { break-before: avoid; }
   pre, code { white-space: pre-wrap !important; overflow-wrap: anywhere; }
   svg, img, table { max-width: 100% !important; height: auto; }
   .defile-x { overflow: visible !important; }

@@ -3,7 +3,7 @@
  * Enregistrer en PDF : la seule entrée d'export du site (bouton « Enregistrer en PDF ↓ » de l'accueil). En haut, masqué à
  * l'impression, le choix : « Cours complet » (les séances 0 à 12) et une case par séance, puis une case par module
  * optionnel, décochée par défaut. Seul ce qui est coché s'imprime ; la couverture et le sommaire ne listent que cela
- * (les modules après les séances) ; le pied de page et le nom de fichier proposé portent le titre de la page quand un
+ * (les modules après les séances), et ne s'impriment pas quand un seul élément est coché ; le pied de page et le nom de fichier proposé portent le titre de la page quand un
  * seul élément est coché, « Data Science & IA » sinon. Chaque page a le même corps que sa page du site (CorpsLecon).
  * `?seances=0,5` et `?modules=SO1,B2` précochent une sélection (npm run pdf:verifier s'en sert). Non indexée.
  */
@@ -87,6 +87,8 @@ const titres = {
     </section>
   ))}
 
+  {/* une seule case cochée : ni couverture ni sommaire à l'impression, la leçon commence page 1 (son en-tête et le pied portent le titre) */}
+  <style is:inline>@media print { [data-une-seule] .couverture, [data-une-seule] .sommaire-cours { display: none; } }</style>
   <style is:inline data-pied-pdf>@media print { @page { @bottom-left { content: "Data Science & IA"; } } }</style>
   <script is:inline define:vars={{ titres }}>
     (function () {
@@ -104,6 +106,7 @@ const titres = {
         tout.checked = s.length === seances.length;
         document.querySelectorAll("[data-cle]:not(input)").forEach(function (el) { el.hidden = cles.indexOf(el.getAttribute("data-cle")) < 0; });
         document.querySelector("[data-nombre]").textContent = [s.length ? pluriel(s.length, "séance") : null, m.length ? pluriel(m.length, "module") : null].filter(Boolean).join(" · ") || "0 séance";
+        document.documentElement.toggleAttribute("data-une-seule", cles.length === 1);
         pied.textContent = "@media print { @page { @bottom-left { content: " + guillemets(cles.length === 1 ? titres[cles[0]] : "Data Science & IA") + "; } } }";
         form.querySelector("[data-imprimer]").disabled = cles.length === 0;
       }
