@@ -26,7 +26,7 @@ Outils (gratuits)
 - Les paquets Python disponibles : https://pypi.org
 - R : https://www.r-project.org · ses paquets sur [CRAN](https://cran.r-project.org/) · `ggplot2` https://ggplot2.tidyverse.org
 - La propriété de la mémoire en Rust (mention seulement, rien à installer) : https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html
-- Les pages de tarifs, à aller lire soi-même : [Anthropic](https://www.anthropic.com/pricing) · [OpenAI](https://openai.com/api/pricing/) · [Google](https://ai.google.dev/pricing)
+- Les pages de tarifs, à aller lire soi-même : [Anthropic](https://claude.com/pricing) · [OpenAI](https://openai.com/api/pricing/) · [Google](https://ai.google.dev/pricing)
 - Un exemple de grille de prix de GPU à l'heure : https://www.runpod.io/pricing
 
 Livrable : [`docs/fiche-choisir-ses-outils.md`](../../docs/fiche-choisir-ses-outils.md)
