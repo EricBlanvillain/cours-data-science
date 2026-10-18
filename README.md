@@ -12,6 +12,7 @@ porte le sien (voir [plan-de-cours.md](plan-de-cours.md) → « Comment lire les
 plan-de-cours.md      le plan détaillé : blocs, séances, rythme 15/60/15, livrables, projets
 liens-utiles.md       outils, datasets (Kaggle + miroirs publics), docs officielles, tutoriels
 docs/                 guides, aide-mémoires, fiches, glossaire, grille d'évaluation
+donnees/              copies de secours des jeux de données dont la licence permet la redistribution (sources et licences dans son README)
 seances/              un dossier par séance : README (déroulé) + leçon + exercices
 projets/              les 4 projets du portfolio, avec datasets Kaggle
 seances-optionnelles/ les séances hors parcours (métiers de la data science, software engineering)
