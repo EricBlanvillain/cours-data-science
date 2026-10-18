@@ -12,8 +12,9 @@ Déroulé (1 h 30)
   - sections 1 et 2 (15 min) : le modèle invente et calcule mal, les 3 outils testés seuls, un quatrième outil
   - section 3 (10 min) : la boucle `OUTIL: nom(args)`, l'agent sur un Pokémon inconnu et sur une question sans outil
   - sections 4 et 5 (15 min) : agent → RAG → réponse, deux outils enchaînés, le banc de test des ratés, une boucle plus tolérante
-  - section 6 (5 min) : le quiz des bonnes pratiques
+  - section 6 (5 min) : les bonnes pratiques avec l'IA, lues ensemble
   - section 7 (15 min) : projet, son propre outil, ajouté à l'agent et mesuré sur un banc de 4 questions
+  - Après la ligne « Fin de l'heure » du notebook, si on a le temps : section 8, le quiz « bonne ou mauvaise idée ? » sur six situations (la séance suivante n'en dépend pas)
 - 15 min : partage : chacun montre son outil, son score au banc de test, et une question ratée
 
 Si le temps manque : le projet (section 7) se termine à la maison ; la séance 16 commence par le portfolio, pas par l'agent.

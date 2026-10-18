@@ -10,11 +10,12 @@ Déroulé (1 h 30)
 - 15 min : l'apprentissage supervisé expliqué avec les champignons et les spams, classification vs régression avec des exemples du quotidien, pourquoi cacher une partie des données, l'exactitude et le « modèle bête »
 - 60 min : notebook `09_premier_modele.ipynb`
   - sections 2 à 4 (25 min) : explorer et nettoyer les manchots, X / y, train / test, arbre de décision lu ensemble sur `plot_tree`
-  - sections 5 à 7 (20 min) : k-NN, la courbe du sur-apprentissage (profondeur 1 → 20), une régression du poids en grammes, on mesure et on améliore
-  - section 8 (15 min) : projet, la même recette sur les Pokémon (prédire `Legendary`)
+  - sections 5 et 6 (20 min) : la courbe du sur-apprentissage (profondeur 1 → 20), un deuxième modèle en une cellule (les k plus proches voisins), une régression du poids en grammes
+  - section 7 (15 min) : projet, la même recette sur les Pokémon (prédire `Legendary`)
+  - Après la ligne « Fin de l'heure » du notebook, si on a le temps : section 8, les k plus proches voisins : quel k ?, et section 9, on mesure et on améliore (ajouter le sexe et l'île, la mise à l'échelle) (la séance suivante n'en dépend pas)
 - 15 min : chacun donne son score face au modèle bête et lit sa phrase « ce que mon modèle a compris »
 
-Si le temps manque : on s'arrête à la préparation X / y du projet Pokémon (section 8) ; l'entraînement, le piège du « toujours non » et la phrase de synthèse ouvrent la séance suivante.
+Si le temps manque : on s'arrête à la préparation X / y du projet Pokémon (section 7) ; l'entraînement, le piège du « toujours non » et la phrase de synthèse ouvrent la séance suivante.
 
 Notes d'animation (formateur)
 - Quiz d'ouverture (2 min) : 4 questions en tête de `09_exercices.ipynb`, à poser à voix haute avant de commencer
@@ -23,10 +24,10 @@ Notes d'animation (formateur)
 - Sections 2 à 3, X et y : « Deux lettres, à répéter toute la séance. Quand un élève demande « c'est quoi le y ? », c'est le bon moment pour réexpliquer, pas un échec. »
 - Section 3, train / test : « L'analogie du contrôle avec les corrigés marche à tous les coups. La faire dire par un élève. »
 - Section 4, l'arbre de décision : « Lire l'arbre dessiné à voix haute, nœud par nœud, avec un manchot inventé. Demander : quelle question l'arbre pose-t-il en premier ? pourquoi celle-là ? »
-- Section 5, k-NN : « Faire deviner à la main un point du nuage avec ses voisins avant de lancer le code. »
 - Section 5, le sur-apprentissage : « L'exercice max_depth de 1 à 20 est le plus important de la séance : faire noter les scores dans un tableau au tableau, on voit la courbe apparaître. »
+- Section 5, le k-NN : « Faire deviner à la main un point du nuage avec ses voisins avant de lancer le code. »
 - Toute la séance : « Une seule notion nouvelle par tranche de dix minutes : supervisé, X/y, train/test, arbre. Pas plus. »
-- Si le groupe est fatigué : « Si le groupe est fatigué, sauter le k-NN et garder le sur-apprentissage : c'est l'idée qui reste. »
+- Le k-NN reste dans le cœur, en une cellule, parce que la séance 11 le compare aux autres modèles ; sa courbe (section 8) est après la ligne « Fin de l'heure » : « Le sur-apprentissage est l'idée qui reste ; la courbe du k-NN se fait s'il reste du temps, ou chez soi. »
 
 Entre deux séances (à la maison) : `09_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ sur des données que la leçon n'a pas vues (des voitures des années 1970, des diamants, les additions d'un restaurant), avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 

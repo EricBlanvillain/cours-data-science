@@ -12,11 +12,12 @@ Déroulé (1 h 30, en binômes)
 - 15 min : rappel de la séance 10 et tour des scores ; le sur-apprentissage expliqué avec l'analogie de l'élève qui apprend les annales par cœur
 - 60 min : notebook `11_kaggle_titanic_2.ipynb`
   - sections 1 à 4 (30 min) : tableau des 4 modèles, importance des variables, courbe train / validation, `GridSearchCV`
-  - section 5 (10 min) : les pièges : démonstration d'une fuite de données, score sur ses propres données, la règle bête à battre (0.766)
-  - section 6 (20 min) : projet, modèle final, `submission_finale.csv`, soumission, tableau des scores du groupe
+  - section 5 (8 min) : les pièges : démonstration d'une fuite de données, score sur ses propres données, la règle bête à battre (0.766)
+  - section 6 (22 min) : projet, modèle final, `submission_finale.csv`, soumission, tableau des scores du groupe
+  - Après la ligne « Fin de l'heure » du notebook, si on a le temps : section 8, l'exercice « fuite ou pas fuite ? » sur trois situations (la séance suivante n'en dépend pas)
 - 15 min : premiers passages, 5 min par binôme : hypothèses → ce qu'on a essayé → score → ce qu'on referait
 
-Si le temps manque : la préparation de la présentation (section 7) et les passages restants ouvrent la séance suivante. À partir de trois binômes, la reprise est à prévoir dès le calendrier : les présentations ne se coupent pas.
+Si le temps manque : la préparation de la présentation (section 7, avant la ligne) et les passages restants ouvrent la séance suivante ; la section 8, après la ligne, se fait chez soi. À partir de trois binômes, la reprise est à prévoir dès le calendrier : les présentations ne se coupent pas.
 
 Notes d'animation (formateur)
 - Quiz d'ouverture (2 min) : 1 question en tête de `11_exercices.ipynb`, à poser à voix haute avant de commencer

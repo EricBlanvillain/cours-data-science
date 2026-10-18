@@ -12,9 +12,10 @@ Déroulé (1 h 30)
   - sections 1 et 2 (12 min) : le problème, embeddings 2D et similarité cosinus
   - sections 3 à 6 (23 min) : chunks, vectorisation sentence-transformers / repli TF-IDF, recherche, injection, réponse, sur les règles d'un jeu fourni
   - section 7 (25 min) : projet « pose une question à ton cours » : chacun colle ses propres notes (ou les règles d'un jeu, un résumé de livre) et pose 5 questions
+  - Après la ligne « Fin de l'heure » du notebook, si on a le temps : section 8, découper par taille (`decouper_par_taille`) puis régler `k`, le découpage et un seuil de score sur son assistant (la séance suivante n'en dépend pas)
 - 15 min : démo des assistants, une bonne réponse et une erreur expliquée par chacun
 
-Si le temps manque : on s'arrête après les 5 questions d'évaluation (section 7) ; le réglage du seuil et du nombre de passages `k` ouvre la séance suivante.
+Si le temps manque : on s'arrête après les 5 questions d'évaluation (section 7) ; la section 8, après la ligne (le découpage par taille, le réglage du seuil et du nombre de passages `k`), se fait chez soi.
 
 Notes d'animation (formateur)
 - Quiz d'ouverture (2 min) : 1 question en tête de `14_exercices.ipynb`, à poser à voix haute avant de commencer

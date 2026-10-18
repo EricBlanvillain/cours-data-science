@@ -14,11 +14,11 @@ Déroulé (1 h 30)
 - 60 min : notebook `01_introduction_ia.ipynb`
   - section 3 (15 min) : « comment une machine apprend », simulation d'un seuil qui s'ajuste sur 20 fruits (pommes / melons), on compte les erreurs, on trace, on piège la machine avec une pomme géante
   - section 4 (20 min) : Teachable Machine, chacun entraîne un modèle qui reconnaît ses gestes à la webcam, le piège, l'améliore
-  - section 5 (10 min) : panorama des outils (ChatGPT, Claude, Mistral, Gemini, Midjourney, Suno, Cursor), ce que chacun fait bien et mal, démo sur mon ordinateur
-  - section 6 (15 min) : projet, les 5 règles d'un bon prompt, grille d'évaluation automatique (score /5), concours du meilleur prompt sur un défi imposé
+  - section 5 (25 min) : projet, les 5 règles d'un bon prompt, grille d'évaluation automatique (score /5), concours du meilleur prompt sur un défi imposé, fiche « mes 5 règles de prompt »
+  - Après la ligne « Fin de l'heure » du notebook, si on a le temps : section 6, panorama des outils (ChatGPT, Claude, Mistral, Gemini, Midjourney, Suno, Cursor), ce que chacun fait bien et mal, démo sur mon ordinateur (la séance suivante n'en dépend pas)
 - 15 min : partage : chacun montre son modèle Teachable Machine et lit son meilleur prompt
 
-Si le temps manque : on s'arrête à la fin de Teachable Machine (section 4) ; le panorama des outils et le concours de prompts ouvrent la séance suivante.
+Si le temps manque : on s'arrête à la fin de Teachable Machine (section 4) ; le concours de prompts (section 5) ouvre la séance suivante. Le panorama des outils (section 6) se saute sans rien perdre.
 
 Notes d'animation (formateur)
 - Quiz d'ouverture (2 min) : 4 questions en tête de `01_exercices.ipynb`, à poser à voix haute avant de commencer
@@ -27,8 +27,8 @@ Notes d'animation (formateur)
 - La frise (site) : « Ne pas réciter les dates. Une question : pourquoi 2012 est-il la vraie rupture ? Réponse : la puissance de calcul des cartes graphiques et les grandes bases d'images. »
 - Section 3, comment une machine apprend : « Insister sur « un tout petit peu » et « des millions de fois ». C'est ce qui rend l'entraînement long et cher, et ce qu'ils vont ressentir avec Teachable Machine. »
 - Section 4, Teachable Machine : « Vérifier que la webcam est autorisée dans le navigateur avant de lancer tout le monde. Le défi « trouve un geste qu'il confond » est le cœur pédagogique : il fait comprendre le rôle des exemples. »
-- Section 5, panorama des outils : « Démo sur l'ordinateur du formateur uniquement. »
-- Section 6, concours du prompt : « Concours : même défi pour tous, on lit les réponses à voix haute, on vote, puis on regarde les prompts gagnants. Faire ressortir quelle règle a fait la différence. »
+- Section 5, concours du prompt : « Concours : même défi pour tous, on lit les réponses à voix haute, on vote, puis on regarde les prompts gagnants. Faire ressortir quelle règle a fait la différence. »
+- Section 6, panorama des outils (si on a le temps) : « Démo sur l'ordinateur du formateur uniquement. »
 
 Entre deux séances (à la maison) : `01_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ sur des situations que la leçon n'a pas vues (la machine de tri d'un bureau de poste, le concours de prompts du club cuisine), avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 

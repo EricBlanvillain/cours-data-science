@@ -11,20 +11,21 @@ Avant la séance : chacun crée un compte Kaggle (gratuit), rejoint la compétit
 Déroulé (1 h 30, en binômes)
 - 15 min : Kaggle, la compétition, les 3 fichiers, comment on soumet (sections 1-2 du notebook) ; on formule les 4 hypothèses ensemble au tableau (femmes et enfants d'abord ? classe ? prix ? famille ?)
 - 60 min : notebook `10_kaggle_titanic_1.ipynb`
-  - sections 3 à 5 (30 min) : vérifier les hypothèses, nettoyer, créer `Famille`, `Seul`, `Titre`
-  - sections 6 et 7 (20 min) : la fonction `preparer()`, régression logistique puis forêt, validation croisée
-  - section 8 (10 min) : projet, générer `submission.csv` et faire sa première soumission sur Kaggle
+  - sections 3 et 4 (30 min) : vérifier les hypothèses, créer `Famille`, `Seul`, `Titre`
+  - sections 5 et 6 (20 min) : la fonction `preparer()` (qui remplit aussi les cases vides), régression logistique puis forêt, validation croisée
+  - section 7 (10 min) : projet, générer `submission.csv` et faire sa première soumission sur Kaggle
+  - Après la ligne « Fin de l'heure » du notebook, si on a le temps : section 8, nettoyer les cases vides en détail (le pic de la médiane, l'âge par classe), et section 9, les exercices en plus des sections 1, 2, 5 et 6 (la séance suivante n'en dépend pas)
 - 15 min : partage, 2 min par binôme : l'hypothèse la plus surprenante, la variable ajoutée, le score
 
-Si le temps manque : on s'arrête avant l'ajout d'une variable personnelle (section 8) ; la soumission se fait en tout début de séance 11, avant de chercher à améliorer le score.
+Si le temps manque : on s'arrête avant l'ajout d'une variable personnelle (section 7) ; la soumission se fait en tout début de séance 11, avant de chercher à améliorer le score.
 
 Notes d'animation (formateur)
 - Quiz d'ouverture (2 min) : 2 questions en tête de `10_exercices.ipynb`, à poser à voix haute avant de commencer
 - Avant la séance : « Vérifier avant la séance que chaque binôme a train.csv et test.csv. Sinon, le notebook charge une copie publique : le projet reste faisable, seule la soumission saute. »
 - Sections 1-2, la compétition et ses données : « Cinq minutes maximum. Le tableau des colonnes est à projeter et à laisser affiché. »
-- Sections 3 à 5, les hypothèses : « Laisser chaque binôme choisir une hypothèse et la vérifier seul avant d'ouvrir la partie modèle. C'est ce qui donne du sens à la préparation. »
-- Section 6, la fonction preparer() : « Insister sur la fonction preparer() appliquée aux deux fichiers. L'erreur classique : préparer train à la main et oublier test. »
-- Section 8, première soumission : « La soumission est le moment fort. Prévoir que le site Kaggle mette une minute à calculer le score, et faire applaudir le premier score affiché. »
+- Section 3, les hypothèses : « Laisser chaque binôme choisir une hypothèse et la vérifier seul avant d'ouvrir la partie modèle. C'est ce qui donne du sens à la préparation. »
+- Section 5, la fonction preparer() : « Insister sur la fonction preparer() appliquée aux deux fichiers. L'erreur classique : préparer train à la main et oublier test. »
+- Section 7, première soumission : « La soumission est le moment fort. Prévoir que le site Kaggle mette une minute à calculer le score, et faire applaudir le premier score affiché. »
 - Toute la séance : « Séance supervisée : rester en mouvement entre les tables, ne pas s'asseoir. »
 
 Entre deux séances (à la maison) : `10_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ : la même démarche sur d'autres données, celles du Spaceship Titanic (données fictives de Kaggle : qui a été transporté dans une autre dimension ?), avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
