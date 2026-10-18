@@ -24,7 +24,7 @@ Les datasets utilisés dans l'atelier sont listés dans [../liens-utiles.md](../
 
 Astuce : pour les datasets de l'atelier, les notebooks chargent automatiquement une copie publique par URL. Le téléchargement n'est vraiment nécessaire que pour la compétition Titanic.
 
-## 4. La compétition Titanic (séances 7 et 8)
+## 4. La compétition Titanic (séances 10 et 11)
 
 1. Va sur https://www.kaggle.com/competitions/titanic
 2. Clique sur **Join Competition** et accepte les règles.

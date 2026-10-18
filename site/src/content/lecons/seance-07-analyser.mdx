@@ -1,0 +1,59 @@
+---
+numero: 7
+titre: Analyser
+niveau: ★★
+duree: 1 h 30
+resume: "L'analyse exploratoire comme une enquête : poser les bonnes questions, repérer une tendance, une anomalie, une corrélation, et déjouer trois pièges avant de conclure."
+livrable: Ton enquête, trois questions, trois réponses chiffrées, trois graphiques, et pour chacune le piège vérifié.
+objectifs:
+  - Tu sauras repérer une tendance, une anomalie et une corrélation, avec le graphique qui montre chacune.
+  - Tu sauras reconnaître trois pièges, une corrélation lue comme une cause, un graphique trompeur, un échantillon biaisé.
+  - Tu sauras mener une petite enquête, une question, un chiffre, un graphique, un piège vérifié.
+aRetenir:
+  - Une analyse commence par des questions précises, auxquelles les colonnes du tableau peuvent répondre.
+  - Tendance, nuage de points et droite ; anomalie, boîte à moustaches ; corrélation, corr et heatmap.
+  - Une corrélation dit que deux choses bougent ensemble, jamais que l'une cause l'autre.
+  - Un axe tronqué invente un écart, un échantillon biaisé donne un chiffre précis et faux.
+  - Une réponse d'enquête, c'est un chiffre, un graphique, et un piège vérifié.
+---
+import TroisIndices from "../../components/schemas/TroisIndices.astro";
+import TroisPieges from "../../components/schemas/TroisPieges.astro";
+import QuelPiege from "../../components/islands/QuelPiege";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Une enquête, trois indices
+
+Un tableau de 800 lignes ne dit rien à personne. L'analyse exploratoire, c'est faire connaissance avec les données avant de conclure : on regarde tout, on note ce qui est bizarre.
+
+<TroisIndices />
+
+<details>
+<summary>La règle des 1,5 écarts</summary>
+
+On mesure l'écart entre le premier quart des valeurs et le troisième : pour les HP, de 50 à 80, soit 30. Tout ce qui dépasse le troisième quart de plus d'une fois et demie cet écart est suspect : au-delà de 80 + 45 = 125. Même chose par le bas : Shedinja, avec 1 HP, sort aussi de la boîte.
+
+Une anomalie n'est pas forcément une erreur. Blissey a vraiment 255 HP : c'est souvent la chose la plus intéressante à raconter.
+
+</details>
+
+## Trois pièges
+
+Une corrélation, un graphique et un échantillon peuvent tous raconter une histoire fausse avec des chiffres justes.
+
+<TroisPieges />
+
+<QuelPiege client:load />
+
+### À toi : ton enquête
+
+Choisis ton client : le patron du restaurant avec Tips, le créateur d'un jeu avec les Pokémon, ou quelqu'un d'autre avec ton dataset de la séance 2. La séance 8 partira de ton enquête pour en faire un tableau de bord.
+
+- **Trois questions précises** qui l'intéressent, auxquelles les colonnes du tableau peuvent répondre.
+- **Pour chacune**, le calcul, le chiffre qui répond, et un graphique dont le titre donne la réponse.
+- **Pour chacune, un piège vérifié** : une corrélation lue comme une cause, un axe tronqué, un échantillon biaisé.
+
+<BoutonsSeance dossier="seance-07-analyser" lecon="07_analyser.ipynb" exercices="07_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `07_exercices.ipynb` : 12 exercices, de ★ à ★★★, sur des données que la leçon n'a pas vues, le catalogue Netflix, un sondage d'élèves, des villes et leurs pompiers, avec vérification automatique, indices et solutions repliées.

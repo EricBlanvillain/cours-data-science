@@ -1,0 +1,66 @@
+---
+numero: 8
+titre: Raconter
+niveau: ★★
+duree: 1 h 30
+resume: "Raconter une enquête à quelqu'un qui doit décider : des titres qui donnent la réponse, des graphiques interactifs avec Plotly, un tableau de bord, et un pitch en deux minutes."
+livrable: Un mini-dashboard, et le pitch de 2 minutes présenté comme devant un client.
+objectifs:
+  - Tu sauras écrire un titre de graphique qui donne la réponse.
+  - Tu sauras faire des graphiques interactifs avec Plotly et les assembler en tableau de bord.
+  - Tu sauras présenter un résultat en trois temps, constat, preuve, recommandation.
+aRetenir:
+  - Raconter, c'est répondre ; un graphique, une idée, et le titre donne la réponse.
+  - Plotly rend les graphiques interactifs ; facet_col fait un sous-graphique par catégorie, animation_frame un graphique qui bouge.
+  - make_subplots et un menu font un tableau de bord ; Streamlit en fait une page web.
+  - Le pitch tient en trois temps, constat, preuve, recommandation.
+  - Avant de présenter, on revérifie les pièges, axe à zéro, cause ou corrélation, échantillon.
+---
+import TableauDeBord from "../../components/schemas/TableauDeBord.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Raconter, c'est répondre
+
+Ton client n'a pas fait l'enquête. Il ne veut pas savoir ce que tu as fait, mais ce que tu as trouvé, et ce qu'il doit faire. Un graphique porte une seule idée, et son titre la donne : pas « Pourboire selon le jour », mais « Le dimanche, les pourboires sont les plus gros ».
+
+## Un tableau de bord
+
+Plotly rend chaque graphique interactif : on survole un point, on zoome, on masque une catégorie en cliquant sur la légende. Assemblés, trois graphiques font un tableau de bord.
+
+<TableauDeBord />
+
+```python
+fig = px.scatter(tips, x="total_bill", y="tip", color="day", size="size")
+fig.show()
+```
+
+<details>
+<summary>Et Streamlit ?</summary>
+
+Streamlit transforme un script Python en page web avec des menus et des boutons, sans écrire de HTML. Il ne tourne pas directement dans Colab, car il lui faut un serveur web : sur ton ordinateur, on l'installe avec `pip install streamlit`, on écrit `app.py`, puis on lance `streamlit run app.py`. À chaque clic, Streamlit relance le script et met la page à jour. Le notebook en montre un exemple à lire.
+
+</details>
+
+## Raconter en deux minutes
+
+Trois graphiques, deux minutes, trois temps.
+
+| Temps | Ce que tu dis | Sur Tips |
+|---|---|---|
+| Constat, 20 s | Ce que tu as trouvé, en une phrase avec un chiffre | Le dimanche soir, le pourboire moyen atteint 3,26 $, près de 9 % au-dessus de la moyenne. |
+| Preuve, 60 s | Le graphique qui le montre, et comment le lire | Les barres du pourboire moyen par jour et par moment. |
+| Recommandation, 40 s | Ce que le client peut faire demain | Mettre les meilleurs serveurs le dimanche soir. |
+
+### À toi : ton dashboard et ton pitch
+
+Pars de ton enquête de la séance 7, ou, si tu n'as pas pu la finir, du patron du restaurant et de trois questions sur Tips.
+
+- **Une question par graphique Plotly**, avec un titre qui donne la réponse.
+- **Un tableau de bord** qui les assemble, puis la vérification des trois pièges : axe à zéro, cause ou corrélation, échantillon.
+- **Ton pitch** en trois temps, prêt à être dit à voix haute.
+
+<BoutonsSeance dossier="seance-08-raconter" lecon="08_raconter.ipynb" exercices="08_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `08_exercices.ipynb` : 12 exercices, de ★ à ★★★, pour un nouveau client, le gérant d'une boutique de jeux vidéo, avec vérification automatique, indices et solutions repliées. Il finit par son tableau de bord complet.

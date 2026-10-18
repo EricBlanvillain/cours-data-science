@@ -1,0 +1,72 @@
+---
+numero: 6
+titre: Collecter avec une API
+niveau: ★★
+duree: 1 h 30
+resume: "Demander des données à un site : une URL, une réponse en JSON qu'on lit marche par marche, plusieurs appels rangés dans un tableau, des paramètres, et un plan B quand ça rate."
+livrable: Ton propre jeu de données, collecté avec une API, rangé dans un tableau et sauvegardé en CSV.
+objectifs:
+  - Tu sauras appeler une API avec requests et lire son code de réponse.
+  - Tu sauras descendre dans un JSON imbriqué et transformer plusieurs appels en tableau.
+  - Tu sauras préciser une demande avec des paramètres, et prévoir un plan B quand l'API ne répond pas.
+aRetenir:
+  - Une API, c'est une URL qu'on demande avec requests.get, et une réponse en JSON.
+  - Le code de réponse dit si ça a marché, 200 oui, 404 introuvable.
+  - Un JSON imbriqué se lit marche par marche, une liste, puis une clé, puis une autre.
+  - Plusieurs appels, une liste de dictionnaires, puis pd.DataFrame ; une pause entre deux appels.
+  - Toujours un plan B, try et des données de secours, et un CSV pour ne pas tout redemander.
+---
+import ApiJson from "../../components/schemas/ApiJson.astro";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Une commande, un plat
+
+La plupart des données du monde ne sont pas dans des fichiers : elles sont derrière des sites. Une API est une porte par laquelle un programme les demande. Au restaurant, tu ne vas pas en cuisine, tu passes commande.
+
+<ApiJson />
+
+## Lire la réponse
+
+`requests.get` envoie l'URL et rapporte la réponse : d'abord un code, 200 si tout va bien, 404 si ce que tu demandes n'existe pas, puis du JSON, que `.json()` transforme en dictionnaire. Le JSON est souvent imbriqué : on descend marche par marche.
+
+```python
+pikachu = requests.get("https://pokeapi.co/api/v2/pokemon/pikachu", timeout=10).json()
+pikachu["types"][0]["type"]["name"]     # "electric"
+```
+
+<details>
+<summary>Les unités de la PokéAPI</summary>
+
+Dans la PokéAPI, `height` est en décimètres et `weight` en hectogrammes : Pikachu mesure 0,4 m et pèse 6 kg. Lire la documentation d'une API, c'est aussi apprendre ses unités.
+
+</details>
+
+## Des appels, un tableau
+
+Un appel donne une fiche ; une boucle en donne cinq. Chaque fiche devient un dictionnaire, la liste de dictionnaires devient un tableau pandas. Entre deux appels, une petite pause : une API gratuite n'aime pas qu'on la bombarde.
+
+| Le geste | En Python | Pourquoi |
+|---|---|---|
+| Demander | `requests.get(url, params=..., timeout=10)` | les paramètres précisent la commande |
+| Vérifier | `reponse.raise_for_status()` | un 404 devient une erreur qu'on attrape |
+| Lire | `reponse.json()` | du texte JSON au dictionnaire |
+| Ranger | `pd.DataFrame(lignes)` | une liste de dictionnaires, un tableau |
+| Garder | `tableau.to_csv("donnees.csv", index=False)` | ne pas tout redemander |
+
+## Quand ça rate
+
+Pas de réseau, site en panne, nom mal écrit : un appel peut échouer. La fonction `demander` du notebook enveloppe l'appel dans un `try / except` et renvoie des données de secours écrites à l'avance : le notebook va au bout, et on le sait.
+
+### À toi : ton propre jeu de données
+
+Collecte un petit jeu de données à toi, au choix : ton équipe de six Pokémon, la météo de cinq villes qui comptent pour toi avec Open-Meteo, ou une autre API gratuite et sans clé.
+
+- **Au moins cinq lignes et trois colonnes**, construites avec une boucle et `demander`, une pause entre deux appels.
+- **Un graphique** qui répond à une question sur tes données.
+- **Le tableau sauvegardé en CSV** : c'est ton livrable.
+
+<BoutonsSeance dossier="seance-06-collecter-api" lecon="06_collecter_api.ipynb" exercices="06_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `06_exercices.ipynb` : 12 exercices, de ★ à ★★★, avec d'autres API gratuites et sans clé, les jours fériés, une bibliothèque en ligne, la recherche de villes et la météo de la semaine. Sans réseau, des données de secours prennent le relais.

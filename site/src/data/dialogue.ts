@@ -1,6 +1,6 @@
 /**
- * Les sorties de modèle de la séance 10, toutes issues d'un vrai passage, le 28/09/2026, du modèle du notebook
- * 10_parler_a_un_llm_par_le_code.ipynb avec ses fonctions llm(), demander(), Chatbot et demander_json() :
+ * Les sorties de modèle de la séance 13, toutes issues d'un vrai passage, le 28/09/2026, du modèle du notebook
+ * 10_parler_a_un_llm_par_le_code.ipynb (devenu 13_parler_a_un_llm_par_le_code.ipynb) avec ses fonctions llm(), demander(), Chatbot et demander_json() :
  *   modèle      Qwen/Qwen2.5-0.5B-Instruct, sur CPU, transformers 5.16.1, torch 2.14.0, Python 3.12.13
  *   réglages    ceux du notebook : max_new_tokens=150, temperature=0.7 échantillonnée ; demander_json : temperature=0.3, 3 essais
  *   graine      transformers.set_seed(0) avant chaque appel ; demander_json : graine = numéro de l'essai − 1

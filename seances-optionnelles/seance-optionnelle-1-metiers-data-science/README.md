@@ -2,7 +2,7 @@
 
 Niveau : ⭐ Débutant
 
-Module optionnel · ne fait pas partie du parcours en 12 séances
+Module optionnel · ne fait pas partie du parcours en 17 séances
 
 Objectifs : savoir quel langage sert à quoi et pourquoi Python domine la data, traiter R sérieusement — là où il gagne (statistiques, `ggplot2`, recherche, biostatistique) et là où il coince (l'industrialisation), comprendre ce que la gestion de la mémoire dit de chaque langage (ramasse-miettes, `malloc`/`free`, garantie à la compilation) et ce qu'elle coûte au programmeur, et savoir chiffrer en euros ce que coûte un modèle appelé par API ou une heure de GPU — avant de lancer.
 

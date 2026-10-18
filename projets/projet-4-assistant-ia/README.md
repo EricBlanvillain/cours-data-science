@@ -1,17 +1,17 @@
 # Projet 4 · Mon assistant IA ⭐⭐⭐
 
-Bloc 4 · Comprendre et construire avec l'IA générative (séances 10 à 12) · Niveau ⭐⭐⭐ Avancé
+Bloc 4 · Comprendre et construire avec l'IA générative (séances 13 à 15) · Niveau ⭐⭐⭐ Avancé
 
 ## Objectif
 
-Construire **un assistant IA à toi**, qui fonctionne, avec ses tests, et le présenter au groupe à la séance 12. Quatre options, une seule à choisir (deux si tu avances vite) :
+Construire **un assistant IA à toi**, qui fonctionne, avec ses tests, et le présenter au groupe à la séance 16. Quatre options, une seule à choisir (deux si tu avances vite) :
 
 | Option | L'assistant | Ce qu'il mobilise | Séance |
 |---|---|---|---|
-| **A · RAG sur tes documents** | répond à des questions sur tes notes de cours, les règles d'un jeu, un résumé de livre, et avoue quand la réponse n'y est pas | découper, vectoriser (TF-IDF ou sentence-transformers), chercher, injecter, répondre | S11 |
-| **B · Générateur de quiz** | fabrique des QCM en JSON à partir d'un thème ou des fiches d'un dataset Kaggle, les valide et corrige les réponses | sortie structurée, parsing JSON robuste, validation | S10 |
-| **C · Chatbot à personnalité** | un personnage avec un prompt système (qui, comment, quoi faire, quoi ne pas faire) qui garde la mémoire de la conversation | prompt système, historique, tests de règles | S10 |
-| **D · Agent avec un outil** | décide seul d'appeler une fonction Python qui interroge un dataset Kaggle (fiche d'un Pokémon, top d'une statistique...) puis répond | protocole `OUTIL: nom(arguments)` de la séance 12 (regex), boucle d'agent bornée | S12 |
+| **A · RAG sur tes documents** | répond à des questions sur tes notes de cours, les règles d'un jeu, un résumé de livre, et avoue quand la réponse n'y est pas | découper, vectoriser (TF-IDF ou sentence-transformers), chercher, injecter, répondre | S14 |
+| **B · Générateur de quiz** | fabrique des QCM en JSON à partir d'un thème ou des fiches d'un dataset Kaggle, les valide et corrige les réponses | sortie structurée, parsing JSON robuste, validation | S13 |
+| **C · Chatbot à personnalité** | un personnage avec un prompt système (qui, comment, quoi faire, quoi ne pas faire) qui garde la mémoire de la conversation | prompt système, historique, tests de règles | S13 |
+| **D · Agent avec un outil** | décide seul d'appeler une fonction Python qui interroge un dataset Kaggle (fiche d'un Pokémon, top d'une statistique...) puis répond | protocole `OUTIL: nom(arguments)` de la séance 15 (regex), boucle d'agent bornée | S15 |
 
 ## Dataset
 
@@ -21,17 +21,17 @@ Construire **un assistant IA à toi**, qui fonctionne, avec ses tests, et le pr�
 
 ## Le modèle
 
-Le notebook reprend la cellule « Préparation » des séances 9 à 12 : `llm(messages)` appelle un petit modèle ouvert (Qwen2.5-0.5B-Instruct) sur le GPU de Colab, sans clé. `USE_MODEL = False` permet de développer sans modèle (réponses factices, y compris pour le RAG et le protocole d'outil). La variante API (clé fournie par le formateur, rangée dans les Secrets de Colab) est en commentaire : le reste du notebook ne change pas.
+Le notebook reprend la cellule « Préparation » des séances 12 à 15 : `llm(messages)` appelle un petit modèle ouvert (Qwen2.5-0.5B-Instruct) sur le GPU de Colab, sans clé. `USE_MODEL = False` permet de développer sans modèle (réponses factices, y compris pour le RAG et le protocole d'outil). La variante API (clé fournie par le formateur, rangée dans les Secrets de Colab) est en commentaire : le reste du notebook ne change pas.
 
-## Étapes (3 séances, ~30-40 min de projet par séance, puis la séance 12)
+## Étapes (3 séances, ~30-40 min de projet par séance, puis la séance 16)
 
 | Étape | Séance | Durée | Ce que tu fais |
 |---|---|---|---|
-| 0. Choisir | S10 | 10 min | option, nom de l'assistant, une phrase « il fait X pour Y » |
-| 1. Squelette | S10-S11 | 40 min | faire tourner le squelette de ton option en mode démo, puis avec le modèle |
-| 2. Personnaliser | S11 | 40 min | tes documents / ton thème / ton prompt système / ton 3e outil |
-| 3. Tester | S12 | 20 min | 5 questions ou messages de test, dont des cas où l'assistant doit refuser ou avouer qu'il ne sait pas |
-| 4. Présenter | S12 | 3 min par personne | problème, démo, ce qui marche, ce qui rate, la suite |
+| 0. Choisir | S13 | 10 min | option, nom de l'assistant, une phrase « il fait X pour Y » |
+| 1. Squelette | S13-S14 | 40 min | faire tourner le squelette de ton option en mode démo, puis avec le modèle |
+| 2. Personnaliser | S14 | 40 min | tes documents / ton thème / ton prompt système / ton 3e outil |
+| 3. Tester | S15 | 20 min | 5 questions ou messages de test, dont des cas où l'assistant doit refuser ou avouer qu'il ne sait pas |
+| 4. Présenter | S16 | 3 min par personne | problème, démo, ce qui marche, ce qui rate, la suite |
 
 ## Livrable
 
@@ -51,7 +51,7 @@ La cellule d'auto-vérification du notebook affiche ✅/❌ selon l'option chois
 ## Pour aller plus loin
 
 - Une petite interface Streamlit (`st.chat_input`, `st.chat_message`) déployée depuis GitHub.
-- Combiner : un agent (D) dont un outil est ton RAG (A), comme la démo de la séance 12.
+- Combiner : un agent (D) dont un outil est ton RAG (A), comme la démo de la séance 15.
 - Comparer le petit modèle et un modèle API sur les mêmes tests : où est la différence ?
 - Bonnes pratiques à présenter : vérifier les réponses, aucune donnée personnelle dans les prompts, savoir dire quand l'IA se trompe.
 

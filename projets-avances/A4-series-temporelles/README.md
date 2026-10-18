@@ -2,7 +2,7 @@
 
 > ⚠️ Le notebook de ce projet reste à écrire. Cette fiche décrit ce qu'il contiendra.
 
-Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 6 à 8 (premier modèle, Kaggle) et de préférence [A1](../A1-energie-batiments/) · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*) — SARIMA, Prophet et XGBoost tournent aussi très bien sur CPU, seul le LSTM y gagne
+Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (premier modèle, Kaggle) et de préférence [A1](../A1-energie-batiments/) · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*) — SARIMA, Prophet et XGBoost tournent aussi très bien sur CPU, seul le LSTM y gagne
 
 ## Objectif
 

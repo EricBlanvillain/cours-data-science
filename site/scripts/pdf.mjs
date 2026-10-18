@@ -3,7 +3,7 @@
  * PDF depuis la fenêtre d'impression du navigateur (boutons « Enregistrer … en PDF ») ; ce script imprime les mêmes pages,
  * avec le Chrome de la machine piloté par son protocole de débogage (WebSocket natif de Node, aucune dépendance), dans
  * site/.verif-pdf/ (ignoré par git), en passant par la page d'export (enregistrer-pdf.html) comme l'élève : le cours
- * complet (séances 0 à 12), une séance seule (la 05), la séance 0 seule, la séance optionnelle SO1 seule et le projet B2 seul.
+ * complet (séances 0 à 16), une séance seule (la 05, Git), la séance 0 seule, la séance optionnelle SO1 seule et le projet B2 seul.
  *
  * Comme le navigateur de l'élève : média « print », taille de page, marges et pied de page tirés du CSS (@page et ses
  * boîtes de marge), <details> ouverts. Contrôles : rien ne dépasse à droite (à la largeur de texte d'une page A4), chaque

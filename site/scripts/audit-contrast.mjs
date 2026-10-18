@@ -46,7 +46,7 @@ const ETATS = [
       window.progression.terminer(0); await w(150);
       if (document.querySelector('[data-seance="1"]').getAttribute("data-etat") !== "ouverte") throw new Error("la séance 1 devrait être ouverte");` },
   { page: "index.html", id: "accueil-tout-termine", pilote: `
-      for (let i = 0; i <= 12; i++) window.progression.terminer(i); await w(150);
+      for (let i = 0; i <= 16; i++) window.progression.terminer(i); await w(150);
       if (document.querySelector("[data-compteur]").getAttribute("data-fini") !== "oui") throw new Error("le compteur devrait être à zéro");` },
   { page: "lecons/seance-01-introduction-ia.html", id: "lecon-1-a-venir-bandeau", pilote: `
       if (document.querySelector("[data-seance-page]").getAttribute("data-etat") !== "a-venir") throw new Error("la séance 1 devrait être à venir");` },
@@ -146,16 +146,17 @@ const ETATS = [
       const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Histogramme").click(); await w(300);
       if (!g.textContent.includes("pas celui-là")) throw new Error("réponse fausse non reconnue");` },
   { page: "lecons/seance-03-sql-et-git.html", id: "s3-initiale", pilote: "" },
-  { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-ouvert", pilote: `
+  { page: "lecons/seance-05-git-github.html", id: "s5-quelle-commande-ouvert", pilote: `
       const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300);
       // la typographie pose une espace fine avant « ? » : on la ramène à une espace pour comparer
       if (!g.textContent.replace(/\u202F/g, " ").includes("quelle commande ?")) throw new Error("le cuivre « situation ouverte » manque");` },
-  { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-juste", pilote: `
+  { page: "lecons/seance-05-git-github.html", id: "s5-quelle-commande-juste", pilote: `
       const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-03-sql-et-git.html", id: "s3-quelle-commande-faux", pilote: `
+  { page: "lecons/seance-05-git-github.html", id: "s5-quelle-commande-faux", pilote: `
       const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git push").click(); await w(300);
       if (!g.textContent.includes("pas celle-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-06-collecter-api.html", id: "s6-initiale", pilote: "" },
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-initiale", pilote: "" },
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-vides-ouvert", pilote: `
       const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300);
@@ -166,86 +167,89 @@ const ETATS = [
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "s4-vides-faux", pilote: `
       const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300); btn(g, "Supprimer").click(); await w(300);
       if (!g.textContent.includes("pas ce choix-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "s5-initiale", pilote: "" },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "s5-piege-ouvert", pilote: `
+  { page: "lecons/seance-05-git-github.html", id: "s5-initiale", pilote: "" },
+  { page: "lecons/seance-07-analyser.html", id: "s7-initiale", pilote: "" },
+  { page: "lecons/seance-07-analyser.html", id: "s7-piege-ouvert", pilote: `
       const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300);
       if (!g.textContent.includes("affirmation ouverte")) throw new Error("le cuivre « affirmation ouverte » manque");` },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "s5-piege-juste", pilote: `
+  { page: "lecons/seance-07-analyser.html", id: "s7-piege-juste", pilote: `
       const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Causalité").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "s5-piege-faux", pilote: `
+  { page: "lecons/seance-07-analyser.html", id: "s7-piege-faux", pilote: `
       const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Biais").click(); await w(300);
       if (!g.textContent.includes("pas ce piège-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-06-premier-modele.html", id: "s6-initiale", pilote: "" },
-  { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-ouvert", pilote: `
+  { page: "lecons/seance-08-raconter.html", id: "s8-initiale", pilote: "" },
+  { page: "lecons/seance-09-premier-modele.html", id: "s9-initiale", pilote: "" },
+  { page: "lecons/seance-09-premier-modele.html", id: "s9-modele-ouvert", pilote: `
       const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300);
       if (!g.textContent.includes("modèle ouvert")) throw new Error("le cuivre « modèle ouvert » manque");` },
-  { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-juste", pilote: `
+  { page: "lecons/seance-09-premier-modele.html", id: "s9-modele-juste", pilote: `
       const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "appris par cœur").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-06-premier-modele.html", id: "s6-modele-faux", pilote: `
+  { page: "lecons/seance-09-premier-modele.html", id: "s9-modele-faux", pilote: `
       const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "Il a compris").click(); await w(300);
       if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-initiale", pilote: "" },
-  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-ouvert", pilote: `
+  { page: "lecons/seance-10-kaggle-titanic-1.html", id: "s10-initiale", pilote: "" },
+  { page: "lecons/seance-10-kaggle-titanic-1.html", id: "s10-duel-ouvert", pilote: `
       const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300);
       if (!g.textContent.includes("duel ouvert")) throw new Error("le cuivre « duel ouvert » manque");` },
-  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-juste", pilote: `
+  { page: "lecons/seance-10-kaggle-titanic-1.html", id: "s10-duel-juste", pilote: `
       const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "1 · une femme").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "s7-duel-faux", pilote: `
+  { page: "lecons/seance-10-kaggle-titanic-1.html", id: "s10-duel-faux", pilote: `
       const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "2 · un homme").click(); await w(300);
       if (!g.textContent.includes("c'est l'autre")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-initiale", pilote: "" },
-  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-ouvert", pilote: `
+  { page: "lecons/seance-11-kaggle-titanic-2.html", id: "s11-initiale", pilote: "" },
+  { page: "lecons/seance-11-kaggle-titanic-2.html", id: "s11-fuite-ouvert", pilote: `
       const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300);
       if (!g.textContent.includes("colonne ouverte")) throw new Error("le cuivre « colonne ouverte » manque");` },
-  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-juste", pilote: `
+  { page: "lecons/seance-11-kaggle-titanic-2.html", id: "s11-fuite-juste", pilote: `
       const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "1 · Fuite").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "s8-fuite-faux", pilote: `
+  { page: "lecons/seance-11-kaggle-titanic-2.html", id: "s11-fuite-faux", pilote: `
       const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "Pas de fuite").click(); await w(300);
       if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-initiale", pilote: "" },
-  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-ouvert", pilote: `
+  { page: "lecons/seance-12-comment-fonctionne-un-llm.html", id: "s12-initiale", pilote: "" },
+  { page: "lecons/seance-12-comment-fonctionne-un-llm.html", id: "s12-limite-ouvert", pilote: `
       const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300);
       if (!g.textContent.includes("réponse ouverte")) throw new Error("le cuivre « réponse ouverte » manque");` },
-  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-juste", pilote: `
+  { page: "lecons/seance-12-comment-fonctionne-un-llm.html", id: "s12-limite-juste", pilote: `
       const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "1 · Hallucination").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "s9-limite-faux", pilote: `
+  { page: "lecons/seance-12-comment-fonctionne-un-llm.html", id: "s12-limite-faux", pilote: `
       const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "3 · Calcul").click(); await w(300);
       if (!g.textContent.includes("pas cette limite-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-initiale", pilote: "" },
-  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-ouvert", pilote: `
+  { page: "lecons/seance-13-parler-a-un-llm-par-le-code.html", id: "s13-initiale", pilote: "" },
+  { page: "lecons/seance-13-parler-a-un-llm-par-le-code.html", id: "s13-consigne-ouvert", pilote: `
       const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300);
       if (!g.textContent.includes("réponse ouverte")) throw new Error("le cuivre « réponse ouverte » manque");` },
-  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-juste", pilote: `
+  { page: "lecons/seance-13-parler-a-un-llm-par-le-code.html", id: "s13-consigne-juste", pilote: `
       const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "2 · Oubliée").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "s10-consigne-faux", pilote: `
+  { page: "lecons/seance-13-parler-a-un-llm-par-le-code.html", id: "s13-consigne-faux", pilote: `
       const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "1 · Tenue").click(); await w(300);
       if (!g.textContent.includes("pas ce verdict-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-11-rag.html", id: "s11-initiale", pilote: "" },
-  { page: "lecons/seance-11-rag.html", id: "s11-rag-ouvert", pilote: `
+  { page: "lecons/seance-14-rag.html", id: "s14-initiale", pilote: "" },
+  { page: "lecons/seance-14-rag.html", id: "s14-rag-ouvert", pilote: `
       const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300);
       if (!g.textContent.includes("diagnostic ouvert")) throw new Error("le cuivre « diagnostic ouvert » manque");` },
-  { page: "lecons/seance-11-rag.html", id: "s11-rag-juste", pilote: `
+  { page: "lecons/seance-14-rag.html", id: "s14-rag-juste", pilote: `
       const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "1 · La recherche").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-11-rag.html", id: "s11-rag-faux", pilote: `
+  { page: "lecons/seance-14-rag.html", id: "s14-rag-faux", pilote: `
       const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "3 · Rien").click(); await w(300);
       if (!g.textContent.includes("pas ce diagnostic-là")) throw new Error("réponse fausse non reconnue");` },
-  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-initiale", pilote: "" },
-  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-agent-ouvert", pilote: `
+  { page: "lecons/seance-15-agents.html", id: "s15-initiale", pilote: "" },
+  { page: "lecons/seance-15-agents.html", id: "s15-agent-ouvert", pilote: `
       const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300);
       if (!g.textContent.includes("diagnostic ouvert")) throw new Error("le cuivre « diagnostic ouvert » manque");` },
-  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-agent-juste", pilote: `
+  { page: "lecons/seance-15-agents.html", id: "s15-agent-juste", pilote: `
       const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);
       if (!g.textContent.includes("✓ juste")) throw new Error("réponse juste non reconnue");` },
-  { page: "lecons/seance-12-agents-et-projet-final.html", id: "s12-agent-faux", pilote: `
+  { page: "lecons/seance-15-agents.html", id: "s15-agent-faux", pilote: `
       const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "2 · Répond de tête").click(); await w(300);
       if (!g.textContent.includes("pas ce diagnostic-là")) throw new Error("réponse fausse non reconnue");` },
+  { page: "lecons/seance-16-projet-final.html", id: "s16-initiale", pilote: "" },
 
   // Le mini-quiz de fin de leçon : sans réponse (cuivre), juste, faux, score, et tout au clavier.
   { page: "lecons/seance-01-introduction-ia.html", id: "quiz-fin-sans-reponse", pilote: `
@@ -301,7 +305,7 @@ const ETATS = [
   if (!css) throw new Error("aucune règle @media print trouvée");
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
   document.querySelectorAll("details").forEach(function (d) { d.open = true; });` },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "impression-seance-05", fond: "impression", pilote: `
+  { page: "lecons/seance-07-analyser.html", id: "impression-seance-07", fond: "impression", pilote: `
   var css = ""; for (var sh of document.styleSheets) { try { for (var r of sh.cssRules) if (r.media && /print/.test(r.media.mediaText)) for (var rr of r.cssRules) if (!/^@page/.test(rr.cssText)) css += rr.cssText + " "; } catch (e) {} }
   if (!css) throw new Error("aucune règle @media print trouvée");
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);

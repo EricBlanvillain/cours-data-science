@@ -1,6 +1,6 @@
 # Projet A2 · Scoring crédit : accorder ou refuser un prêt · ⭐⭐⭐
 
-Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 6 à 8 (premier modèle, Kaggle) et de préférence [A1](../A1-energie-batiments/) · **CPU suffisant, pas de GPU**
+Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (premier modèle, Kaggle) et de préférence [A1](../A1-energie-batiments/) · **CPU suffisant, pas de GPU**
 
 ## Objectif
 

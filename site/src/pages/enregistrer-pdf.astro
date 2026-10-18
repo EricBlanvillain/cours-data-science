@@ -1,7 +1,7 @@
 ---
 /**
  * Enregistrer en PDF : la seule entrée d'export du site (bouton « Enregistrer en PDF ↓ » de l'accueil). En haut, masqué à
- * l'impression, le choix : « Cours complet » (les séances 0 à 12) et une case par séance, puis une case par module
+ * l'impression, le choix : « Cours complet » (les séances 0 à 16) et une case par séance, puis une case par module
  * optionnel, décochée par défaut. Seul ce qui est coché s'imprime ; la couverture et le sommaire ne listent que cela
  * (les modules après les séances), et ne s'impriment pas quand un seul élément est coché ; le pied de page et le nom de fichier proposé portent le titre de la page quand un
  * seul élément est coché, « Data Science & IA » sinon. Chaque page a le même corps que sa page du site (CorpsLecon).
@@ -12,7 +12,7 @@ import Base from "../layouts/Base.astro";
 import CorpsLecon from "../components/CorpsLecon.astro";
 import { libelleModule, titreModule, trierModules } from "../data/modules";
 
-const lecons = (await getCollection("lecons")).filter((l) => l.data.numero <= 12).sort((a, b) => a.data.numero - b.data.numero);
+const lecons = (await getCollection("lecons")).filter((l) => l.data.numero <= 16).sort((a, b) => a.data.numero - b.data.numero);
 const modules = trierModules(await getCollection("modules"));
 const nn = (n: number) => String(n).padStart(2, "0");
 const titres = {
@@ -26,7 +26,7 @@ const titres = {
     <h1 class="hero-titre" style="font-size: 2.2rem;">Enregistrer en PDF</h1>
     <fieldset class="mt-6" style="border: 0; padding: 0;">
       <legend class="mono-caps" style="color: var(--encre-2);">Ce que tu veux enregistrer</legend>
-      <label class="choix-pdf-ligne choix-pdf-tout"><input type="checkbox" data-tout checked /> <b>Cours complet</b> <span class="discret">· séances 0 à 12</span></label>
+      <label class="choix-pdf-ligne choix-pdf-tout"><input type="checkbox" data-tout checked /> <b>Cours complet</b> <span class="discret">· séances 0 à 16</span></label>
       <ul class="choix-pdf-liste">
         {lecons.map((l) => (
           <li><label class="choix-pdf-ligne"><input type="checkbox" data-cle={`s${l.data.numero}`} data-seance-pdf checked /> <span class="mono-caps">Séance {nn(l.data.numero)}</span> · {l.data.titre}</label></li>
@@ -119,7 +119,7 @@ const titres = {
         if (s.length === seances.length && !m.length) return "Cours Data Science & IA";
         if (cles.length === 1) return titres[cles[0]];
         var morceaux = ["Data Science & IA"];
-        if (s.length) morceaux.push("séances " + (s.length === seances.length ? "00 à 12" : s.map(function (k) { return ("0" + k.slice(1)).slice(-2); }).join(", ")));
+        if (s.length) morceaux.push("séances " + (s.length === seances.length ? "00 à 16" : s.map(function (k) { return ("0" + k.slice(1)).slice(-2); }).join(", ")));
         if (m.length) morceaux.push("modules " + m.map(function (k) { return k.slice(1); }).join(", "));
         return morceaux.join(" · ");
       };

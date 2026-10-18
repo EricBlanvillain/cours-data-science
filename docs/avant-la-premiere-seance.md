@@ -12,7 +12,7 @@ Tout l'atelier tourne dans le navigateur. Rien à installer, tout est gratuit. I
 
 Ces services demandent un âge minimum dans leurs conditions d'utilisation. Si nécessaire, l'adulte référent crée les comptes (ou les valide) avec le participant, et garde les identifiants quelque part de sûr.
 
-Un compte ChatGPT, Claude ou Mistral (version gratuite) est utile à partir de la séance 1 mais pas indispensable : le formateur fait les démos, et à partir de la séance 9 un petit modèle tourne directement dans Colab sans compte ni clé.
+Un compte ChatGPT, Claude ou Mistral (version gratuite) est utile à partir de la séance 1 mais pas indispensable : le formateur fait les démos, et à partir de la séance 12 un petit modèle tourne directement dans Colab sans compte ni clé.
 
 Les guides pas à pas : [guide-colab.md](guide-colab.md), [guide-kaggle.md](guide-kaggle.md), [guide-github.md](guide-github.md).
 
@@ -29,12 +29,12 @@ Pas besoin d'un ordinateur puissant : tout le calcul se fait sur les serveurs de
 
 | Outil | Gratuit ? | Limite à connaître |
 |---|---|---|
-| Google Colab | Oui | Le GPU gratuit est limité en temps par jour ; on l'active seulement pour les séances 9 à 12 |
+| Google Colab | Oui | Le GPU gratuit est limité en temps par jour ; on l'active seulement pour les séances 12 à 15 |
 | Kaggle | Oui | 10 soumissions par jour à la compétition |
 | GitHub | Oui | Les dépôts publics sont illimités |
 | ChatGPT / Claude / Mistral / Gemini | Oui (version gratuite) | Nombre de messages limité par jour, largement suffisant |
 | Modèle de langage dans Colab | Oui | Un petit modèle ouvert ; moins doué que ChatGPT, mais sans clé ni coût |
-| Clé d'API pour un gros modèle | Fournie par le formateur en séance 10 si besoin | Budget plafonné, jamais à mettre dans le code ni sur GitHub |
+| Clé d'API pour un gros modèle | Fournie par le formateur en séance 13 si besoin | Budget plafonné, jamais à mettre dans le code ni sur GitHub |
 
 Aucun achat n'est nécessaire à aucun moment. Si un site propose une version payante, on n'en a pas besoin.
 

@@ -1,6 +1,6 @@
 # Projet B2 · Un agent qui sait choisir son outil · ⭐⭐⭐
 
-Piste agentique · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 10 et 12 (API, prompt système, boucle d'agent)
+Piste agentique · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 13 et 15 (API, prompt système, boucle d'agent)
 
 ## Objectif
 
@@ -17,7 +17,7 @@ Cet agent sert à quiconque veut une réponse **vérifiable** : il a une boîte 
 | Un CSV public chargé par URL (Pokémon ou celui de ton projet 1) | rien à installer, `pandas.read_csv(url)` |
 
 **Aucune clé d'API, aucun appel réseau obligatoire.** La météo est **simulée** : une fonction Python qui renvoie une réponse plausible et déterministe à partir du nom de la ville, pour que l'agent tourne partout, même sans réseau. Le vrai appel à https://open-meteo.com/en/docs (gratuit et sans clé) est donné en commentaire, en option.
-L'interrupteur `USE_MODEL` de la séance 12 est en haut du notebook : en mode démo, le faux modèle suit le protocole `OUTIL: nom(arguments)` dès que le prompt système le décrit — donc c'est bien **ta boucle** qui est testée.
+L'interrupteur `USE_MODEL` de la séance 15 est en haut du notebook : en mode démo, le faux modèle suit le protocole `OUTIL: nom(arguments)` dès que le prompt système le décrit — donc c'est bien **ta boucle** qui est testée.
 
 ## Déroulé (1 h 30)
 
@@ -62,4 +62,4 @@ Si le temps manque : arrête-toi à la fin de la section 4 (l'agent marche et ch
 - Des patrons d'agents simples qui marchent mieux que les frameworks : https://www.anthropic.com/engineering/building-effective-agents
 - Le *function calling* côté Kaggle : https://www.kaggle.com/code/markishere/day-3-function-calling-with-the-gemini-api
 - Le CSV Pokémon utilisé par l'outil de recherche : https://gist.githubusercontent.com/armgilles/194bcff35001e7eb53a2a8b441e8b2c6/raw/92200bc0a673d5ce2110aaad4544ed6c4010f687/pokemon.csv
-- La leçon dont ce projet est la suite : [séance 12 · Agents](../../../seances/seance-12-agents-et-projet-final/)
+- La leçon dont ce projet est la suite : [séance 15 · Agents](../../../seances/seance-15-agents/)

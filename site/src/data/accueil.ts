@@ -8,7 +8,7 @@ export const QUIZ_IA = [
   { id: "youtube", titre: "Les recommandations YouTube", ia: "oui",
     pourquoi: "Oui. Personne n'a écrit la règle « après cette vidéo, propose celle-là ». Un modèle l'a apprise sur ce que regardent des centaines de millions de personnes." },
   { id: "chatgpt", titre: "ChatGPT", ia: "oui",
-    pourquoi: "Oui, dans sa version la plus récente : le deep learning. Il prédit le mot suivant, appris sur une bonne partie d'Internet. On le construit en miniature à la séance 9." },
+    pourquoi: "Oui, dans sa version la plus récente : le deep learning. Il prédit le mot suivant, appris sur une bonne partie d'Internet. On le construit en miniature à la séance 12." },
   { id: "gps", titre: "Le GPS qui calcule l'itinéraire le plus rapide", ia: "oui",
     pourquoi: "Oui, mais rien n'est appris : un algorithme des années 1950, écrit à la main, cherche le plus court chemin. C'est de l'IA « classique », un raisonnement fait de règles." },
   { id: "snapchat", titre: "Un filtre Snapchat", ia: "oui",

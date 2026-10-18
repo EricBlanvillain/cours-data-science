@@ -1,6 +1,6 @@
 # Projet 3 · Compétition Kaggle « Titanic » ⭐⭐⭐
 
-Bloc 3 · Projet Kaggle en séance supervisée (séances 7 et 8) · Niveau ⭐⭐⭐ Avancé · En binôme
+Bloc 3 · Projet Kaggle en séance supervisée (séances 10 et 11) · Niveau ⭐⭐⭐ Avancé · En binôme
 
 ## Objectif
 
@@ -21,13 +21,13 @@ Pour récupérer les fichiers : téléchargement manuel puis upload dans Colab, 
 
 | Étape | Séance | Durée | Ce que vous faites |
 |---|---|---|---|
-| 0. Kaggle | S7 | 10 min | compte, *Join Competition*, `train.csv` et `test.csv` dans Colab |
-| 1. Explorer et poser 3 hypothèses | S7 | 20 min | survie par sexe, par classe, cases vides ; 3 hypothèses écrites |
-| 2. Préparer les données | S7 | 30 min | lire `preparer()` (titre par regex, âge par médiane du titre, famille, encodage), ajouter une variable |
-| 3. Trois modèles + validation croisée | S7 | 30 min | régression logistique, forêt, gradient boosting ; écart apprentissage / validation |
-| 4. Première soumission | S7 | 15 min | `submission.csv`, *Submit Prediction*, score noté dans le journal |
-| 5. Améliorer et journaliser | S8 | 60 min | au moins 3 essais supplémentaires : variables, profondeur de la forêt, retrait d'une variable |
-| 6. Soumission finale et présentation | S8 | 30 min | meilleur modèle soumis, 5 minutes par binôme |
+| 0. Kaggle | S10 | 10 min | compte, *Join Competition*, `train.csv` et `test.csv` dans Colab |
+| 1. Explorer et poser 3 hypothèses | S10 | 20 min | survie par sexe, par classe, cases vides ; 3 hypothèses écrites |
+| 2. Préparer les données | S10 | 30 min | lire `preparer()` (titre par regex, âge par médiane du titre, famille, encodage), ajouter une variable |
+| 3. Trois modèles + validation croisée | S10 | 30 min | régression logistique, forêt, gradient boosting ; écart apprentissage / validation |
+| 4. Première soumission | S10 | 15 min | `submission.csv`, *Submit Prediction*, score noté dans le journal |
+| 5. Améliorer et journaliser | S11 | 60 min | au moins 3 essais supplémentaires : variables, profondeur de la forêt, retrait d'une variable |
+| 6. Soumission finale et présentation | S11 | 30 min | meilleur modèle soumis, 5 minutes par binôme |
 
 ## Livrable
 

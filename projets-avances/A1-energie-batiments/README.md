@@ -1,6 +1,6 @@
 # Projet A1 · Consommation énergétique des bâtiments · ⭐⭐⭐
 
-Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 6 à 8 (premier modèle, Kaggle) · **CPU suffisant, pas de GPU**
+Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (premier modèle, Kaggle) · **CPU suffisant, pas de GPU**
 
 ## Objectif
 

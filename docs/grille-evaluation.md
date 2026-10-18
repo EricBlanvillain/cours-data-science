@@ -2,7 +2,7 @@
 
 Une grille commune pour les 4 projets et les présentations. Elle sert à **donner un retour**, pas à classer : aucune note chiffrée n'est obligatoire. Chaque ligne se lit en trois paliers, et on écrit une phrase de retour par ligne plutôt qu'un chiffre.
 
-Elle est utilisable par le formateur, par les pairs (à la séance 12) et par soi-même avant de rendre.
+Elle est utilisable par le formateur, par les pairs (à la séance 16) et par soi-même avant de rendre.
 
 ## Les trois paliers
 
@@ -51,7 +51,7 @@ Critères propres à chaque projet, en plus des 8 ci-dessus :
 
 - **Avant de rendre** (auto-évaluation) : coche un palier par ligne, honnêtement. Les lignes « En route » sont ta liste de choses à faire.
 - **Pendant le partage** : le formateur ou un pair remplit une phrase par ligne, pas un chiffre. Le retour tient sur une demi-page : deux points forts, un point à améliorer, une idée pour la suite.
-- **À la séance 12** : chacun relit les retours reçus sur les 4 projets et choisit celui qu'il présente.
+- **À la séance 16** : chacun relit les retours reçus sur les 4 projets et choisit celui qu'il présente.
 
 Si une note chiffrée est nécessaire (cadre scolaire, attestation), compter 1 point par « Atteint » et 2 par « Dépassé », sur les 8 critères du projet : /16, à ramener à l'échelle voulue. Ce n'est pas la finalité de la grille.
 

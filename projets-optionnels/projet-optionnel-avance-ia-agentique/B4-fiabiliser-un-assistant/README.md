@@ -60,4 +60,4 @@ Si le temps manque : arrête-toi à la fin de la section 4 (tu as déjà le chif
 - Un pipeline RAG de référence, pour comparer avec le tien : https://python.langchain.com/docs/tutorials/rag/
 - Ce qu'est un agent, et pourquoi l'évaluer est le vrai travail : https://www.kaggle.com/whitepaper-agents
 - La grille d'évaluation du cours (trois paliers) : [docs/grille-evaluation.md](../../../docs/grille-evaluation.md)
-- Les leçons dont ce projet est la suite : [séance 9 · Comment fonctionne un LLM](../../../seances/seance-09-comment-fonctionne-un-llm/) et [séance 11 · Le RAG](../../../seances/seance-11-rag/)
+- Les leçons dont ce projet est la suite : [séance 12 · Comment fonctionne un LLM](../../../seances/seance-12-comment-fonctionne-un-llm/) et [séance 14 · Le RAG](../../../seances/seance-14-rag/)

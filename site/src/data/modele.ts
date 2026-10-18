@@ -1,5 +1,5 @@
 /**
- * Les chiffres de la séance 6, obtenus en rejouant le notebook 06_premier_modele.ipynb sur ses données :
+ * Les chiffres de la séance 9, obtenus en rejouant le notebook 06_premier_modele.ipynb (devenu 09_premier_modele.ipynb) sur ses données :
  *   manchots https://raw.githubusercontent.com/mwaskom/seaborn-data/master/penguins.csv (Palmer Penguins, 344 lignes)
  *   Pokémon  https://gist.githubusercontent.com/armgilles/194bcff35001e7eb53a2a8b441e8b2c6/raw/92200bc0a673d5ce2110aaad4544ed6c4010f687/pokemon.csv
  * Calculé le 27/09/2026 dans un environnement proche de Colab (pandas 2.2.3, numpy 2.0, scikit-learn 1.9) :

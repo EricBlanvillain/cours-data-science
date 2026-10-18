@@ -1,0 +1,65 @@
+---
+numero: 16
+titre: Projet final et présentation
+niveau: ★★★
+duree: 1 h 30
+resume: "Pas de nouvelle notion : les quatre projets du parcours rassemblés dans un portfolio GitHub, un README d'accueil, et une présentation de trois minutes devant les invités."
+livrable: Ton portfolio GitHub complet, quatre projets et un README d'accueil, et ta présentation finale.
+objectifs:
+  - Tu sauras vérifier qu'un portfolio est complet, quatre projets, un README par projet, aucune clé ni donnée personnelle.
+  - Tu sauras écrire le README d'accueil qui présente ton travail en deux minutes de lecture.
+  - Tu sauras présenter un projet en trois minutes à des gens qui ne connaissent pas la data.
+aRetenir:
+  - Ton portfolio raconte le parcours en quatre projets ; c'est lui que tu montres.
+  - Un README d'accueil dit qui tu es, tes quatre projets avec un lien chacun, et ce que tu as appris.
+  - Rien de secret sur GitHub, ni clé d'API, ni donnée personnelle.
+  - Trois minutes, cinq temps, et la démo en vrai, préparée à l'avance.
+  - Un raté raconté, c'est ce qui rend l'histoire vraie.
+---
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Quatre projets, une vitrine
+
+Un portfolio, c'est ta vitrine : un dépôt GitHub qu'on comprend en deux minutes. Un projet par grande partie du parcours.
+
+| Projet | Séances | Ce qu'on doit y trouver |
+|---|---|---|
+| Analyse d'un dataset de ton choix | 2, 4, 7 | le notebook, 3 graphiques, 3 phrases de conclusion |
+| Dashboard et premier modèle | 8, 9 | le dashboard ou ses captures, le modèle et son score |
+| Compétition Kaggle Titanic | 10, 11 | le notebook, ton score et ta place au classement |
+| Assistant IA, chatbot, RAG ou agent | 13, 14, 15 | le notebook, le prompt système, un exemple de conversation |
+
+<details>
+<summary>Ce qui ne doit jamais être public</summary>
+
+Une clé d'API publiée sur GitHub est trouvée par des robots en quelques minutes : on la retire, on la range dans les Secrets de Colab, et si elle est déjà partie, on la révoque chez le fournisseur. Même règle pour un numéro de téléphone, une adresse, les notes de quelqu'un d'autre. Le `.gitignore` de la séance 5 protège ce qu'on ne veut pas publier.
+
+</details>
+
+## Trois minutes devant les invités
+
+Les invités ne connaissent ni pandas ni les tokens : montre ce que tu as fait et pourquoi c'est intéressant.
+
+| Temps | Durée | Ce que tu montres |
+|---|---|---|
+| Le projet en une phrase | 20 s | « J'ai construit… qui permet de… » |
+| Le problème | 30 s | Pourquoi c'était difficile, avec un exemple |
+| La démo | 1 min | En vrai : une question à ton assistant, un graphique, ton score |
+| Ce que j'ai appris | 40 s | Deux choses nouvelles, et une fois où ça a raté |
+| La suite | 30 s | Avec plus de temps, et le lien de ton portfolio |
+
+Un seul mot technique par diapo, expliqué en une phrase. La démo déborde presque toujours : prépare la question à l'avance, et une capture d'écran au cas où le réseau lâche.
+
+### À toi : le portfolio et la présentation
+
+Le notebook est ton plan de travail pour la séance.
+
+- **La check-list** des quatre projets et du dépôt : coche ce qui est fait, corrige tout de suite ce qui manque.
+- **Le README d'accueil**, généré par le notebook, collé et commité sur GitHub.
+- **Ta fiche projet et trois questions du public préparées**, puis une répétition à deux, chrono en main.
+
+<BoutonsSeance dossier="seance-16-projet-final" lecon="16_projet_final.ipynb" exercices="16_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `16_exercices.ipynb` : 12 exercices, de ★ à ★★★, pour outiller ton projet final avec Python, sur le portfolio d'une autre élève : liens cassés, secrets publiés, durée de la présentation, jargon, check-list automatique.

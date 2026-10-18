@@ -1,6 +1,6 @@
 # Projet A3 · Reconnaissance d'images · ⭐⭐⭐
 
-Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 6 à 8 (premier modèle, Kaggle) · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*)
+Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (premier modèle, Kaggle) · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*)
 
 ## Objectif
 

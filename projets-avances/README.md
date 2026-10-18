@@ -4,7 +4,7 @@ Une réserve dans laquelle piocher, pas un parcours. Chaque projet reprend la d�
 **données → nettoyage et feature engineering → analyse → modèles candidats → tuning ou fine-tuning → interprétation →
 recommandation** — avec scikit-learn, XGBoost, TensorFlow/Keras et Hugging Face.
 
-Le premier usage, c'est de **remplacer le projet Kaggle Titanic (séances 7 et 8)** quand il ne convient pas au groupe :
+Le premier usage, c'est de **remplacer le projet Kaggle Titanic (séances 10 et 11)** quand il ne convient pas au groupe :
 trop facile, trop ennuyeux, ou simplement pas le bon sujet. La dernière colonne est là pour ça — elle se lit en trente
 secondes, en séance.
 
@@ -21,7 +21,7 @@ Les temps indiqués sont ceux d'une exécution complète en `MODE_RAPIDE = True`
 A1 et A2 tournent partout ; A3 et A6 sont plus confortables avec le GPU T4 gratuit de Colab.
 
 Chaque projet a sa fiche : question métier, données et leur source, ce que tu entraînes et règles, déroulé, livrable
-et grille d'évaluation en trois paliers. Prérequis conseillés : séances 6 à 8 (premier modèle, Kaggle).
+et grille d'évaluation en trois paliers. Prérequis conseillés : séances 9 à 11 (premier modèle, Kaggle).
 
 Pour construire avec un LLM plutôt qu'entraîner des modèles, va voir le module
 [Projet avancé · IA agentique](../projets-optionnels/projet-optionnel-avance-ia-agentique/).

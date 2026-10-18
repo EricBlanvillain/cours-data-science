@@ -4,11 +4,11 @@ Quatre projets pour **construire avec un LLM** au lieu d'entraîner un modèle :
 un agent qui se sert d'outils Python, un analyste qui explore un fichier tout seul, et un banc de test pour rendre
 tout ça fiable.
 
-Module optionnel : il ne fait pas partie du parcours en 12 séances. Prérequis conseillés : les séances 9 à 12
+Module optionnel : il ne fait pas partie du parcours en 17 séances. Prérequis conseillés : les séances 12 à 15
 (comment fonctionne un LLM, l'API par le code, le RAG, les agents).
 
 **Rien à payer, rien à installer.** Le petit modèle tourne dans Colab sans clé d'API, et chaque notebook garde
-l'interrupteur `USE_MODEL` de la séance 11 : à `False`, tout s'exécute avec un modèle simulé, sans GPU.
+l'interrupteur `USE_MODEL` de la séance 14 : à `False`, tout s'exécute avec un modèle simulé, sans GPU.
 
 ## Les projets
 

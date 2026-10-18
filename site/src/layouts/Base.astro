@@ -17,7 +17,7 @@ interface Props {
   /** page fabriquée pour l'impression (le cours complet) : pas d'indexation */
   noindex?: boolean;
 }
-const { titre, description = "Cours Data Science & IA en 12 séances", largeur = "lecture", barre = false, courant, courantModule, noindex = false } = Astro.props;
+const { titre, description = "Cours Data Science & IA en 17 séances", largeur = "lecture", barre = false, courant, courantModule, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -60,7 +60,7 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
     <script is:inline>
       (function () {
         var CLE = "cours-data-science-progression"; // ancienne clé : atelier-data-ia-progress
-        var DERNIERE = 12;
+        var DERNIERE = 16;
         function charger() {
           try {
             var brut = localStorage.getItem(CLE);
@@ -98,7 +98,7 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
             var r = api.restantes(); el.textContent = String(r);
             var bloc = el.closest("[data-compteur]"); if (bloc) { bloc.setAttribute("data-fini", r === 0 ? "oui" : "non"); var mot = bloc.querySelector("[data-restantes-mot]"); if (mot) mot.textContent = r > 1 ? "séances restantes" : (r === 1 ? "séance restante" : "séance restante : parcours terminé"); }
           });
-          // La barre latérale : « Séances terminées · N / 13 » et sa jauge (encre : ce qui est fait est résolu).
+          // La barre latérale : « Séances terminées · N / 17 » et sa jauge (encre : ce qui est fait est résolu).
           var t = nbTerminees();
           document.querySelectorAll("[data-terminees]").forEach(function (el) { el.textContent = String(t); });
           document.querySelectorAll("[data-jauge]").forEach(function (el) { el.style.width = (t / (DERNIERE + 1) * 100).toFixed(1) + "%"; });
@@ -161,7 +161,7 @@ const { titre, description = "Cours Data Science & IA en 12 séances", largeur =
       </div>
     </main>
     <footer class="conteneur pied">
-      <p>Cours Data Science &amp; IA · 13 séances · notebooks et exercices sur <a href="https://github.com/EricBlanvillain/cours-data-science">GitHub ↗</a></p>
+      <p>Cours Data Science &amp; IA · 17 séances · notebooks et exercices sur <a href="https://github.com/EricBlanvillain/cours-data-science">GitHub ↗</a></p>
       <p>
         <span>Progression gardée dans ce navigateur, sur cet appareil · </span>
         <button type="button" class="lien-mono" data-reinit-1 onclick="this.hidden=true; this.nextElementSibling.hidden=false;">Réinitialiser</button>

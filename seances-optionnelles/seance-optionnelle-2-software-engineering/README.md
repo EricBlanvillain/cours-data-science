@@ -2,7 +2,7 @@
 
 Niveau : ⭐ Débutant
 
-Module optionnel · ne fait pas partie du parcours en 12 séances
+Module optionnel · ne fait pas partie du parcours en 17 séances
 
 Elle fait suite à la [séance optionnelle 1 · Les métiers de la data science](../seance-optionnelle-1-metiers-data-science/), qui répond à « quel langage pour quel usage » ; celle-ci répond à « pourquoi celui-là est lent, et où le faire tourner ».
 

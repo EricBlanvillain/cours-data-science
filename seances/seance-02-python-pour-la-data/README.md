@@ -39,4 +39,4 @@ Outils
 - Aide-mémoire pandas : https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
 - Galerie matplotlib : https://matplotlib.org/stable/gallery/index.html
 
-Ils repartent avec : un notebook avec 3 questions posées sur un dataset et 3 graphiques qui y répondent (poussé sur GitHub à la séance 3).
+Ils repartent avec : un notebook avec 3 questions posées sur un dataset et 3 graphiques qui y répondent (poussé sur GitHub à la séance 5).

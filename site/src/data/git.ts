@@ -1,5 +1,5 @@
 /**
- * Git et GitHub pour la séance 3 : les quatre commandes du notebook (section 6) et le jeu « quelle commande git ? ».
+ * Git et GitHub pour la séance 5 : les quatre commandes de base (le notebook en tape d'autres, une par cellule) et le jeu « quelle commande git ? ».
  * Les messages de commit sont ceux du notebook (cellule README de la section 6 et exercice 11 du carnet d'exercices).
  * Ce que fait chaque commande : https://git-scm.com/docs (git-add, git-commit, git-push, git-pull), vérifié le 27/09/2026.
  * Ce que fait Colab d'un clic : « Fichier → Enregistrer une copie dans GitHub » écrit le commit directement dans le dépôt, sur

@@ -1,10 +1,10 @@
 # Projet 1 · Analyse d'un dataset de ton choix ⭐
 
-Bloc 1 · Les bases solides (séances 2 et 3) · Niveau ⭐ Débutant
+Bloc 1 · Les bases solides (séance 2), mis en ligne à la séance 5 · Niveau ⭐ Débutant
 
 ## Objectif
 
-Choisir un vrai dataset publié sur Kaggle, l'explorer avec pandas, poser **3 questions** et y répondre avec **3 graphiques** matplotlib. C'est ton premier notebook de portfolio : à la séance 3, il part sur GitHub avec un README.
+Choisir un vrai dataset publié sur Kaggle, l'explorer avec pandas, poser **3 questions** et y répondre avec **3 graphiques** matplotlib. C'est ton premier notebook de portfolio : à la séance 5, il part sur GitHub avec un README.
 
 ## Dataset (au choix)
 
@@ -17,7 +17,7 @@ Choisir un vrai dataset publié sur Kaggle, l'explorer avec pandas, poser **3 qu
 
 Le notebook charge le miroir automatiquement (pas de compte Kaggle nécessaire). Pour utiliser le fichier téléchargé sur Kaggle, dépose-le dans Colab et renseigne `FICHIER_LOCAL`. Attention, pour les jeux vidéo, le fichier Kaggle `vgsales.csv` (ventes par région) n'a pas les mêmes colonnes que le miroir Steam.
 
-## Étapes (2 h, plus le temps de publication à la séance 3)
+## Étapes (2 h, plus le temps de publication à la séance 5)
 
 | Étape | Durée | Ce que tu fais |
 |---|---|---|
@@ -26,7 +26,7 @@ Le notebook charge le miroir automatiquement (pas de compte Kaggle nécessaire).
 | 2. Préparer | 10 min | les colonnes utiles (année, nombres extraits du texte), `value_counts` |
 | 3. Trois questions, trois graphiques | 45 min | compter une catégorie, comparer une moyenne, suivre une évolution ; puis une 4e question libre |
 | 4. Raconter | 15 min | générer le README avec tes questions et réponses |
-| 5. Publier (séance 3) | 20 min | sauvegarder le notebook et le README sur ton dépôt GitHub |
+| 5. Publier (séance 5) | 20 min | sauvegarder le notebook et le README sur ton dépôt GitHub |
 
 ## Livrable
 

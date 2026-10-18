@@ -3,7 +3,7 @@
  * les projets B1 à B4 n'en ont pas (le lint le refuse). Quatre questions, écrites depuis le contenu réel de la page.
  * Ton : question courte, options plausibles, explication qui apprend quelque chose au lieu de dire « bravo ».
  * `bonne` est l'index de la bonne option. Une séance sans entrée n'a pas de quiz (la séance 0 se termine sur son notebook).
- * Réserve pour les séances 2 à 12 : les 20 questions de l'ancien site (introductioniagen/site/src/content/quiz.ts),
+ * Réserve pour les séances 2 à 16 : les 20 questions de l'ancien site (introductioniagen/site/src/content/quiz.ts),
  * à réécrire séance par séance, jamais à porter mécaniquement.
  */
 export type QuestionQuiz = {
@@ -106,10 +106,10 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Bug, Normal, Poison et cinq autres types n'ont pas de ligne dans types, donc pas de correspondance. Un JOIN simple ne garde que ce qui se recolle ; LEFT JOIN garderait les 800, avec des cases vides.",
     },
     {
-      question: "Dans quel ordre tapes-tu ces trois commandes pour envoyer ton notebook sur GitHub ?",
-      options: ["commit, add, push", "add, commit, push", "push, add, commit", "add, push, commit"],
+      question: "Pour les 5 Pokémon les plus rapides, SQL et pandas donnent les mêmes vitesses, mais pas les mêmes noms dans le même ordre. Pourquoi ?",
+      options: ["SQL se trompe dans le tri", "Plusieurs Pokémon ont la même vitesse : chacun range les ex æquo à sa façon", "pandas arrondit les vitesses", "LIMIT coupe au hasard"],
       bonne: 1,
-      explication: "add choisit les fichiers, commit crée le point de sauvegarde avec son message, push envoie les commits sur GitHub. Un push avant le commit n'a rien de nouveau à envoyer.",
+      explication: "Des ex æquo n'ont pas d'ordre naturel. Pour que les deux langues tombent d'accord, on les départage de la même façon des deux côtés : ORDER BY vitesse DESC, nom en SQL, et le même tri sur deux colonnes en pandas.",
     },
   ],
   4: [
@@ -132,13 +132,65 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Remplir, c'est remplacer une valeur perdue par une valeur raisonnable, pas par la vraie. Un petit écart est normal ; ce qui compte, c'est que le journal dise d'où il vient.",
     },
     {
+      question: "Pour lire trois formats de date, le notebook écrit pd.to_datetime(..., format=..., errors=\"coerce\"). Que fait errors=\"coerce\" ?",
+      options: ["Il devine le bon format tout seul", "Ce qui ne colle pas au format devient NaT au lieu de faire planter la cellule", "Il supprime les lignes mal écrites", "Il convertit les dates en texte"],
+      bonne: 1,
+      explication: "Chaque essai lit un seul format et laisse NaT ailleurs ; on recolle ensuite les trois essais avec fillna, chacun comble les trous des autres. À la fin, on vérifie qu'il ne reste aucun NaT.",
+    },
+  ],
+  5: [
+    {
+      question: "Dans quel ordre tapes-tu ces trois commandes pour envoyer ton notebook sur GitHub ?",
+      options: ["commit, add, push", "add, commit, push", "push, add, commit", "add, push, commit"],
+      bonne: 1,
+      explication: "add choisit les fichiers, commit crée le point de sauvegarde avec son message, push envoie les commits sur GitHub. Un push avant le commit n'a rien de nouveau à envoyer.",
+    },
+    {
+      question: "Lequel de ces messages de commit aidera le plus quelqu'un qui relit l'historique dans six mois ?",
+      options: ["modif", "update", "Ajoute les notes de la séance 3 sur SQL", "trucs"],
+      bonne: 2,
+      explication: "Un bon message dit ce que fait le commit, avec un verbe : en lisant seulement git log, on sait ce qui a changé. « modif » ou « update » sont vrais pour tous les commits, donc n'apprennent rien.",
+    },
+    {
+      question: "Ton projet utilise une clé d'API rangée dans cle_api.txt. Comment être sûr qu'elle ne part jamais sur GitHub ?",
+      options: ["Ne jamais faire de push", "Écrire cle_api.txt dans le fichier .gitignore", "Mettre la clé en majuscules", "Faire git restore cle_api.txt"],
+      bonne: 1,
+      explication: "Le .gitignore liste ce que Git doit faire semblant de ne pas voir : la clé disparaît de git status, et un git add . ne l'emporte plus.",
+    },
+    {
+      question: "Tu as travaillé sur ton notebook au CDI et poussé tes commits. De retour chez toi, que fais-tu avant de continuer ?",
+      options: ["git push", "git pull, pour récupérer ce qui a changé sur GitHub", "git init", "Rien, GitHub met ton ordinateur à jour tout seul"],
+      bonne: 1,
+      explication: "git pull rapatrie les commits faits ailleurs. Le réflexe de ceux qui travaillent sur plusieurs machines : pull en arrivant, push en partant, sinon deux versions différentes finissent par se croiser.",
+    },
+  ],
+  6: [
+    {
       question: "La PokéAPI renvoie data, un JSON. Quelle ligne donne le type de Pikachu ?",
       options: ["data[\"type\"]", "data[\"types\"][\"name\"]", "data[\"types\"][0][\"type\"][\"name\"]", "data.type"],
       bonne: 2,
       explication: "types est une liste (un Pokémon peut en avoir deux), d'où le [0] ; chaque élément est un dictionnaire qui contient type, lui-même un dictionnaire qui contient name. On descend niveau par niveau jusqu'à « electric ».",
     },
+    {
+      question: "Tu demandes un Pokémon mal orthographié, et l'API répond avec le code 404. Qu'est-ce que ça veut dire ?",
+      options: ["Le réseau est coupé", "Le site a bien répondu, pour dire que ce que tu demandes n'existe pas", "Tout s'est bien passé", "Le site est en panne"],
+      bonne: 1,
+      explication: "200 veut dire que tout va bien, 404 que la page demandée n'existe pas, 500 que le site a un problème. Un 404 n'est pas un plantage : c'est une réponse, qu'on vérifie avant de lire le JSON.",
+    },
+    {
+      question: "Avec requests, à quoi sert params={\"latitude\": 48.85, \"longitude\": 2.35} ?",
+      options: ["À crypter la demande", "À écrire les paramètres dans l'URL, après le ?, sans se tromper de format", "À choisir le format de la réponse", "À éviter le plan B"],
+      bonne: 1,
+      explication: "requests construit l'URL complète à partir du dictionnaire : …/forecast?latitude=48.85&longitude=2.35. C'est plus lisible, et plus sûr qu'écrire l'URL à la main.",
+    },
+    {
+      question: "Pourquoi la boucle qui appelle l'API pour cinq Pokémon fait-elle time.sleep(0.2) entre deux appels ?",
+      options: ["Pour que Python ait le temps de calculer", "Pour ménager une API gratuite, qui n'aime pas qu'on la bombarde", "Pour que le graphique s'affiche", "Parce que requests l'exige"],
+      bonne: 1,
+      explication: "Une API gratuite sert tout le monde : trop d'appels trop vite, et elle te bloque. Une petite pause entre deux appels, et un CSV pour ne pas tout redemander, c'est la politesse de la collecte.",
+    },
   ],
-  5: [
+  7: [
     {
       question: "La corrélation entre la défense et la vitesse des Pokémon vaut 0,02. Qu'est-ce que ça veut dire ?",
       options: ["Les Pokémon rapides sont fragiles", "La vitesse ne dit presque rien de la défense", "La défense fait baisser la vitesse", "Il y a une erreur dans les données"],
@@ -152,6 +204,20 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "La règle des 1,5 écarts signale un suspect, pas un coupable. Blissey a vraiment 255 HP dans le jeu : une anomalie vraie est souvent le fait le plus intéressant du tableau.",
     },
     {
+      question: "Laquelle de ces questions est une bonne question d'enquête sur le dataset Tips ?",
+      options: ["C'est quoi les pourboires ?", "Les pourboires sont-ils plus gros le week-end ?", "Les clients sont-ils contents ?", "Le restaurant est-il rentable ?"],
+      bonne: 1,
+      explication: "Une bonne question est précise, on peut y répondre avec les colonnes qu'on a (ici day et tip), et la réponse intéresse quelqu'un. La satisfaction ou la rentabilité ne sont pas dans le tableau.",
+    },
+    {
+      question: "Pour voir si le pourboire monte avec l'addition, quel graphique choisis-tu ?",
+      options: ["Un camembert", "Un nuage de points, avec la droite qui résume la tendance", "Une boîte à moustaches", "Un histogramme du pourboire"],
+      bonne: 1,
+      explication: "Une tendance entre deux nombres se lit sur un nuage de points : un point par addition, et regplot ajoute la droite. La boîte à moustaches sert à repérer les anomalies, l'histogramme à voir une répartition.",
+    },
+  ],
+  8: [
+    {
       question: "Quel titre donner au nuage « pourboire selon l'addition » dans ton tableau de bord ?",
       options: ["Pourboire vs addition", "Graphique 1", "Le pourboire suit l'addition", "Données Tips, colonnes total_bill et tip"],
       bonne: 2,
@@ -163,8 +229,20 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       bonne: 2,
       explication: "Le constat dit ce que tu as trouvé, avec un chiffre ; la preuve montre le graphique qui l'établit ; la recommandation dit au client quoi faire demain. Une action à mener, c'est toujours la recommandation.",
     },
+    {
+      question: "Dans Plotly, que fait facet_col=\"time\" ?",
+      options: ["Il colore les points selon le moment", "Il fait un sous-graphique par valeur de time, côte à côte", "Il anime le graphique", "Il trie les données par moment"],
+      bonne: 1,
+      explication: "Un sous-graphique par catégorie, sur le même axe vertical : on compare midi et soir d'un coup d'œil. La couleur, c'est color= ; l'animation, animation_frame=.",
+    },
+    {
+      question: "Pourquoi Streamlit ne tourne-t-il pas directement dans Colab ?",
+      options: ["Il est payant", "Il lui faut un serveur web, qu'on lance sur son ordinateur avec streamlit run app.py", "Il ne sait pas faire de graphiques", "Il n'existe qu'en anglais"],
+      bonne: 1,
+      explication: "Streamlit transforme un script en page web, et une page web a besoin d'un serveur. Sur son ordinateur : pip install streamlit, un fichier app.py, puis streamlit run app.py.",
+    },
   ],
-  6: [
+  9: [
     {
       question: "Dans le tableau des manchots, quelle colonne est y ?",
       options: ["La longueur du bec", "Le poids", "L'espèce", "Toutes les mesures ensemble"],
@@ -190,7 +268,7 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "k-NN compare des distances. Sans mise à l'échelle, 100 g d'écart pèsent autant que 100 mm, alors que les becs ne diffèrent que de quelques millimètres : le poids décidait presque seul.",
     },
   ],
-  7: [
+  10: [
     {
       question: "Pourquoi ranger tout le nettoyage dans une seule fonction preparer() ?",
       options: ["Pour que le code soit plus court", "Pour appliquer exactement la même recette à train et à test", "Parce que Kaggle l'exige", "Pour aller plus vite"],
@@ -216,7 +294,7 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "28 ans est bien l'âge médian du bateau, mais pas celui de chacun. Le titre donne un âge plausible : 3,5 ans pour un Master, 35 pour une Mrs.",
     },
   ],
-  8: [
+  11: [
     {
       question: "L'arbre fait 82,3 % ± 2,2, la régression logistique 80,4 % ± 0,7. Lequel est le plus stable d'un paquet à l'autre ?",
       options: ["L'arbre, parce que sa moyenne est plus haute", "La régression logistique, parce que son écart-type est plus petit", "Les deux se valent", "On ne peut pas savoir"],
@@ -242,7 +320,7 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "12 combinaisons, et chacune est entraînée 5 fois, une par paquet : 60 entraînements. C'est pour ça qu'une grille trop grande devient vite lente.",
     },
   ],
-  9: [
+  12: [
     {
       question: "La même idée coûte 15 tokens en français et 12 en anglais. Pourquoi ?",
       options: ["Le français a plus de lettres", "Le découpage a été construit sur beaucoup plus de texte anglais : ses gros morceaux sont surtout des mots anglais", "Les accents comptent double", "C'est un hasard"],
@@ -268,7 +346,7 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Le notebook télécharge le modèle une fois, puis tout se calcule dans ta session Colab. Avec l'API d'un gros modèle, au contraire, chaque message part sur le serveur de son éditeur.",
     },
   ],
-  10: [
+  13: [
     {
       question: "Où ranges-tu la personnalité et les règles de ton chatbot ?",
       options: ["Dans le message user", "Dans le message system", "Dans le message assistant", "Dans le nom de la fonction"],
@@ -294,7 +372,7 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "« Voici le JSON : {…} » n'est pas du JSON valide. On isole la partie entre accolades, on essaie json.loads dans un try, et on redemande si ça rate.",
     },
   ],
-  11: [
+  14: [
     {
       question: "Dans le dessin à deux axes, chat et camion ont une similarité cosinus de 0,24. Ça veut dire quoi ?",
       options: ["Ils sont presque identiques", "Leurs flèches partent dans des directions très différentes : ils ne parlent pas de la même chose", "Le camion est plus gros", "Il y a une erreur de calcul"],
@@ -320,7 +398,7 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Sous le seuil, aucun passage ne parle vraiment de la question. Refuser avant d'appeler le modèle évite une réponse inventée et économise des tokens.",
     },
   ],
-  12: [
+  15: [
     {
       question: "Pourquoi la calculatrice du notebook n'utilise-t-elle jamais eval() sur ce qu'écrit le modèle ?",
       options: ["eval est trop lent", "eval exécuterait n'importe quel code, même un ordre d'effacer des fichiers", "eval ne connaît pas les multiplications", "Python interdit eval"],
@@ -340,10 +418,36 @@ export const quiz: Record<number | string, QuestionQuiz[]> = {
       explication: "Même un gros modèle se trompe. Pour les actions qu'on ne peut pas annuler, envoyer, payer, effacer, on garde un humain dans la boucle.",
     },
     {
+      question: "Pourquoi la boucle de l'agent s'arrête-t-elle au bout de max_etapes tours, même sans réponse finale ?",
+      options: ["Pour économiser la batterie", "Pour qu'un agent qui tourne en rond, d'outil en outil, ne boucle pas sans fin", "Parce que le modèle ne sait compter que jusqu'à 4", "Pour que le prompt système reste court"],
+      bonne: 1,
+      explication: "Un petit modèle peut redemander le même outil encore et encore. Une borne, et un message honnête (« je n'ai pas réussi »), valent mieux qu'un programme qui ne s'arrête jamais.",
+    },
+  ],
+  16: [
+    {
       question: "Pendant ta présentation de trois minutes, que montres-tu dans la minute de démo ?",
       options: ["Le code de TF-IDF", "Ton projet en vrai : une question à ton assistant, un graphique ou ton score", "La liste des bibliothèques installées", "Rien, tu racontes"],
       bonne: 1,
       explication: "Les invités ne connaissent pas les outils : ce qui les convainc, c'est de voir le projet marcher, et même rater une fois, avec ce que tu en as compris.",
+    },
+    {
+      question: "Que doit dire le README d'accueil de ton portfolio ?",
+      options: ["La liste de toutes les bibliothèques installées", "Qui tu es, tes 4 projets avec un lien chacun, et ce que tu as appris", "Ton mot de passe GitHub", "Le code complet de chaque projet"],
+      bonne: 1,
+      explication: "Le README d'accueil est la première chose qu'on lit sur ton dépôt : quelqu'un qui l'ouvre doit comprendre en deux minutes qui tu es et ce que tu as construit.",
+    },
+    {
+      question: "Tu répètes ta présentation : elle dure 3 minutes 30. Que fais-tu ?",
+      options: ["Tu parles plus vite", "Tu raccourcis ce qui déborde, souvent la démo, en préparant la question à l'avance", "Tu supprimes la démo", "Rien, 30 secondes de plus, ce n'est pas grave"],
+      bonne: 1,
+      explication: "Trois minutes, c'est strict, et c'est ce qui rend l'exercice juste pour tous. On garde la démo, mais on la prépare : la question déjà écrite, et une capture d'écran au cas où le réseau lâche.",
+    },
+    {
+      question: "Avant de rendre ton dépôt public, tu trouves une clé d'API dans un fichier config.py. Que fais-tu ?",
+      options: ["Je la laisse, personne ne lira ce fichier", "Je la retire du dépôt, je la range dans les Secrets de Colab, et si elle est déjà partie je la révoque", "Je la mets en commentaire", "Je renomme le fichier"],
+      bonne: 1,
+      explication: "Des robots parcourent GitHub à la recherche de clés : une clé publiée est trouvée en quelques minutes. Une clé qui est partie se considère comme volée, on en demande une nouvelle.",
     },
   ],
   SO1: [

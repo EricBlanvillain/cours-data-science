@@ -95,7 +95,7 @@ Le détail des commandes est dans [aide-memoire-git.md](aide-memoire-git.md).
 
 Un dépôt public est lisible par tout le monde, pour toujours (même si tu supprimes un fichier, il reste dans l'historique).
 
-## 7. Check-list du portfolio final (séance 12)
+## 7. Check-list du portfolio final (séance 16)
 
 - [ ] Le dépôt est public et a un README d'accueil qui liste les 4 projets avec un lien vers chacun
 - [ ] Chaque projet a son notebook et son README (problème, données, démarche, résultat, comment relancer)

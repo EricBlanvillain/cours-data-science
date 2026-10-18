@@ -6,7 +6,7 @@ import { z } from "astro/zod";
 const lecons = defineCollection({
   loader: glob({ pattern: "**/[^_]*.mdx", base: "./src/content/lecons" }),
   schema: z.object({
-    numero: z.number().int().min(0).max(12),
+    numero: z.number().int().min(0).max(16),
     titre: z.string(),
     niveau: z.enum(["★", "★★", "★★★"]),
     resume: z.string(),
@@ -34,7 +34,7 @@ const modules = defineCollection({
     duree: z.string().default("1 h 30"),
     livrable: z.string(),
     /** ce sur quoi le module s'appuie : des numéros de séance ou des codes de module ; la page en fait des liens */
-    prerequis: z.array(z.union([z.number().int().min(0).max(12), z.enum(["SO1", "SO2", "B1", "B2", "B3", "B4"])])).optional(),
+    prerequis: z.array(z.union([z.number().int().min(0).max(16), z.enum(["SO1", "SO2", "B1", "B2", "B3", "B4"])])).optional(),
     /** une précision sur les prérequis, par exemple « l'un des deux suffit » */
     prerequisNote: z.string().optional(),
     objectifs: z.array(z.string()).min(1).max(3),

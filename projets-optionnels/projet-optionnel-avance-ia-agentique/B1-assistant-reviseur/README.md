@@ -1,6 +1,6 @@
 # Projet B1 · L'assistant qui te fait réviser · ⭐⭐⭐
 
-Piste agentique · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (LLM, prompt, RAG)
+Piste agentique · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 12 à 14 (LLM, prompt, RAG)
 
 ## Objectif
 
@@ -16,7 +16,7 @@ Cet assistant sert à celui qui doit apprendre un cours : il indexe **tes propre
 | `transformers` + `accelerate` (le modèle Qwen2.5-0.5B) | `!pip install -q transformers accelerate` — la cellule le fait pour toi quand `USE_MODEL = True` |
 | `sentence-transformers` (embeddings « par le sens », **optionnel**) | `!pip install -q sentence-transformers`, confortable seulement avec un GPU T4 |
 
-**Aucune clé d'API.** L'interrupteur `USE_MODEL` de la séance 11 est en haut du notebook :
+**Aucune clé d'API.** L'interrupteur `USE_MODEL` de la séance 14 est en haut du notebook :
 - `USE_MODEL = False` → un faux modèle (`llm_factice`) répond hors ligne, sans GPU. Tout le projet tourne, y compris la génération des questions : ce qui est vérifié, c'est **ton code** (découpage, recherche, correction), pas le talent du modèle.
 - `USE_MODEL = True` → Qwen2.5-0.5B-Instruct tourne dans Colab, gratuitement, sans compte. Le reste du notebook ne change pas.
 - La variante API (clé rangée dans les *Secrets* de Colab) est en commentaire, à décommenter si tu en as une.
@@ -64,4 +64,4 @@ Si le temps manque : arrête-toi à la fin de la section 6 (tu as déjà un assi
 - Embeddings multilingues (option) : https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 · le classement des modèles : https://huggingface.co/spaces/mteb/leaderboard
 - Un RAG pas à pas côté Kaggle : https://www.kaggle.com/code/markishere/day-2-document-q-a-with-rag
 - Le même service, prêt à l'emploi, pour comparer avec ton assistant : https://notebooklm.google
-- La leçon dont ce projet est la suite : [séance 11 · Le RAG](../../../seances/seance-11-rag/)
+- La leçon dont ce projet est la suite : [séance 14 · Le RAG](../../../seances/seance-14-rag/)

@@ -25,7 +25,7 @@ Le petit numéro `[3]` à gauche d'une cellule dit dans quel ordre elle a été 
 
 Les cellules qui commencent par `!` lancent une commande système, par exemple `!pip install plotly` pour installer une bibliothèque.
 
-## 3. Activer le GPU T4 (séances 9 à 12)
+## 3. Activer le GPU T4 (séances 12 à 15)
 
 Les modèles de langage ont besoin d'une carte graphique. Colab en prête une gratuitement.
 
@@ -62,7 +62,7 @@ df = pd.read_csv("/content/drive/MyDrive/atelier/train.csv")
 ```
 Une fenêtre demande l'autorisation d'accéder à ton Drive : accepte.
 
-## 6. Enregistrer sur GitHub (séances 3, 8, 12)
+## 6. Enregistrer sur GitHub (séances 5, 11, 16)
 
 1. **Fichier → Enregistrer une copie dans GitHub**
 2. La première fois, Colab demande l'autorisation d'accéder à ton compte GitHub : accepte.

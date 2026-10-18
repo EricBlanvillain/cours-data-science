@@ -1,5 +1,5 @@
 /**
- * Les chiffres de la séance 7, obtenus en rejouant le notebook 07_kaggle_titanic_1.ipynb sur la copie publique de train.csv
+ * Les chiffres de la séance 10, obtenus en rejouant le notebook 07_kaggle_titanic_1.ipynb (devenu 10_kaggle_titanic_1.ipynb) sur la copie publique de train.csv
  * qu'il charge quand les fichiers Kaggle sont absents (mêmes 891 passagers, mêmes 12 colonnes) :
  *   https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv
  * Calculé le 27/09/2026 dans un environnement proche de Colab (pandas 2.2.3, scikit-learn 1.9) :

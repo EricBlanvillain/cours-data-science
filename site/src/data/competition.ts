@@ -1,7 +1,7 @@
 /**
- * Les chiffres de la séance 8, obtenus en rejouant le notebook 08_kaggle_titanic_2.ipynb sur la copie publique de train.csv
+ * Les chiffres de la séance 11, obtenus en rejouant le notebook 08_kaggle_titanic_2.ipynb (devenu 11_kaggle_titanic_2.ipynb) sur la copie publique de train.csv
  * qu'il charge (https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv, 891 passagers), avec la même
- * fonction preparer() que la séance 7. Calculé le 27/09/2026 (pandas 2.2.3, scikit-learn 1.9), validation croisée à 5 paquets :
+ * fonction preparer() que la séance 10. Calculé le 27/09/2026 (pandas 2.2.3, scikit-learn 1.9), validation croisée à 5 paquets :
  *
  *   logistique / arbre (profondeur 4) / forêt (200, 5) / boosting (100, 3) → 80,4 ± 0,7 ; 82,3 ± 2,2 ; 82,7 ± 1,9 ; 83,2 ± 1,6 %
  *   k-NN brut / mis à l'échelle                                              → 71,6 % / 81,4 %

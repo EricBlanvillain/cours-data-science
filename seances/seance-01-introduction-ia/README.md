@@ -30,7 +30,7 @@ Notes d'animation (formateur)
 - Section 5, panorama des outils : « Démo sur l'ordinateur du formateur uniquement. »
 - Section 6, concours du prompt : « Concours : même défi pour tous, on lit les réponses à voix haute, on vote, puis on regarde les prompts gagnants. Faire ressortir quelle règle a fait la différence. »
 
-Entre deux séances (à la maison) : `01_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
+Entre deux séances (à la maison) : `01_exercices.ipynb` — 12 exercices ⭐ à ⭐⭐⭐ sur des situations que la leçon n'a pas vues (la machine de tri d'un bureau de poste, le concours de prompts du club cuisine), avec vérification automatique (✅/❌), indices et solutions dépliables. C'est le seul travail personnel : la leçon, elle, se fait toujours ensemble.
 
 Fiche : les 5 règles d'un bon prompt
 1. Le contexte : qui tu es, pour quoi faire

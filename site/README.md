@@ -35,7 +35,7 @@ navigateurs bloquent les scripts de type module en `file://`.
 
 ```
 src/content/lecons/*.mdx        le texte des leçons : c'est là qu'on écrit, sans toucher au code
-src/data/seances.ts             les 13 séances (titre, niveau, résumé, dossier GitHub, slug de la leçon)
+src/data/seances.ts             les 17 séances (titre, niveau, résumé, dossier GitHub, slug de la leçon)
 src/data/frise.ts               les jalons de la frise 1950 → aujourd'hui, avec source et date de vérification
 src/data/causes.ts              les trois cartes « Pourquoi maintenant », avec source et date de vérification
 src/data/questions.ts           les exemples du quiz classification / régression
@@ -52,6 +52,18 @@ scripts/fleches.mjs             post-build : chaque lien qui sort du site finit 
 scripts/audit-contrast.mjs      mesure chaque texte contre son fond composité dans Chrome headless, sans dépendance
 scripts/audit-mise-en-page.mjs  grilles de cartes (subgrid), en-tête identique sur toutes les pages, plafond de prose, écrans de la séance 0 dans 1440 × 900
 ```
+
+## Les quatre règles du cours
+
+Elles valent pour chaque séance, notebooks et page du site (texte complet dans `CLAUDE.md`, « Les quatre règles ») :
+
+- **R1. Un seul thème principal par séance** : deux thèmes, deux séances. La page d'une séance ne traite que son thème.
+- **R2. La séance 0 fait connaissance et présente le cours**, avec un court bilan : rien de la séance de Python (listes,
+  boucles, fonctions, dictionnaires) n'y est enseigné ni pratiqué.
+- **R3. Les exercices complètent la leçon** : mêmes notions, situation et données nouvelles, faisables seul ; jamais la leçon
+  refaite, jamais un thème que la séance ne traite pas.
+- **R4. Une étape par cellule de code** dans les notebooks de leçon, chacune précédée d'une ligne qui dit ce qu'elle montre,
+  8 lignes de code au plus (`scripts/recette/une_etape.py`).
 
 ## Écrire une leçon
 
@@ -81,10 +93,10 @@ fait des liens et que le lint vérifie), `prerequisNote` (la précision, par exe
 (3 au plus), `aRetenir` (5 au plus). Même ouverture et même corps qu'une leçon (`CorpsLecon`) ; libellé « Séance optionnelle 1
 · ★ · 1 h 30 » ou « Projet B2 · ★★★ · 1 h 30 », objectifs « À la fin de la séance » ou « À la fin du projet ».
 
-- **Séance optionnelle** (`type: seance`) : une leçon, avec les mêmes règles que les séances 2 à 12 (vocabulaire des blocs,
+- **Séance optionnelle** (`type: seance`) : une leçon, avec les mêmes règles que les séances 2 à 16 (vocabulaire des blocs,
   625 mots visibles, un quiz de 4 questions dans `src/data/quiz.ts` à la clé SO1 ou SO2, un jeu seulement si un îlot existant
   convient, la relecture ci-dessous, la règle 5 s'appliquant à ses notebooks).
-- **Projet** (`type: projet`) : une page de projet, pas une leçon (l'enseignement est dans les séances 9 à 12). Ce qu'on
+- **Projet** (`type: projet`) : une page de projet, pas une leçon (l'enseignement est dans les séances 12 à 15). Ce qu'on
   construit (un schéma SVG du circuit), les prérequis, le déroulé en courte liste avec les durées exactes du README, le
   livrable, la grille d'évaluation (4 colonnes au plus) et la rangée `BoutonsSeance` (Colab et dossier GitHub). Ni quiz ni
   jeu : le lint refuse un quiz pour un projet. 625 mots visibles ; relecture, points 2 à 5.
@@ -127,7 +139,7 @@ commande ? », le quiz interroge l'ordre, la syntaxe ou le piège, pas la même 
 
 ### Relecture avant de rendre une leçon
 
-À partir de la séance 5, chaque leçon passe cette relecture avant d'être rendue, et le compte rendu liste ce qu'elle a
+Depuis la séance 3 (et pour la page de la séance 0), chaque leçon passe cette relecture avant d'être rendue, et le compte rendu liste ce qu'elle a
 changé, une ligne par correction, ou dit que rien n'a eu besoin de l'être.
 
 1. **Le jeu n'a qu'une réponse défendable.** Chaque question du jeu a sa réponse parmi les choix proposés, et les
@@ -150,7 +162,7 @@ changé, une ligne par correction, ou dit que rien n'a eu besoin de l'être.
 
 ### Bloc 4 : sorties de modèle et faits sur l'IA
 
-Deux règles de plus pour les séances 9 à 12.
+Deux règles de plus pour les séances 12 à 15.
 
 1. **Toute sortie de modèle montrée sur la page vient d'un vrai passage du modèle du notebook** (Qwen 2.5 0.5B Instruct ;
    le CPU suffit) : texte généré, probabilités du mot suivant, passages retrouvés, étapes d'un agent. Le modèle, les
@@ -220,7 +232,7 @@ dans l'objet, mettre la date du jour. Le lecteur voit la source au clic sur « s
      ou « Revoir les notebooks ↗ » si terminée. La bande garde la hauteur d'un bouton même vide.
 - Après le bloc 4, la section **Modules optionnels** se construit depuis la collection `modules` (la seule liste des
   modules), en deux groupes : « Séances optionnelles » (SO1, SO2) et « Projets d'IA agentique » (B1 à B4, avec la ligne
-  « Prérequis conseillés : les séances 9 à 12. B4 se fait après B1 ou B2. »). Même grille, même carte : titre lié à la page,
+  « Prérequis conseillés : les séances 12 à 15. B4 se fait après B1 ou B2. »). Même grille, même carte : titre lié à la page,
   pied neutre sans pastille (« Leçon en ligne · module optionnel » ou « Projet en ligne · module optionnel »), action « Ouvrir
   la leçon → » ou « Ouvrir le projet → ». Une carte n'apparaît qu'avec sa page ; sans page, pas de section. Pas de
   `data-seance` : hors de la progression et du compteur « séances restantes ». Les projets de réserve (A1 à A6) n'y figurent

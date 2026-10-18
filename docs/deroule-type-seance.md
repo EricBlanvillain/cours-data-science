@@ -37,15 +37,15 @@ Le rôle du formateur pendant ces 60 minutes :
 - **Repérer les bloqués silencieux** : ceux qui n'écrivent plus depuis 5 minutes. Souvent une cellule non exécutée ou un fichier disparu.
 - **Débloquer en public** quand trois personnes ont la même erreur : on la montre au vidéoprojecteur, on la corrige ensemble, on repart.
 - **Laisser les niveaux faire le tri.** Les exercices ⭐ pour tous, ⭐⭐ pour la plupart, ⭐⭐⭐ pour ceux qui ont fini. Personne n'attend, personne n'est largué. Un ⭐⭐⭐ non fini n'est pas un échec.
-- **Binômes** dès que c'est possible (obligatoire aux séances 7 et 8) : un qui tape, un qui lit l'énoncé, on inverse à la moitié.
+- **Binômes** dès que c'est possible (obligatoire aux séances 10 et 11) : un qui tape, un qui lit l'énoncé, on inverse à la moitié.
 
 ## Les 15 dernières minutes : partager
 
 - **Tout le monde montre quelque chose**, même inachevé. 1 à 2 minutes chacun, chrono visible. Le format est toujours le même : ce que j'ai voulu faire, ce que ça donne, ce qui a coincé.
 - **Le formateur pose une question par passage**, jamais un jugement : « pourquoi ce graphique plutôt qu'un autre ? », « qu'est-ce que tu changerais ? ».
-- **Les autres jouent un rôle** quand la séance s'y prête : le client (séance 5), le jury du concours de prompts (séance 1), les testeurs du bot (séance 10).
-- **Conclure en 2 minutes** : l'idée du jour en une phrase, le point de reprise s'il y en a un, les exercices `NN_exercices.ipynb` à faire d'ici la prochaine fois, ce qu'on construit ensuite et ce qu'il faut préparer (compte Kaggle avant la séance 7, `train.csv` avant la 8, ses propres notes avant la 11).
-- **Pousser sur GitHub** avant de partir (à partir de la séance 3) : le partage est aussi le moment de « fermer » le projet.
+- **Les autres jouent un rôle** quand la séance s'y prête : le client (séance 8), le jury du concours de prompts (séance 1), les testeurs du bot (séance 13).
+- **Conclure en 2 minutes** : l'idée du jour en une phrase, le point de reprise s'il y en a un, les exercices `NN_exercices.ipynb` à faire d'ici la prochaine fois, ce qu'on construit ensuite et ce qu'il faut préparer (compte Kaggle avant la séance 10, `train.csv` avant la 11, ses propres notes avant la 14).
+- **Pousser sur GitHub** avant de partir (à partir de la séance 5) : le partage est aussi le moment de « fermer » le projet.
 
 ## Conseils d'animation
 
@@ -55,8 +55,8 @@ Le rôle du formateur pendant ces 60 minutes :
 | Quelqu'un recopie sans comprendre | Lui demander de modifier une valeur et de prédire le résultat avant d'exécuter |
 | Un participant coincé sur une erreur depuis longtemps | Lire le message d'erreur à voix haute ensemble ; 90 % des cas sont dans la table « erreurs fréquentes » des aide-mémoires |
 | Le wifi ou Colab rame | Les datasets ont tous un miroir public ; les notebooks 9 à 12 tournent en `USE_MODEL = False` ; garder un notebook exécuté en local pour montrer les sorties |
-| Le GPU n'est pas disponible (séances 9-12) | Mode `USE_MODEL = False` pour les exercices ; démo du modèle sur la machine du formateur (Ollama) |
-| Utilisation de ChatGPT pour faire les exercices | L'autoriser, à une condition : expliquer chaque ligne obtenue au partage. Faire le lien avec les bonnes pratiques de la séance 12 |
+| Le GPU n'est pas disponible (séances 12-15) | Mode `USE_MODEL = False` pour les exercices ; démo du modèle sur la machine du formateur (Ollama) |
+| Utilisation de ChatGPT pour faire les exercices | L'autoriser, à une condition : expliquer chaque ligne obtenue au partage. Faire le lien avec les bonnes pratiques de la séance 15 |
 | Quelqu'un termine tout, exercices ⭐⭐⭐ compris | Lui proposer de changer de dataset (liens-utiles) ou de commencer le projet suivant |
 | Un participant ne veut pas présenter | Présenter en binôme, ou montrer son écran sans parler et laisser le formateur commenter la première fois |
 | La séance déborde | Ne rien couper et ne rien renvoyer à la maison : s'arrêter au point de reprise du README, le noter au tableau, reprendre là au créneau suivant. Garder les 15 min de partage, même sur du travail inachevé |

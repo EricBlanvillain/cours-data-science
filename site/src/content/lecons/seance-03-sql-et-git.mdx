@@ -1,26 +1,24 @@
 ---
 numero: 3
-titre: SQL et Git
+titre: SQL
 niveau: ★
 duree: 1 h 30
-resume: "Où une appli range ses données, SQL pour interroger une base (SELECT, WHERE, GROUP BY, un premier JOIN), puis Git et GitHub pour mettre son premier projet en ligne."
-livrable: Le premier projet en ligne sur GitHub, avec un README qui l'explique.
+resume: "Où une appli range ses données, et SQL pour les interroger : SELECT, WHERE, ORDER BY, GROUP BY, un premier JOIN, puis la même question posée en SQL et en pandas."
+livrable: Tes requêtes SQL, et le défi « même question en SQL et en pandas » résolu trois fois.
 objectifs:
   - Tu sauras dire où une appli range ses données et lire une requête SQL comme une phrase.
   - Tu sauras filtrer, trier, compter, regrouper et relier deux tables, en SQL comme en pandas.
-  - Tu sauras ce que font add, commit, push et pull, et pousser un notebook sur GitHub depuis Colab.
+  - Tu sauras vérifier une réponse en posant la même question en SQL et en pandas.
 aRetenir:
   - Une appli garde ses données dans une base faite de tables ; SQL est la langue pour les interroger.
   - Une requête se lit comme une phrase, SELECT quoi, FROM où, WHERE à quelle condition, ORDER BY dans quel ordre, LIMIT combien.
   - SQL et pandas font la même chose, WHERE et filtre, ORDER BY et sort_values, GROUP BY et groupby, JOIN et merge.
   - Un JOIN recolle deux tables par une colonne commune, et laisse tomber ce qui n'a pas de correspondance.
-  - Git garde des points de sauvegarde, GitHub les met en ligne ; add choisit, commit sauvegarde avec un message qui dit pourquoi, push envoie, pull récupère.
+  - Quand SQL et pandas ne tombent pas d'accord, c'est souvent un détail, des ex æquo ou un arrondi, qu'il faut traiter pareil des deux côtés.
 ---
 import BaseEtTables from "../../components/schemas/BaseEtTables.astro";
 import AnatomieRequete from "../../components/schemas/AnatomieRequete.astro";
 import Jointure from "../../components/schemas/Jointure.astro";
-import PointsDeSauvegarde from "../../components/schemas/PointsDeSauvegarde.astro";
-import QuelleCommande from "../../components/islands/QuelleCommande";
 import BoutonsSeance from "../../components/BoutonsSeance.astro";
 
 ## Où vivent les données d'une appli
@@ -71,21 +69,13 @@ Huit types du dataset n'ont pas de ligne dans la table `types` : Bug, Dark, Drag
 
 </details>
 
-## Git : des points de sauvegarde
+### À toi : même question, deux langues
 
-Tu connais les sauvegardes d'un jeu vidéo : on y revient quand on rate. Git fait ça pour ton code ; GitHub garde les sauvegardes en ligne et les montre.
+Le projet de la séance : trois défis, chacun résolu en SQL puis en pandas. La fonction `compare` du notebook dit si les deux réponses concordent.
 
-<PointsDeSauvegarde />
-
-<QuelleCommande client:load />
-
-### À toi : ton projet en ligne
-
-Depuis Colab, le menu Fichier, puis « Enregistrer une copie dans GitHub », revient à add, commit et push d'un clic.
-
-- **Pousse ton notebook de la séance 2** dans ton dépôt `mon-portfolio-ia`, chemin `seance-02/02_python_pour_la_data.ipynb`, avec un message qui dit ce qu'il contient.
-- **Écris le README** : la cellule de la section 6 le génère depuis ta fiche, tu le colles sur GitHub. Modifie-le une deuxième fois : ton historique a deux versions.
-- **Même question, deux langues** (section 7) : trois défis à résoudre en SQL puis en pandas, `compare` dit si les deux réponses concordent. Le premier est résolu, les deux autres sont à toi.
+- **Le premier défi est résolu** : combien de Pokémon par génération. Lis les deux versions côte à côte.
+- **Le deuxième** : les cinq plus rapides. Plusieurs Pokémon ont la même vitesse ; départage-les par le nom, des deux côtés.
+- **Le troisième** : l'attaque moyenne par type, arrondie, top 5. Puis invente ta propre question, avec un JOIN si tu es chaud.
 
 <BoutonsSeance dossier="seance-03-sql-et-git" lecon="03_sql_et_git.ipynb" exercices="03_exercices.ipynb" />
 

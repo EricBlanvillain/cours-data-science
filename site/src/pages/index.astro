@@ -5,7 +5,7 @@ import { getCollection } from "astro:content";
 import { seances, blocs, DEPOT } from "../data/seances";
 import { libelleModule, trierModules } from "../data/modules";
 
-const parBloc = [0, 1, 2, 3, 4].map((b) => ({
+const parBloc = [0, 1, 2, 3, 4, 5].map((b) => ({
   bloc: b as keyof typeof blocs,
   titre: blocs[b as keyof typeof blocs],
   liste: seances.filter((s) => s.bloc === b),
@@ -15,7 +15,7 @@ const total = seances.length;
 const modules = trierModules(await getCollection("modules"));
 const groupesModules = [
   { titre: "Séances optionnelles", intro: null, liste: modules.filter((m) => m.data.type === "seance") },
-  { titre: "Projets d'IA agentique", intro: "Prérequis conseillés : les séances 9 à 12. B4 se fait après B1 ou B2.", liste: modules.filter((m) => m.data.type === "projet") },
+  { titre: "Projets d'IA agentique", intro: "Prérequis conseillés : les séances 12 à 15. B4 se fait après B1 ou B2.", liste: modules.filter((m) => m.data.type === "projet") },
 ].filter((g) => g.liste.length > 0);
 ---
 
@@ -101,7 +101,7 @@ const groupesModules = [
     {groupesModules.length > 0 && (
       <section>
         <h2 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--encre-2);">Modules optionnels</h2>
-        <p class="discret mt-2" style="font-size: 0.95rem;">En plus des séances 0 à 12, hors parcours : pour aller plus loin, quand on veut.</p>
+        <p class="discret mt-2" style="font-size: 0.95rem;">En plus des séances 0 à 16, hors parcours : pour aller plus loin, quand on veut.</p>
         {groupesModules.map((g) => (
           <div class="mt-8">
             <h3 class="mono-caps" style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500; color: var(--encre-2);">{g.titre}</h3>

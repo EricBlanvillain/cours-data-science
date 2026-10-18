@@ -1,10 +1,10 @@
 # Projet 2 · Nettoyage, dashboard et premier modèle ⭐⭐
 
-Bloc 2 · Le métier de data scientist (séances 4, 5 et 6) · Niveau ⭐⭐ Intermédiaire
+Bloc 2 · Le métier de data scientist (séances 4, 8 et 9) · Niveau ⭐⭐ Intermédiaire
 
 ## Objectif
 
-Refaire sur ton dataset du projet 1 le travail complet d'un data scientist : **nettoyer** en documentant chaque correction (S4), construire un **dashboard Plotly** de 3 graphiques interactifs (S5), entraîner et évaluer un **premier modèle scikit-learn** qui prédit quelque chose d'utile (S6), et **présenter** le tout à un « client » en 2 minutes.
+Refaire sur ton dataset du projet 1 le travail complet d'un data scientist : **nettoyer** en documentant chaque correction (S4), construire un **dashboard Plotly** de 3 graphiques interactifs (S8), entraîner et évaluer un **premier modèle scikit-learn** qui prédit quelque chose d'utile (S9), et **présenter** le tout à un « client » en 2 minutes.
 
 ## Dataset
 
@@ -24,9 +24,9 @@ Les miroirs sont listés dans le [README des projets](../README.md). Les cibles 
 | Étape | Séance | Durée | Ce que tu fais |
 |---|---|---|---|
 | 1. Nettoyer et documenter | S4 | 40 min | lire `nettoyer()`, ajouter au moins une correction, remplir `JOURNAL` |
-| 2. Dashboard Plotly | S5 | 40 min | 3 graphiques interactifs avec une question en titre, remplacer au moins l'un d'eux par le tien, écrire le pitch constat / preuve / recommandation |
-| 3. Premier modèle | S6 | 50 min | train/test, modèle bête vs régression logistique vs forêt, matrice de confusion, importance des variables, 2 essais d'amélioration notés dans `ESSAIS` |
-| 4. Présentation client | S6 | 2 min par personne | problème, données, résultat, recommandation ; le groupe joue le client |
+| 2. Dashboard Plotly | S8 | 40 min | 3 graphiques interactifs avec une question en titre, remplacer au moins l'un d'eux par le tien, écrire le pitch constat / preuve / recommandation |
+| 3. Premier modèle | S9 | 50 min | train/test, modèle bête vs régression logistique vs forêt, matrice de confusion, importance des variables, 2 essais d'amélioration notés dans `ESSAIS` |
+| 4. Présentation client | S9 | 2 min par personne | problème, données, résultat, recommandation ; le groupe joue le client |
 
 ## Livrable
 

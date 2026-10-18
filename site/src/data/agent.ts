@@ -1,5 +1,5 @@
 /**
- * Les sorties de la séance 12, toutes issues d'un vrai passage, le 28/09/2026, du notebook 12_agents_et_projet_final.ipynb
+ * Les sorties de la séance 15, toutes issues d'un vrai passage, le 28/09/2026, du notebook 12_agents_et_projet_final.ipynb (devenu 15_agents.ipynb)
  * avec son propre code (ses trois outils, sa boucle agent(), son banc de test), exécuté cellule par cellule :
  *   modèle      Qwen/Qwen2.5-0.5B-Instruct, sur CPU, transformers 5.16.1, torch 2.14.0, Python 3.12.13
  *   réglages    ceux du notebook : demander() et agent() à temperature=0 (glouton, donc sans graine), max_new_tokens=60 pour
@@ -20,7 +20,7 @@ export const outils = [
   { nom: "chercher_pokemon", appel: "chercher_pokemon(\"Pikachou\")", sortie: "Aucun Pokémon appelé Pikachou." },
   { nom: "calculer", appel: "calculer(\"348 * 27\")", sortie: "348 * 27 = 9396" },
   { nom: "calculer", appel: "calculer('__import__(\"os\")…')", sortie: "Expression refusée (élément interdit : Call)." },
-  { nom: "chercher_dans_mes_notes", appel: "chercher_dans_mes_notes(\"à quoi sert la température\")", sortie: "Séance 9 : un LLM fait une seule chose, prédire le token suivant, encore et encore. La température règle le hasard : 0 = toujours pareil, élevée = créatif puis délirant." },
+  { nom: "chercher_dans_mes_notes", appel: "chercher_dans_mes_notes(\"à quoi sert la température\")", sortie: "Séance 12 : un LLM fait une seule chose, prédire le token suivant, encore et encore. La température règle le hasard : 0 = toujours pareil, élevée = créatif puis délirant." },
 ];
 export const traceReussie = { question: "Quels sont les PV de Snorlax ?", etapes: [{"etape": 1, "qui": "modèle", "texte": "OUTIL: chercher_pokemon(Snorlax)"}, {"etape": 1, "qui": "outil", "texte": "Snorlax : type Normal, 160 PV, attaque 110, défense 65, vitesse 30."}], reponse: "Le PV de Snorlax est 160." };
 export const traceDemo = { question: "Combien fait la vitesse de Pikachu fois 3 ?", etapes: [{"etape": 1, "qui": "modèle", "texte": "OUTIL: chercher_pokemon(Pikachu)"}, {"etape": 1, "qui": "outil", "texte": "Pikachu : type Electric, 35 PV, attaque 55, défense 40, vitesse 90."}, {"etape": 2, "qui": "modèle", "texte": "OUTIL: calculer(90 * 3)"}, {"etape": 2, "qui": "outil", "texte": "90 * 3 = 270"}], reponse: "D'après mes outils : Pikachu : type Electric, 35 PV, attaque 55, défense 40, vitesse 90. ; 90 * 3 = 270" };

@@ -1,8 +1,8 @@
 # Aide-mémoire LLM
 
-Une page pour les séances 9 à 12 : tokens, messages, prompt système, JSON, RAG, agent. Les exemples utilisent la fonction `llm(messages)` des notebooks, qui envoie une liste de messages au modèle et renvoie sa réponse en texte (avec `USE_MODEL = False`, une réponse factice).
+Une page pour les séances 12 à 15 : tokens, messages, prompt système, JSON, RAG, agent. Les exemples utilisent la fonction `llm(messages)` des notebooks, qui envoie une liste de messages au modèle et renvoie sa réponse en texte (avec `USE_MODEL = False`, une réponse factice).
 
-## Tokens (séance 9)
+## Tokens (séance 12)
 
 | Idée | À retenir |
 |---|---|
@@ -20,7 +20,7 @@ tokens = enc.encode("Les manchots aiment le froid.")
 len(tokens), enc.decode(tokens[:3])
 ```
 
-## Les trois rôles (séance 10)
+## Les trois rôles (séance 13)
 
 | Rôle | Qui parle | Contenu |
 |---|---|---|
@@ -47,7 +47,7 @@ Les 5 règles d'un bon prompt s'appliquent (voir [fiche-5-regles-du-prompt.md](f
 - Ce qu'il doit faire quand il ne sait pas (« Si la question sort de la SVT, dis-le et propose de revenir au sujet. »)
 - La langue et la longueur attendues
 
-## Réponse en JSON (séance 10)
+## Réponse en JSON (séance 13)
 
 Demander un format que le programme peut lire :
 
@@ -71,7 +71,7 @@ except json.JSONDecodeError:
 
 Toujours prévoir le cas où le modèle ne respecte pas le format : `try / except`, vérifier les clés (`"question" in quiz`), redemander une fois.
 
-## RAG (séance 11)
+## RAG (séance 14)
 
 Le modèle ne connaît pas tes documents. Le RAG (*Retrieval-Augmented Generation*) les lui donne au bon moment, comme un examen à livre ouvert.
 
@@ -96,7 +96,7 @@ meilleurs = [chunks[i] for i in scores.argsort()[::-1][:3]]
 
 Ce qui fait la différence : la taille des chunks, le nombre k, et la consigne « si ce n'est pas dans le contexte, dis-le ». Une mauvaise réponse vient presque toujours d'une mauvaise recherche (le bon passage n'a pas été trouvé), pas du modèle.
 
-## Agent (séance 12)
+## Agent (séance 15)
 
 Un agent, c'est un LLM dans une boucle avec des outils :
 
@@ -118,7 +118,7 @@ for tour in range(5):
     messages.append({"role": "user", "content": f"RÉSULTAT: {resultat}"})
 ```
 
-Ce qui peut rater : l'agent invente un outil qui n'existe pas, se trompe d'arguments, boucle, ou répond sans appeler l'outil alors qu'il fallait. D'où le banc de test de la séance 12.
+Ce qui peut rater : l'agent invente un outil qui n'existe pas, se trompe d'arguments, boucle, ou répond sans appeler l'outil alors qu'il fallait. D'où le banc de test de la séance 15.
 
 ## Les limites à garder en tête
 

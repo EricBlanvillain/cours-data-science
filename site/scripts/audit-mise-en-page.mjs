@@ -46,25 +46,29 @@ const PAGES = [
   { page: "lecons/seance-02-python-pour-la-data.html", id: "seance-2", pilote: "" },
   { page: "lecons/seance-02-python-pour-la-data.html", id: "seance-2-quel-graphique-juste", pilote: `const g = ile("QuelGraphique"); btn(g, "Quel type de Pokémon").click(); await w(300); btn(g, "Barres").click(); await w(300);` },
   { page: "lecons/seance-03-sql-et-git.html", id: "seance-3", pilote: "" },
-  { page: "lecons/seance-03-sql-et-git.html", id: "seance-3-quelle-commande-juste", pilote: `const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);` },
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "seance-4", pilote: "" },
   { page: "lecons/seance-04-collecter-nettoyer.html", id: "seance-4-vides-juste", pilote: `const g = ile("SupprimerRemplirGarder"); btn(g, "Type 2").click(); await w(300); btn(g, "Garder").click(); await w(300);` },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "seance-5", pilote: "" },
-  { page: "lecons/seance-05-analyser-raconter.html", id: "seance-5-piege-juste", pilote: `const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Causalité").click(); await w(300);` },
-  { page: "lecons/seance-06-premier-modele.html", id: "seance-6", pilote: "" },
-  { page: "lecons/seance-06-premier-modele.html", id: "seance-6-modele-juste", pilote: `const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "appris par cœur").click(); await w(300);` },
-  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "seance-7", pilote: "" },
-  { page: "lecons/seance-07-kaggle-titanic-1.html", id: "seance-7-duel-juste", pilote: `const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "1 · une femme").click(); await w(300);` },
-  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "seance-8", pilote: "" },
-  { page: "lecons/seance-08-kaggle-titanic-2.html", id: "seance-8-fuite-juste", pilote: `const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "1 · Fuite").click(); await w(300);` },
-  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "seance-9", pilote: "" },
-  { page: "lecons/seance-09-comment-fonctionne-un-llm.html", id: "seance-9-limite-juste", pilote: `const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "1 · Hallucination").click(); await w(300);` },
-  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "seance-10", pilote: "" },
-  { page: "lecons/seance-10-parler-a-un-llm-par-le-code.html", id: "seance-10-consigne-juste", pilote: `const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "2 · Oubliée").click(); await w(300);` },
-  { page: "lecons/seance-11-rag.html", id: "seance-11", pilote: "" },
-  { page: "lecons/seance-11-rag.html", id: "seance-11-rag-juste", pilote: `const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "1 · La recherche").click(); await w(300);` },
-  { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12", pilote: "" },
-  { page: "lecons/seance-12-agents-et-projet-final.html", id: "seance-12-agent-juste", pilote: `const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);` },
+  { page: "lecons/seance-05-git-github.html", id: "seance-5", pilote: "" },
+  { page: "lecons/seance-05-git-github.html", id: "seance-5-quelle-commande-juste", pilote: `const g = ile("QuelleCommande"); btn(g, "choisir quels fichiers").click(); await w(300); btn(g, "git add").click(); await w(300);` },
+  { page: "lecons/seance-06-collecter-api.html", id: "seance-6", pilote: "" },
+  { page: "lecons/seance-07-analyser.html", id: "seance-7", pilote: "" },
+  { page: "lecons/seance-07-analyser.html", id: "seance-7-piege-juste", pilote: `const g = ile("QuelPiege"); btn(g, "ordinateur portable").click(); await w(300); btn(g, "Causalité").click(); await w(300);` },
+  { page: "lecons/seance-08-raconter.html", id: "seance-8", pilote: "" },
+  { page: "lecons/seance-09-premier-modele.html", id: "seance-9", pilote: "" },
+  { page: "lecons/seance-09-premier-modele.html", id: "seance-9-modele-juste", pilote: `const g = ile("CeModeleACompris"); btn(g, "un seul voisin").click(); await w(300); btn(g, "appris par cœur").click(); await w(300);` },
+  { page: "lecons/seance-10-kaggle-titanic-1.html", id: "seance-10", pilote: "" },
+  { page: "lecons/seance-10-kaggle-titanic-1.html", id: "seance-10-duel-juste", pilote: `const g = ile("QuiAPlusDeChances"); btn(g, "femme de 3e classe").click(); await w(300); btn(g, "1 · une femme").click(); await w(300);` },
+  { page: "lecons/seance-11-kaggle-titanic-2.html", id: "seance-11", pilote: "" },
+  { page: "lecons/seance-11-kaggle-titanic-2.html", id: "seance-11-fuite-juste", pilote: `const g = ile("FuiteOuPas"); btn(g, "colonne Canot").click(); await w(300); btn(g, "1 · Fuite").click(); await w(300);` },
+  { page: "lecons/seance-12-comment-fonctionne-un-llm.html", id: "seance-12", pilote: "" },
+  { page: "lecons/seance-12-comment-fonctionne-un-llm.html", id: "seance-12-limite-juste", pilote: `const g = ile("QuelleLimite"); btn(g, "Roland-Garros").click(); await w(300); btn(g, "1 · Hallucination").click(); await w(300);` },
+  { page: "lecons/seance-13-parler-a-un-llm-par-le-code.html", id: "seance-13", pilote: "" },
+  { page: "lecons/seance-13-parler-a-un-llm-par-le-code.html", id: "seance-13-consigne-juste", pilote: `const g = ile("ConsigneTenue"); btn(g, "Tu es un pirate").click(); await w(300); btn(g, "2 · Oubliée").click(); await w(300);` },
+  { page: "lecons/seance-14-rag.html", id: "seance-14", pilote: "" },
+  { page: "lecons/seance-14-rag.html", id: "seance-14-rag-juste", pilote: `const g = ile("OuARateLeRag"); btn(g, "Qui a créé le jeu").click(); await w(300); btn(g, "1 · La recherche").click(); await w(300);` },
+  { page: "lecons/seance-15-agents.html", id: "seance-15", pilote: "" },
+  { page: "lecons/seance-15-agents.html", id: "seance-15-agent-juste", pilote: `const g = ile("QuAtIlRate"); btn(g, "PV de Snorlax").click(); await w(300); btn(g, "3 · Réussi").click(); await w(300);` },
+  { page: "lecons/seance-16-projet-final.html", id: "seance-16", pilote: "" },
   { page: "enregistrer-pdf.html", id: "enregistrer-pdf", pilote: "" },
   // les pages de module, puis le menu du téléphone ouvert sur l'une d'elles (la colonne des numéros, codes compris)
   ...SLUGS_MODULES.map((slug) => ({ page: `modules/${slug}.html`, id: `module-${slug}`, pilote: "" })),
@@ -80,7 +84,7 @@ const PILOTE_IMPRESSION = `
   document.querySelectorAll("details").forEach(function (d) { d.open = true; });`;
 const IMPRESSION = [...PAGES.filter((e) => /^seance-\d+$/.test(e.id) || (/^module-/.test(e.id) && e.id !== "module-menu-ouvert")), { page: "enregistrer-pdf.html", id: "enregistrer-pdf" }]
   .map((e) => ({ page: e.page, id: "impression-" + e.id, pilote: PILOTE_IMPRESSION }));
-const PAGES_EN_TETE = ["accueil", "glossaire", "enregistrer-pdf", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11", "seance-12"];
+const PAGES_EN_TETE = ["accueil", "glossaire", "enregistrer-pdf", "seance-0", "seance-1", "seance-2", "seance-3", "seance-4", "seance-5", "seance-6", "seance-7", "seance-8", "seance-9", "seance-10", "seance-11", "seance-12", "seance-13", "seance-14", "seance-15", "seance-16"];
 
 // 4. Les écrans de la séance 0 : on avance aux flèches, on mesure la hauteur de l'écran depuis le haut des écrans, et on la
 //    compare à la zone visible moins la barre épinglée moins les 12 px de marge du retour en haut.

@@ -1,6 +1,6 @@
 # Les 4 projets du portfolio
 
-Chaque bloc du parcours se termine par un projet qui va sur ton **GitHub**. À la fin des 12 séances, ton portfolio contient ces 4 projets, tous construits sur de vrais datasets **Kaggle**. Public : débutant en programmation, curieux de la data et de l'IA. Niveaux : ⭐ Débutant · ⭐⭐ Intermédiaire · ⭐⭐⭐ Avancé.
+Chaque bloc du parcours se termine par un projet qui va sur ton **GitHub**. À la fin des 17 séances, ton portfolio contient ces 4 projets, tous construits sur de vrais datasets **Kaggle**. Public : débutant en programmation, curieux de la data et de l'IA. Niveaux : ⭐ Débutant · ⭐⭐ Intermédiaire · ⭐⭐⭐ Avancé.
 
 | # | Projet | Bloc | Niveau | Dataset Kaggle | Livrable |
 |---|---|---|---|---|---|
@@ -49,10 +49,10 @@ Note : le miroir « jeux vidéo » est le dataset Steam de TidyTuesday (prix, pr
 ## Publier son projet sur GitHub
 
 1. Crée un compte sur https://github.com et un **dépôt** (*New repository*) : nom `portfolio-data-ia`, public, coche *Add a README*.
-2. Depuis Colab : *Fichier → Enregistrer une copie sur GitHub* → choisis ton dépôt, un dossier (`projet-1/`) et un message de commit qui dit **pourquoi** (« Ajoute l'analyse Netflix avec 3 graphiques »).
+2. Depuis Colab : *Fichier → Enregistrer une copie dans GitHub* → choisis ton dépôt, un dossier (`projet-1/`) et un message de commit qui dit **pourquoi** (« Ajoute l'analyse Netflix avec 3 graphiques »).
 3. Ajoute à côté un `README.md` (chaque notebook génère un gabarit) : le titre, le dataset et sa source, tes questions et tes réponses, comment lancer le notebook.
 4. Vérifie sur GitHub que le notebook s'affiche avec ses graphiques (exécute-le entièrement avant de sauvegarder, GitHub affiche les sorties).
-5. En ligne de commande (séance 3) : `git add . ; git commit -m "..." ; git push`.
+5. En ligne de commande (séance 5) : `git add . ; git commit -m "..." ; git push`.
 
 Guides : https://docs.github.com/fr/get-started/start-your-journey/hello-world · https://docs.github.com/fr/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
 

@@ -1,6 +1,6 @@
 # Projet A6 · Génération de texte : du bigramme au LLM adapté avec LoRA · ⭐⭐⭐
 
-Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 6 à 8 (premier modèle, Kaggle) et surtout la séance 9 (comment fonctionne un LLM, le modèle bigramme) · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*) — en `MODE_RAPIDE`, un CPU suffit
+Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (premier modèle, Kaggle) et surtout la séance 12 (comment fonctionne un LLM, le modèle bigramme) · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*) — en `MODE_RAPIDE`, un CPU suffit
 
 ## Objectif
 
@@ -27,7 +27,7 @@ Métrique : la **perplexité par caractère** sur `texte_test`. C'est « entre c
 | Modèle | Ce qu'il apprend | Paramètres |
 |---|---|---|
 | **Unigramme** | la fréquence de chaque caractère — la baseline « bête » | ≈ 90 |
-| **Bigramme** (séance 9) | `P(caractère suivant \| caractère courant)`, avec lissage +1 | ≈ 8 000 |
+| **Bigramme** (séance 12) | `P(caractère suivant \| caractère courant)`, avec lissage +1 | ≈ 8 000 |
 | **LSTM caractère** (Keras) | une mémoire de 100 caractères | ≈ 350 000 |
 | **Qwen2.5-0.5B-Instruct**, sans adaptation | le français, appris ailleurs | 494 000 000 |
 | **Qwen2.5-0.5B + LoRA** | le style de Dumas, par-dessus le français | ≈ 0,1 % des 494 M |

@@ -1,5 +1,5 @@
 /**
- * Les chiffres de la séance 5, calculés une fois sur les deux CSV que le notebook 05_analyser_raconter.ipynb charge,
+ * Les chiffres des séances 7 et 8, calculés une fois sur les deux CSV que le notebook 05_analyser_raconter.ipynb (devenu 07_analyser.ipynb et 08_raconter.ipynb) charge,
  * et en rejouant ses simulations avec les mêmes graines :
  *   Tips    https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv (244 additions)
  *   Pokémon https://gist.githubusercontent.com/armgilles/194bcff35001e7eb53a2a8b441e8b2c6/raw/92200bc0a673d5ce2110aaad4544ed6c4010f687/pokemon.csv

@@ -1,0 +1,67 @@
+---
+numero: 5
+titre: Git et GitHub
+niveau: ★
+duree: 1 h 30
+resume: "Sauvegarder son travail en versions : les vraies commandes Git dans un dossier d'entraînement, un faux GitHub pour s'exercer à envoyer et récupérer, puis ses notebooks en ligne sur le vrai GitHub."
+livrable: Tes notebooks des séances 2 à 4 en ligne sur GitHub, avec un README et au moins deux commits.
+objectifs:
+  - Tu sauras dire où en est ton dépôt avec git status, et sauvegarder un fichier avec add et commit.
+  - Tu sauras voir ce qui a changé et revenir en arrière, avec diff et restore.
+  - Tu sauras envoyer et récupérer tes commits, push et pull, et publier un notebook sur GitHub depuis Colab.
+aRetenir:
+  - Git garde un historique de commits ; GitHub le garde en ligne et le montre.
+  - git status dit où on en est ; add choisit, commit sauvegarde avec un message qui dit pourquoi, log montre l'historique.
+  - git diff montre ce qui a changé ; git restore remet un fichier comme au dernier commit.
+  - Le .gitignore empêche une clé ou un gros fichier de partir sur GitHub.
+  - push envoie, pull récupère ; pull en arrivant, push en partant.
+---
+import PointsDeSauvegarde from "../../components/schemas/PointsDeSauvegarde.astro";
+import QuelleCommande from "../../components/islands/QuelleCommande";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Des points de sauvegarde
+
+Tu connais les sauvegardes d'un jeu vidéo : on y revient quand on rate. Git fait ça pour ton code ; GitHub garde les sauvegardes en ligne et les montre.
+
+<PointsDeSauvegarde />
+
+## Les vraies commandes
+
+Le notebook crée un dossier d'entraînement et y tape les vraies commandes Git, une par cellule. Git répond en anglais : *untracked*, non suivi ; *modified*, modifié ; *deleted*, supprimé.
+
+| La commande | Ce qu'elle fait | Quand |
+|---|---|---|
+| `git status` | dit où en est le dépôt | tout le temps |
+| `git add notes.md` | choisit ce qui entre dans la sauvegarde | avant chaque commit |
+| `git commit -m "…"` | crée le point de sauvegarde, avec un message | quand une étape est finie |
+| `git log --oneline` | montre l'historique, le plus récent en haut | pour retrouver un commit |
+| `git diff` | montre les lignes ajoutées et retirées | avant de sauvegarder |
+| `git restore notes.md` | remet le fichier comme au dernier commit | après une erreur |
+
+<QuelleCommande client:load />
+
+<details>
+<summary>Ce qu'on ne sauvegarde jamais</summary>
+
+Une clé d'API est un mot de passe pour un service. Publiée sur GitHub, elle est trouvée par des robots en quelques minutes. Le fichier `.gitignore` liste ce que Git doit faire semblant de ne pas voir : la clé, les gros fichiers de données. On l'écrit avant le premier `git add .`, et on le sauvegarde avec le reste.
+
+</details>
+
+## Envoyer et récupérer
+
+Le notebook crée un deuxième dossier qui joue le rôle de GitHub, puis un « deuxième ordinateur ». `git push` envoie tes commits, `git clone` copie le dépôt ailleurs, `git pull` rapatrie ce qui a changé : le même historique sur les deux machines, sans compte ni réseau.
+
+### À toi : tes notebooks en ligne
+
+Depuis Colab, le menu Fichier, puis « Enregistrer une copie dans GitHub », revient à add, commit et push d'un clic.
+
+- **Pousse tes notebooks des séances 2, 3 et 4** dans ton dépôt `mon-portfolio-ia`, chacun dans son dossier, avec un message qui dit ce qu'il contient.
+- **Écris le README** : la dernière cellule le génère depuis ta fiche, tu le colles sur GitHub.
+- **Modifie-le une deuxième fois** et ouvre l'onglet Commits : ton historique a deux versions, comme `git log`.
+
+<BoutonsSeance dossier="seance-05-git-github" lecon="05_git_github.ipynb" exercices="05_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `05_exercices.ipynb` : 12 exercices, de ★ à ★★★, dans un autre dépôt, celui du club cuisine du lycée, avec vérification automatique, indices et solutions repliées. Chaque exercice crée son propre dépôt neuf.

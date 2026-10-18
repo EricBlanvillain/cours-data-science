@@ -1,6 +1,6 @@
 /**
- * Les sorties de modèle et les faits de tokens de la séance 9. Tout vient d'un vrai passage, le 28/09/2026, du modèle du
- * notebook 09_comment_fonctionne_un_llm.ipynb, avec la même fonction llm() :
+ * Les sorties de modèle et les faits de tokens de la séance 12. Tout vient d'un vrai passage, le 28/09/2026, du modèle du
+ * notebook 09_comment_fonctionne_un_llm.ipynb (devenu 12_comment_fonctionne_un_llm.ipynb), avec la même fonction llm() :
  *   modèle      Qwen/Qwen2.5-0.5B-Instruct, sur CPU, transformers 5.16.1, torch 2.14.0, Python 3.12.13
  *   réglages    ceux du notebook : max_new_tokens=150, temperature=0.7 échantillonnée (sauf mention) ; temperature=0 = glouton
  *   graine      transformers.set_seed(0) avant chaque appel échantillonné ; graines 0, 1, 2 pour les trois essais de température

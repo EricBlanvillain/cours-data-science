@@ -1,6 +1,6 @@
 # Projet B3 · L'analyste automatique (avec un humain dans la boucle) · ⭐⭐⭐
 
-Piste agentique · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 4 et 5 (pandas, graphiques) et séance 12 (agents)
+Piste agentique · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 4 et 7 (pandas, graphiques) et séance 15 (agents)
 
 ## Objectif
 
@@ -59,4 +59,4 @@ Si le temps manque : arrête-toi à la fin de la section 4 (tu as le rapport éc
 - Choisir son type de graphique (galerie matplotlib) : https://matplotlib.org/stable/plot_types/index.html · les cartes de chaleur : https://seaborn.pydata.org/generated/seaborn.heatmap.html
 - CSV d'entraînement, sans compte : manchots https://raw.githubusercontent.com/mwaskom/seaborn-data/master/penguins.csv · pourboires https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv · Pokémon https://gist.githubusercontent.com/armgilles/194bcff35001e7eb53a2a8b441e8b2c6/raw/92200bc0a673d5ce2110aaad4544ed6c4010f687/pokemon.csv
 - Ce qu'est un agent, en 40 pages : https://www.kaggle.com/whitepaper-agents
-- Les leçons dont ce projet est la suite : [séance 5 · Analyser et raconter](../../../seances/seance-05-analyser-raconter/) et [séance 12 · Agents](../../../seances/seance-12-agents-et-projet-final/)
+- Les leçons dont ce projet est la suite : [séance 7 · Analyser](../../../seances/seance-07-analyser/) et [séance 15 · Agents](../../../seances/seance-15-agents/)

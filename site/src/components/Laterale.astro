@@ -23,7 +23,7 @@ const { courant, courantModule } = Astro.props;
 const modules = trierModules(await getCollection("modules"));
 const chemin = Astro.url.pathname;
 
-const parBloc = [0, 1, 2, 3, 4].map((b) => ({
+const parBloc = [0, 1, 2, 3, 4, 5].map((b) => ({
   titre: blocs[b as keyof typeof blocs],
   liste: seances.filter((s) => s.bloc === b),
 }));

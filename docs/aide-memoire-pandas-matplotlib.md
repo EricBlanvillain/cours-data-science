@@ -122,7 +122,7 @@ Raccourci pandas : `df.plot(x="Attack", y="Defense", kind="scatter")`, `df["HP"]
 | `sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm")` | Matrice de corrélation colorée |
 | `sns.pairplot(df[["HP", "Attack", "Defense"]])` | Tous les nuages de points deux à deux |
 
-## Plotly Express (dashboard interactif, séance 5)
+## Plotly Express (dashboard interactif, séance 8)
 
 ```python
 import plotly.express as px
@@ -131,7 +131,7 @@ fig.show()
 ```
 Même logique pour `px.bar`, `px.line`, `px.histogram`, `px.box`. Options : `facet_col="Generation"` (un sous-graphique par valeur), `animation_frame="Generation"` (un curseur), `title="…"`.
 
-## Les 3 pièges d'un graphique (séance 5)
+## Les 3 pièges d'un graphique (séance 7)
 
 1. Un axe qui ne part pas de zéro exagère les écarts.
 2. Deux courbes qui montent ensemble ne prouvent pas que l'une cause l'autre.

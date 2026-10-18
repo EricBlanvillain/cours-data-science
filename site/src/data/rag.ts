@@ -1,5 +1,5 @@
 /**
- * Les sorties de la séance 11, toutes issues d'un vrai passage, le 28/09/2026, du RAG du notebook 11_rag.ipynb, sur les
+ * Les sorties de la séance 14, toutes issues d'un vrai passage, le 28/09/2026, du RAG du notebook 11_rag.ipynb (devenu 14_rag.ipynb), sur les
  * règles de Sardine Express qu'il fournit (15 paragraphes, un paragraphe = un chunk) :
  *   modèle      Qwen/Qwen2.5-0.5B-Instruct, sur CPU, transformers 5.16.1, torch 2.14.0, Python 3.12.13
  *   embeddings  sentence-transformers 6.1.0, modèle paraphrase-multilingual-MiniLM-L12-v2 (le chemin de Colab,

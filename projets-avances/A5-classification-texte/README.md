@@ -2,7 +2,7 @@
 
 > ⚠️ Le notebook de ce projet reste à écrire. Cette fiche décrit ce qu'il contiendra.
 
-Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 6 à 8 (premier modèle, Kaggle) ; la séance 9 (comment fonctionne un LLM) aide pour la partie CamemBERT · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*) — TF-IDF tourne sur CPU en secondes, le fine-tuning de CamemBERT veut le GPU
+Réserve « pour aller plus loin » · Niveau ⭐⭐⭐ Avancé · Prérequis : séances 9 à 11 (premier modèle, Kaggle) ; la séance 12 (comment fonctionne un LLM) aide pour la partie CamemBERT · **pensé pour le GPU T4 gratuit de Colab** (*Exécution → Modifier le type d'exécution → T4 GPU*) — TF-IDF tourne sur CPU en secondes, le fine-tuning de CamemBERT veut le GPU
 
 ## Objectif
 

@@ -1,6 +1,15 @@
 # CLAUDE.md
 
-Cours de data science et d'IA : 12 séances, deux séances optionnelles, des projets, et une réserve de projets avancés. Tout est en français, tutoiement, et tout doit tourner gratuitement dans Google Colab.
+Cours de data science et d'IA : 17 séances (0 à 16), deux séances optionnelles, des projets, et une réserve de projets avancés. Tout est en français, tutoiement, et tout doit tourner gratuitement dans Google Colab.
+
+## Les quatre règles
+
+Tirées des cinq premières séances réelles (0 à 4). Elles valent pour chaque séance, et passent avant tout le reste de ce fichier.
+
+- **R1. Un seul thème principal par séance.** Deux thèmes, c'est deux séances. En classe, la séance 3 n'a traité que SQL (Git n'a jamais été atteint) et la séance 4 que le nettoyage (l'API jamais) : un thème remplit l'heure de notebook à lui seul. Le déroulé du README tient en 15 / 60 / 15 minutes pour 1 h 30.
+- **R2. La séance 0 sert à faire connaissance et à présenter le cours**, plus un court bilan de compétences. Rien de ce que la séance de Python (la 2) enseigne n'est enseigné ni pratiqué en séance 0 : ni listes, ni boucles, ni fonctions, ni dictionnaires. Le bilan constate, il n'enseigne pas, et il ne recoupe pas les exercices de la séance 2.
+- **R3. Les carnets d'exercices complètent la leçon, ils ne la refont pas.** Mêmes notions, dans une situation nouvelle avec des données nouvelles, faisables seul à la maison (énoncé, squelette « À toi », cellule de vérification, solution repliée). Interdits : « reprends / réécris … de la leçon », le jeu de données de la leçon travaillé de la même façon, et tout exercice sur un thème que la séance ne traite pas.
+- **R4. Une étape par cellule de code dans les notebooks de leçon** : regarder, compter, corriger, vérifier, chacune dans sa cellule, précédée d'une ligne de markdown qui dit ce que l'étape montre. Exemple, les doublons : (1) montrer les lignes en double, (2) les compter, (3) les supprimer, (4) vérifier que le compte est à 0, puis noter au journal. 8 lignes de code au plus par cellule. Exceptions : la cellule de préparation, les filets `#@title`, les cellules de vérification, les solutions repliées, et une définition de fonction seule dans sa cellule, qui peut dépasser 8 lignes. `scripts/recette/une_etape.py` le vérifie (voir « La recette »).
 
 ## Convention des notebooks
 
@@ -35,7 +44,7 @@ Deux environnements, un par version de pandas, en Python 3.13 et avec les versio
 python3.13 -m venv ~/.venvs/recette-pandas2 && ~/.venvs/recette-pandas2/bin/pip install -r scripts/recette/requirements-pandas-2.2.3.txt
 python3.13 -m venv ~/.venvs/recette-pandas3 && ~/.venvs/recette-pandas3/bin/pip install -r scripts/recette/requirements-pandas-3.0.6.txt
 
-~/.venvs/recette-pandas2/bin/python scripts/recette/recette.py --solutions seances/seance-05-analyser-raconter/05_exercices.ipynb
+~/.venvs/recette-pandas2/bin/python scripts/recette/recette.py --solutions seances/seance-07-analyser/07_exercices.ipynb
 ~/.venvs/recette-pandas3/bin/python scripts/recette/recette.py --solutions        # sans chemin : tous les notebooks du dépôt
 ```
 
@@ -54,7 +63,7 @@ de module » dans `site/README.md`.
 
 ### Les PDF du site
 
-Aucun PDF n'est versionné : l'élève les enregistre depuis son navigateur. Une seule entrée, le bouton « Enregistrer en PDF ↓ » de l'accueil, qui ouvre `enregistrer-pdf.html` : en haut (masqué à l'impression), « Cours complet » (les séances 0 à 12) et une case par séance, puis une seconde liste, les six modules optionnels, décochés par défaut, puis « Enregistrer la sélection en PDF », qui ouvre la fenêtre d'impression. Seul ce qui est coché s'imprime, les modules après les séances ; la couverture (« N séances · M modules ») et le sommaire ne listent que la sélection, et ne s'impriment pas quand une seule case est cochée (la page commence alors à la page 1), et le pied de page porte le titre de la page quand une seule case est cochée, « Data Science & IA » sinon (boîtes de marge de `@page`, que Chrome et Edge affichent). `?seances=0,5` ou `?modules=SO1,B2` précoche une sélection (l'une donnée, l'autre part vide). Tout le reste tient dans les styles d'impression de `site/src/styles/global.css` : thème clair forcé, navigation masquée, boutons Colab et GitHub imprimés en liens avec leur adresse courte, jeux et mini-quiz imprimés en liste avec leur corrigé en fin de leçon, les six écrans de la séance 0 imprimés à la suite.
+Aucun PDF n'est versionné : l'élève les enregistre depuis son navigateur. Une seule entrée, le bouton « Enregistrer en PDF ↓ » de l'accueil, qui ouvre `enregistrer-pdf.html` : en haut (masqué à l'impression), « Cours complet » (les séances 0 à 16) et une case par séance, puis une seconde liste, les six modules optionnels, décochés par défaut, puis « Enregistrer la sélection en PDF », qui ouvre la fenêtre d'impression. Seul ce qui est coché s'imprime, les modules après les séances ; la couverture (« N séances · M modules ») et le sommaire ne listent que la sélection, et ne s'impriment pas quand une seule case est cochée (la page commence alors à la page 1), et le pied de page porte le titre de la page quand une seule case est cochée, « Data Science & IA » sinon (boîtes de marge de `@page`, que Chrome et Edge affichent). `?seances=0,5` ou `?modules=SO1,B2` précoche une sélection (l'une donnée, l'autre part vide). Tout le reste tient dans les styles d'impression de `site/src/styles/global.css` : thème clair forcé, navigation masquée, boutons Colab et GitHub imprimés en liens avec leur adresse courte, jeux et mini-quiz imprimés en liste avec leur corrigé en fin de leçon, les six écrans de la séance 0 imprimés à la suite.
 
 `cd site && npm run pdf:verifier` (script `site/scripts/pdf.mjs`) est un contrôle local : il construit le site, passe par la page d'export comme l'élève (le cours complet, la séance 05 seule, la séance 00 seule, la séance optionnelle SO1 seule, le projet B2 seul ; `--pages seance-03` ou `--pages SO2` pour une autre), imprime dans `site/.verif-pdf/` (ignoré par git), et vérifie que rien ne dépasse à droite et que chaque jeu et chaque mini-quiz a son corrigé, puis donne le nombre de pages. Il imprime avec l'en-tête et le pied de page de Chrome activés (comme l'option cochée chez l'élève) et relit chaque PDF avec PDFKit (macOS) : le haut de page doit rester vide (les boîtes `@top-*` de `@page` remplacent l'en-tête de Chrome), et le titre du document, que Chrome propose comme nom de fichier, suit la sélection.
 
@@ -78,8 +87,10 @@ La règle :
 
 ### Où en est le dépôt
 
-La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, A2, A3, A6) et par les **15 notebooks d'exercices** des séances (`NN_exercices.ipynb`, `SO1_exercices.ipynb`, `SO2_exercices.ipynb`).
+La convention est respectée par les **4 notebooks de `projets-avances/`** (A1, A2, A3, A6) et par les **19 notebooks d'exercices** des séances (`NN_exercices.ipynb`, `SO1_exercices.ipynb`, `SO2_exercices.ipynb`).
 
-**pandas 3** : les trois cassures connues (04 ex 6, 05 ex 6, partie mémoire de SO2) sont réparées le 28/09/2026 ; ces carnets passent leur recette sous pandas 2.2 (Colab) comme sous pandas 3.0, solutions injectées. Le 29/09/2026, tout le dépôt a été recetté sous les deux versions, solutions injectées : aucun notebook ne plante, et aucun écart ne vient de pandas 3.
+**pandas 3** : les trois cassures connues (04 ex 6, ancien 05 ex 6, partie mémoire de SO2) sont réparées le 28/09/2026 ; ces carnets passent leur recette sous pandas 2.2 (Colab) comme sous pandas 3.0, solutions injectées. Le 29/09/2026, tout le dépôt a été recetté sous les deux versions, solutions injectées : aucun notebook ne plante, et aucun écart ne vient de pandas 3.
 
-**Ordre des cellules** : depuis le 28/09/2026, aucune solution ne précède plus son squelette dans le dépôt. Depuis le 29/09/2026, les leçons 04 à 08 ont une cellule de vérification (`verifier`, qui n'affiche jamais la réponse) après chaque exercice à résultat vérifiable, dont le squelette nomme le résultat ; leurs exercices ouverts (questions à rédiger, graphiques) et les projets 1 à 3 n'en ont pas, et leur solution suit directement le squelette.
+**Plan en 17 séances** (17/10/2026) : les séances à deux thèmes sont coupées (SQL 3 / Git 5, nettoyer 4 / API 6, analyser 7 / raconter 8, agents 15 / projet final 16), les anciennes 6 à 12 sont devenues 9 à 15. Tous les carnets d'exercices (séances, SO1, SO2) suivent R3 : données et situations que la leçon n'a pas, aucun « reprends … de la leçon ». Toutes les leçons (0 à 16, SO1, SO2, B1 à B4) passent `une_etape.py` sans faute. Seul ❌ volontaire restant dans la recette : la vérification « pigment » de B4, l'échec que le texte explique.
+
+**Ordre des cellules** : depuis le 28/09/2026, aucune solution ne précède plus son squelette dans le dépôt. Depuis le 29/09/2026, les leçons 04 et 07 à 11 ont une cellule de vérification (`verifier`, qui n'affiche jamais la réponse) après chaque exercice à résultat vérifiable, dont le squelette nomme le résultat ; leurs exercices ouverts (questions à rédiger, graphiques) et les projets 1 à 3 n'en ont pas, et leur solution suit directement le squelette.

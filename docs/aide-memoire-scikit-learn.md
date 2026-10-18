@@ -17,7 +17,7 @@ modele.score(X_test, y_test)          # exactitude (part de bonnes réponses) su
 modele.predict(X_test.head())         # prédire
 ```
 
-## Préparer les données (séances 6 et 7)
+## Préparer les données (séances 9 et 10)
 
 | Code | Ce que ça fait |
 |---|---|
@@ -65,7 +65,7 @@ Tous s'utilisent avec les mêmes méthodes : `.fit(X, y)`, `.predict(X)`, `.scor
 | `pd.Series(modele.feature_importances_, index=X.columns).sort_values().plot(kind="barh")` | La même chose en graphique |
 | `modele.coef_` | Poids de chaque variable (régression linéaire / logistique) |
 
-## Régler les hyperparamètres (séance 8)
+## Régler les hyperparamètres (séance 11)
 
 ```python
 from sklearn.model_selection import GridSearchCV
@@ -90,7 +90,7 @@ La courbe du sur-apprentissage : pour `max_depth` de 1 à 20, tracer le score tr
 | Classes déséquilibrées | 95 % d'exactitude alors que le modèle dit toujours « non » | Comparer au modèle bête, regarder la matrice de confusion |
 | Hasard non fixé | Un score différent à chaque exécution | `random_state=42` partout |
 
-## Soumettre sur Kaggle (séances 7 et 8)
+## Soumettre sur Kaggle (séances 10 et 11)
 
 ```python
 X_final = preparer(test)                    # même préparation que train

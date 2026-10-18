@@ -26,10 +26,11 @@ const QUI: [string, string][] = [
 ];
 
 const BLOCS = [
-  { n: "Bloc 1", s: "séances 1 à 3", quoi: "Les bases solides : ce qu'est l'IA, Python pour les données, SQL et Git.", gain: "Un premier projet d'analyse en ligne sur GitHub." },
-  { n: "Bloc 2", s: "séances 4 à 6", quoi: "Le métier : collecter, nettoyer, analyser, raconter, puis entraîner un premier modèle.", gain: "Un tableau de bord présenté à l'oral et un modèle évalué." },
-  { n: "Bloc 3", s: "séances 7 et 8", quoi: "La compétition Kaggle Titanic, en binôme, comme les data scientists du monde entier.", gain: "Un score au classement mondial." },
-  { n: "Bloc 4", s: "séances 9 à 12", quoi: "Comprendre les LLM de l'intérieur, leur parler par le code, leur donner de la mémoire, en faire des agents.", gain: "Un assistant IA construit soi-même, et le portfolio complet." },
+  { n: "Bloc 1", s: "séances 1 à 3", quoi: "Les bases solides : ce qu'est l'IA, Python pour les données, SQL.", gain: "Un premier projet d'analyse." },
+  { n: "Bloc 2", s: "séances 4 à 9", quoi: "Le métier : nettoyer, Git, collecter par une API, analyser, raconter, un premier modèle.", gain: "Un tableau de bord présenté à l'oral, un modèle évalué." },
+  { n: "Bloc 3", s: "séances 10 et 11", quoi: "La compétition Kaggle Titanic, en binôme, comme les data scientists du monde entier.", gain: "Un score au classement mondial." },
+  { n: "Bloc 4", s: "séances 12 à 15", quoi: "Comprendre les LLM, leur parler par le code, leur donner de la mémoire, en faire des agents.", gain: "Un assistant IA construit soi-même." },
+  { n: "Clôture", s: "séance 16", quoi: "Les quatre projets rassemblés, présentés devant les invités.", gain: "Un portfolio complet, présenté en trois minutes." },
 ];
 
 type Etat = {
@@ -149,7 +150,7 @@ export default function AccueilSeance0() {
               Plus aucun cadre sur cet écran : la case affirmation a son propre écran. */}
           <div className="grid gap-3">
           <p className="etiquette">Séance 0 · Faire connaissance</p>
-          <h1 style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)" }}>Data Science &amp; IA<br />en 12 séances</h1>
+          <h1 style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)" }}>Data Science &amp; IA<br />en 17 séances</h1>
           <p style={{ color: "var(--encre-2)" }}>Python, données, machine learning, puis l'IA générative. Tout dans le navigateur, rien à installer.</p>
           </div>
           <ol className="grid gap-2" style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -286,13 +287,13 @@ export default function AccueilSeance0() {
 
       {/* ---------------- Écran 6 ---------------- */}
       {ecran === 6 && (
-        <section style={{ display: "grid", gap: "0.9rem" }}>
-          <h2>Le parcours, en quatre blocs</h2>
+        <section style={{ display: "grid", gap: "0.7rem" }}>
+          <h2>Le parcours, en quatre blocs et une clôture</h2>
           <p style={{ color: "var(--encre-2)" }}>Une séance de 1 h 30 à la fois. La leçon se fait toujours ensemble ; seul le carnet d'exercices se fait entre deux séances.</p>
-          {/* Quatre blocs, une rangée de quatre cartes : bloc et séances, ce qu'on fait, ce qu'on gagne. */}
-          <ul className="grille-cartes" style={{ "--bandes": 3, "--carte-min": "11rem" } as CSSProperties}>
+          {/* Quatre blocs et la clôture, une rangée de cinq cartes : bloc et séances, ce qu'on fait, ce qu'on gagne. */}
+          <ul className="grille-cartes" style={{ "--bandes": 3, "--carte-min": "8.5rem" } as CSSProperties}>
             {BLOCS.map((b) => (
-              <li key={b.n} className="carte" style={{ padding: "0.9rem 1rem" }}>
+              <li key={b.n} className="carte" style={{ padding: "0.75rem 0.9rem" }}>
                 <div className="mono" style={{ fontWeight: 500 }}>{b.n}<span className="discret" style={{ display: "block", fontWeight: 400 }}>{b.s}</span></div>
                 <p style={{ fontSize: "0.92rem", lineHeight: 1.35 }}>{b.quoi}</p>
                 <p style={{ fontSize: "0.9rem", lineHeight: 1.35, fontWeight: 600 }}>{b.gain}</p>
@@ -332,7 +333,7 @@ export default function AccueilSeance0() {
     <div className="imprime-seul accueil-imprime">
       <section>
         <p className="mono-caps">Séance 0 · Faire connaissance</p>
-        <h3>Data Science &amp; IA en 12 séances</h3>
+        <h3>Data Science &amp; IA en 17 séances</h3>
         <p>Python, données, machine learning, puis l'IA générative. Tout dans le navigateur, rien à installer.</p>
         <ol>
           <li>À la fin, vous aurez un <b>portfolio sur GitHub</b> : quatre projets faits de vos mains, visibles par n'importe qui avec un lien.</li>
@@ -369,7 +370,7 @@ export default function AccueilSeance0() {
         {lignes(3)}
       </section>
       <section>
-        <h3>Le parcours, en quatre blocs</h3>
+        <h3>Le parcours, en quatre blocs et une clôture</h3>
         <p>Une séance de 1 h 30 à la fois. La leçon se fait toujours ensemble ; seul le carnet d'exercices se fait entre deux séances.</p>
         <ul className="accueil-blocs">{BLOCS.map((b) => <li key={b.n}><b>{b.n}</b> · {b.s} · {b.quoi} <b>{b.gain}</b></li>)}</ul>
       </section>

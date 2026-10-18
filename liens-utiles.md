@@ -34,7 +34,7 @@ Tous les liens ci-dessous sont gratuits (au moins dans leur version de base) et 
 | Le Chat (Mistral, français) | https://chat.mistral.ai | Version gratuite suffisante pour l'atelier |
 | Gemini (Google) | https://gemini.google.com | Fonctionne avec le compte Google de Colab |
 
-Documentation des API (pour aller plus loin après la séance 10, une clé est nécessaire) : [Claude](https://platform.claude.com/docs) · [OpenAI](https://platform.openai.com/docs) · [Mistral](https://docs.mistral.ai) · [Gemini](https://ai.google.dev/gemini-api/docs)
+Documentation des API (pour aller plus loin après la séance 13, une clé est nécessaire) : [Claude](https://platform.claude.com/docs) · [OpenAI](https://platform.openai.com/docs) · [Mistral](https://docs.mistral.ai) · [Gemini](https://ai.google.dev/gemini-api/docs)
 
 ## Datasets
 
@@ -117,7 +117,7 @@ Tous les datasets seaborn : https://github.com/mwaskom/seaborn-data · Page du p
 | Ressource | Lien | Pour quoi |
 |---|---|---|
 | Science Étonnante (chaîne YouTube) | https://www.youtube.com/@ScienceEtonnante | Les meilleures vulgarisations sur le deep learning et ChatGPT |
-| Science Étonnante · « Ce qui se cache derrière ChatGPT » | https://www.youtube.com/watch?v=7ell8KEbhJo | Comment fonctionne un LLM (séance 9) |
+| Science Étonnante · « Ce qui se cache derrière ChatGPT » | https://www.youtube.com/watch?v=7ell8KEbhJo | Comment fonctionne un LLM (séance 12) |
 | Machine Learnia (chaîne YouTube) | https://www.youtube.com/@MachineLearnia | Python, pandas, scikit-learn, pas à pas |
 | Documentation Python en français | https://docs.python.org/fr/3/tutorial/index.html | Le tutoriel officiel traduit |
 | OpenClassrooms · Bases de Python | https://openclassrooms.com/fr/courses/7168871-apprenez-les-bases-du-langage-python | Reprendre les bases (séance 0) |
@@ -125,9 +125,9 @@ Tous les datasets seaborn : https://github.com/mwaskom/seaborn-data · Page du p
 | Cours Python de l'université Paris Cité | https://python.sdv.univ-paris-diderot.fr/ | Cours complet, très clair |
 | learnpython.org (français) | https://www.learnpython.org/fr/ | Exercices interactifs dans le navigateur |
 | sql.sh | https://sql.sh | Le SQL en français, commande par commande (séance 3) |
-| Learn Git Branching (français) | https://learngitbranching.js.org/?locale=fr_FR | Git expliqué visuellement, en jouant (séance 3) |
+| Learn Git Branching (français) | https://learngitbranching.js.org/?locale=fr_FR | Git expliqué visuellement, en jouant (séance 5) |
 | Elements of AI (français) | https://course.elementsofai.com/fr | Cours d'introduction à l'IA sans code (séance 1) |
-| Wikipédia · Grand modèle de langage | https://fr.wikipedia.org/wiki/Grand_mod%C3%A8le_de_langage | Une bonne synthèse (séance 9) |
+| Wikipédia · Grand modèle de langage | https://fr.wikipedia.org/wiki/Grand_mod%C3%A8le_de_langage | Une bonne synthèse (séance 12) |
 
 ### En anglais (mais très visuels)
 
@@ -135,21 +135,21 @@ Tous les datasets seaborn : https://github.com/mwaskom/seaborn-data · Page du p
 |---|---|---|
 | 3Blue1Brown · Neural networks | https://www.3blue1brown.com/topics/neural-networks | Les réseaux de neurones et les transformers en animation |
 | 3Blue1Brown · « But what is a neural network? » | https://www.youtube.com/watch?v=aircAruvnKk | La vidéo de référence (sous-titres français) |
-| 3Blue1Brown · « Transformers explained visually » | https://www.youtube.com/watch?v=wjZofJX0v4M | Comment un LLM prédit le mot suivant (séance 9) |
+| 3Blue1Brown · « Transformers explained visually » | https://www.youtube.com/watch?v=wjZofJX0v4M | Comment un LLM prédit le mot suivant (séance 12) |
 | Andrej Karpathy · « Intro to Large Language Models » | https://www.youtube.com/watch?v=zjkBMFhNj_g | 1 h pour tout comprendre des LLM |
 | Kaggle Learn | https://www.kaggle.com/learn | Mini-cours gratuits : [Python](https://www.kaggle.com/learn/python), [pandas](https://www.kaggle.com/learn/pandas), [Intro to Machine Learning](https://www.kaggle.com/learn/intro-to-machine-learning) |
 | Google ML Crash Course | https://developers.google.com/machine-learning/crash-course | Le cours de Google, avec exercices |
-| MLU-Explain · Bias-variance | https://mlu-explain.github.io/bias-variance/ | Le sur-apprentissage en images (séance 8) |
-| The Illustrated Transformer | https://jalammar.github.io/illustrated-transformer/ | L'article illustré de référence (séance 9) |
-| LLM Visualization | https://bbycroft.net/llm | Un LLM en 3D, token par token (séance 9) |
-| Transformer Explainer | https://poloclub.github.io/transformer-explainer/ | GPT-2 qui tourne dans le navigateur (séance 9) |
-| Hugging Face · Agents Course | https://huggingface.co/learn/agents-course | Pour aller plus loin après la séance 12 |
+| MLU-Explain · Bias-variance | https://mlu-explain.github.io/bias-variance/ | Le sur-apprentissage en images (séance 11) |
+| The Illustrated Transformer | https://jalammar.github.io/illustrated-transformer/ | L'article illustré de référence (séance 12) |
+| LLM Visualization | https://bbycroft.net/llm | Un LLM en 3D, token par token (séance 12) |
+| Transformer Explainer | https://poloclub.github.io/transformer-explainer/ | GPT-2 qui tourne dans le navigateur (séance 12) |
+| Hugging Face · Agents Course | https://huggingface.co/learn/agents-course | Pour aller plus loin après la séance 15 |
 | SQLBolt | https://sqlbolt.com | SQL interactif (séance 3) |
 | SQLZoo | https://sqlzoo.net | Exercices SQL |
 | Python Tutor | https://pythontutor.com/visualize.html | Voir son code s'exécuter ligne par ligne |
 | Codewars | https://www.codewars.com | Réviser Python en jouant |
 | Exercism · Python | https://exercism.org/tracks/python | Exercices avec mentorat gratuit |
-| Spurious correlations | https://www.tylervigen.com/spurious-correlations | Corrélations absurdes (séance 5) |
+| Spurious correlations | https://www.tylervigen.com/spurious-correlations | Corrélations absurdes (séance 7) |
 
 ## Pour installer Python chez soi (optionnel, tout l'atelier tourne dans Colab)
 

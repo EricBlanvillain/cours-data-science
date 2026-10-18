@@ -1,0 +1,76 @@
+---
+numero: 15
+titre: Les agents
+niveau: ★★★
+duree: 1 h 30
+resume: "Un modèle qui agit : des outils Python, une boucle, ce qui rate avec un petit modèle, les bonnes pratiques avec l'IA, et un outil écrit par toi."
+livrable: Ton agent, avec un outil écrit par toi, testé sur un banc de questions.
+objectifs:
+  - Tu sauras ce qu'est un agent, un modèle, des outils et une boucle, et en lire une trace.
+  - Tu sauras écrire un outil sûr et reconnaître pourquoi un petit agent rate.
+  - Tu sauras donner un nouvel outil à un agent, et mesurer s'il sait s'en servir.
+aRetenir:
+  - Un agent, c'est un modèle, des outils et une boucle ; il demande, Python exécute, le résultat repart au modèle.
+  - Le modèle ne connaît que les outils qu'on lui décrit, et chaque outil vérifie ce qu'il reçoit.
+  - Jamais d'eval sur ce qu'écrit un modèle ; une calculatrice sûre n'accepte que des calculs.
+  - Un petit modèle oublie le format ou répond de tête ; un banc de test le mesure avant qu'on lui confie quoi que ce soit.
+  - Vérifier, protéger ses données, apprendre plutôt que copier, et garder la main sur les actions importantes.
+---
+import TroisOutils from "../../components/schemas/TroisOutils.astro";
+import BoucleAgent from "../../components/schemas/BoucleAgent.astro";
+import BancDeTest from "../../components/schemas/BancDeTest.astro";
+import QuAtIlRate from "../../components/islands/QuAtIlRate";
+import BoutonsSeance from "../../components/BoutonsSeance.astro";
+
+## Un modèle qui agit
+
+Jusqu'ici, le modèle parlait. Un agent, c'est un modèle à qui l'on donne des outils et le droit de les appeler. Tout ce qui suit sort du notebook, lancé pour de vrai avec son petit modèle.
+
+<TroisOutils />
+
+## La boucle
+
+La règle est écrite dans le prompt système : pour utiliser un outil, réponds `OUTIL: nom(arguments)`. La boucle Python repère cette ligne, exécute la fonction et renvoie le résultat au modèle.
+
+<BoucleAgent />
+
+<details>
+<summary>Deux outils à la suite</summary>
+
+« Combien fait la vitesse de Pikachu fois 3 ? » demande deux étapes : chercher la vitesse, puis calculer. Lancé pour de vrai, le petit modèle a écrit « calculer(348 * 27) », sans « OUTIL: » et avec les nombres de l'exemple du prompt : rien ne s'est exécuté. Le mode démo du notebook, des réponses écrites à la main, montre ce que la boucle doit faire : `chercher_pokemon(Pikachu)`, qui renvoie une vitesse de 90, puis `calculer(90 * 3)`, qui renvoie 270.
+
+</details>
+
+## Ce qui rate
+
+À 0,5 milliard de paramètres, l'agent rate plus souvent qu'il ne réussit. Le notebook le mesure avec un banc de test.
+
+<BancDeTest />
+
+<QuAtIlRate client:load />
+
+## Les bonnes pratiques avec l'IA
+
+Savoir comment ça marche change la façon de s'en servir.
+
+| La pratique | Pourquoi |
+|---|---|
+| Vérifier une date, un chiffre, une citation | Le modèle écrit le plausible, pas le vrai |
+| Ne rien taper qu'on n'écrirait pas sur un mur public | Ce qu'on envoie peut être stocké et relu |
+| Faire faire les calculs par Python | Le modèle écrit des chiffres, il ne pose pas l'opération |
+| Se faire expliquer plutôt que copier | Le test : sais-tu le refaire sans lui ? |
+| Garder la main sur envoyer, payer, effacer | Un agent bien construit demande avant les actions importantes |
+
+### À toi : ton agent, ton outil
+
+Donne à l'agent un outil à toi, sur un sujet qui t'intéresse, puis mesure s'il sait s'en servir.
+
+- **Écris la fonction-outil** et teste-la seule, sur deux cas, dont un qui rate.
+- **Ajoute-la à `OUTILS` et décris-la dans le prompt système**, avec un exemple d'appel : le modèle ne connaît que ce qu'on lui décrit.
+- **Écris un banc de quatre questions**, dont une qui n'a besoin d'aucun outil, puis note le score et une question ratée.
+
+<BoutonsSeance dossier="seance-15-agents" lecon="15_agents.ipynb" exercices="15_exercices.ipynb" />
+
+## Entre deux séances
+
+Le carnet `15_exercices.ipynb` : 12 exercices, de ★ à ★★★, avec vérification automatique, indices et solutions repliées. Un autre agent, construit de zéro : l'assistant de la médiathèque du lycée, qui demande ses outils en JSON et demande ton accord avant de réserver un livre.

@@ -15,7 +15,7 @@ Git garde l'historique des versions d'un projet. GitHub héberge ce projet en li
 | README | Le fichier d'accueil du dépôt, en Markdown |
 | `.gitignore` | La liste des fichiers que Git doit ignorer (secrets, gros fichiers) |
 
-## Les 4 commandes de base (séance 3)
+## Les 4 commandes de base (séance 5)
 
 | Commande | Ce qu'elle fait |
 |---|---|
