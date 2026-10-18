@@ -52,6 +52,13 @@ Sur Mac, deux réglages que Colab (Linux) n'a pas besoin : xgboost cherche la bi
 
 Après une modification de notebook, on rejoue sa recette sous les deux environnements, l'un après l'autre (deux passages en parallèle sur le même dossier effaceraient les fichiers l'un de l'autre). Le script sort en code 1 si un notebook plante, contient des sorties ou, avec `--solutions`, affiche un ❌. Un module introuvable donne « SKIP : dépendance Colab », qui ne fait pas échouer.
 
+À côté de la recette, `scripts/recette/une_etape.py` vérifie la règle R4 sur les notebooks de leçon (séances, SO1, SO2, B1 à B4), sans les exécuter et sans dépendance (Python 3 du système suffit) : une cellule de code échoue si elle a plus de 8 lignes de code (lignes vides et commentaires non comptés), ou si elle regarde (un `print`, un `display`, une dernière ligne affichée) et modifie (une colonne écrite, `inplace=True`, `df = df.…`) dans la même cellule. Exceptions : les cellules de code qui suivent le titre « Préparation » (ou « 0. Préparation »), jusqu'au markdown suivant, les filets `#@title`, les cellules de vérification, les squelettes « # À toi », et une définition de fonction ou de classe seule dans sa cellule (elle n'exécute rien). Il sort en code 1 à la moindre faute ; on le lance après chaque modification d'une leçon, en même temps que sa recette :
+
+```bash
+python3 scripts/recette/une_etape.py                                             # toutes les leçons
+python3 scripts/recette/une_etape.py seances/seance-04-collecter-nettoyer/04_collecter_nettoyer.ipynb
+```
+
 ### Les modules optionnels du site
 
 Les séances optionnelles SO1 et SO2 et les projets B1 à B4 ont leur page sur le site : collection `modules`
