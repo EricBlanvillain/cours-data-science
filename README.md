@@ -101,5 +101,8 @@ d'exécution → T4 GPU*. Aucune clé d'API n'est nécessaire.
 les séances 0 à 11 et 16. Les notebooks 12 à 15 ont un interrupteur `USE_MODEL` en tête : `False` fait
 tourner tout le notebook avec un modèle simulé, sans GPU ni `transformers`.
 
-Les données sont chargées par URL (miroirs publics des datasets Kaggle), avec un repli hors ligne
-pour que chaque notebook s'exécute même sans réseau.
+Les données sont chargées par URL (miroirs publics des datasets Kaggle). Si la source ne répond pas, le notebook
+prend une copie de secours qui ne dépend pas d'elle : un petit jeu écrit dans le notebook, ou la copie rangée dans
+[`donnees/`](donnees/) (dans le dépôt cloné, puis en ligne ; sources et licences dans son README). Exceptions, sans copie
+de secours : les leçons 10 et 11 et le projet 3 (sans le `train.csv` de Kaggle, seule la copie publique du Titanic),
+et les projets 1 et 2 (seuls les miroirs publics).
